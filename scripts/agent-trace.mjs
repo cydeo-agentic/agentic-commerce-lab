@@ -5,7 +5,7 @@
  * Run: npm run trace            (last 5 sessions)
  *      npm run trace -- 20      (last 20 sessions)
  */
-import { agentSessions, mcpCalls, projectsDir, skillsLoaded } from './lib/agent-trace.mjs';
+import { agentSessions, deniedCalls, mcpCalls, projectsDir, skillsLoaded } from './lib/agent-trace.mjs';
 
 const n = Number(process.argv[2] ?? 5);
 const sessions = agentSessions().slice(-n);
@@ -22,5 +22,7 @@ for (const s of sessions) {
   console.log(`  skills loaded : ${skills.length ? [...new Set(skills)].join(', ') : 'none'}`);
   console.log(`  MCP tools     : ${mcp.length ? Object.entries(mcp.reduce((m, k) => ({ ...m, [k]: (m[k] ?? 0) + 1 }), {})).map(([k, v]) => `${k} ×${v}`).join(', ') : 'none'}`);
   console.log(`  other tools   : ${Object.entries(counts).filter(([k]) => k !== 'skill' && !k.startsWith('mcp__')).map(([k, v]) => `${k} ×${v}`).join(', ') || 'none'}`);
+  const denied = deniedCalls(s);
+  if (denied.length) console.log(`  not run       : ${Object.entries(denied.reduce((m, c) => ({ ...m, [c.name]: (m[c.name] ?? 0) + 1 }), {})).map(([k, v]) => `${k} ×${v}`).join(', ')}  (denied or failed: the agent asked, the runtime did not run it)`);
 }
 console.log('\nThis list comes from the agent runtime\'s session recordings, not from anything the agent wrote.');

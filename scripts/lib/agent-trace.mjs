@@ -29,6 +29,7 @@ export function agentSessions(cwd = process.cwd()) {
   for (const f of readdirSync(dir).filter((n) => n.endsWith('.jsonl'))) {
     const file = join(dir, f);
     const calls = [];
+    const status = new Map(); // call id -> 'success' | 'error', from the runtime's tool_result records
     let start = null;
     let end = null;
     for (const line of readFileSync(file, 'utf8').split('\n')) {
@@ -37,13 +38,18 @@ export function agentSessions(cwd = process.cwd()) {
       try { r = JSON.parse(line); } catch { continue; }
       if (r.cwd && r.cwd !== cwd) continue;
       if (r.timestamp) { start ??= r.timestamp; end = r.timestamp; }
-      for (const c of callsIn(r)) calls.push({ name: c.name, args: c.args ?? {}, at: r.timestamp });
+      if (r.type === 'tool_result' && r.toolCallResult?.callId) status.set(r.toolCallResult.callId, r.toolCallResult.status);
+      for (const c of callsIn(r)) calls.push({ id: c.id, name: c.name, args: c.args ?? {}, at: r.timestamp });
     }
+    // A call counts only if the runtime ran it: an attempt that was denied (no approval) is recorded as an error.
+    for (const c of calls) c.ok = status.get(c.id) === 'success';
     if (start) sessions.push({ id: f.replace(/\.jsonl$/, ''), file, start, end, calls, mtime: statSync(file).mtimeMs });
   }
   return sessions.sort((a, b) => a.start.localeCompare(b.start));
 }
 
-// The skills a session loaded (Qwen's `skill` tool) and the MCP tools it called (mcp__<server>__<tool>).
-export const skillsLoaded = (s) => s.calls.filter((c) => c.name === 'skill').map((c) => c.args.skill ?? c.args.name ?? '?');
-export const mcpCalls = (s) => s.calls.filter((c) => c.name.startsWith('mcp__')).map((c) => ({ ...c, server: c.name.split('__')[1], tool: c.name.split('__').slice(2).join('__') }));
+// The skills a session really loaded (Qwen's `skill` tool) and the MCP tools it really ran (mcp__<server>__<tool>).
+// Only calls the runtime executed count; denied attempts are listed separately by `deniedCalls`.
+export const skillsLoaded = (s) => s.calls.filter((c) => c.name === 'skill' && c.ok).map((c) => c.args.skill ?? c.args.name ?? '?');
+export const mcpCalls = (s) => s.calls.filter((c) => c.name.startsWith('mcp__') && c.ok).map((c) => ({ ...c, server: c.name.split('__')[1], tool: c.name.split('__').slice(2).join('__') }));
+export const deniedCalls = (s) => s.calls.filter((c) => !c.ok);

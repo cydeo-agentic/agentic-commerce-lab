@@ -7,5 +7,6 @@
       "Bash(npm run rules)",
       "Bash(npm run trace)"
     ]
-  }
+  },
+  "$version": 4
 }

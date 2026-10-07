@@ -8,12 +8,13 @@ description: Check whether a Zinc Store order is really correct by asking all th
 A green page is a claim. An order is correct only when the store page, Stripe and the ledger agree.
 
 ## Steps
-1. Find the order id. If the user did not give one, use `latest`.
-2. Run the witness. Never judge from the page alone, and never from memory:
+1. Find the order id the user asked about. If they gave none, ask which order; do not guess "latest".
+2. Find its witness receipt: `artifacts/witness/<order id>.json`. The witness writes it:
    ```bash
-   npm run witness -- <order id or latest>
+   npm run witness -- <order id>
    ```
-3. Read the receipt it wrote: `artifacts/witness/<order id>.json`.
+   If there is no receipt for that order and you cannot run that command yourself, stop and ask the user to run it. Never judge from the page alone, from an older receipt, or from memory.
+3. Read the receipt by its exact path with your file-read tool. `artifacts/` is git-ignored, so directory listings and file searches hide it: an empty listing does NOT mean there is no receipt.
 4. Report in exactly this shape:
 
    ```

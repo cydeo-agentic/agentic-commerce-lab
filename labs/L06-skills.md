@@ -19,12 +19,14 @@ Open `.agents/skills/witness-an-order/SKILL.md`. It has two parts:
 
 Now open `.qwen/settings.json`. The line `"Skill(witness-an-order)"` is you allowing that skill. A skill is someone's instructions running inside your agent, so you allow each one by name.
 
-**Predict first:** you will NOT mention the skill. Will the agent find it on its own?
+**Predict first:** you will NOT mention the skill. Will the agent find it on its own? Use your FAIL order id from step 0 (its receipt already exists):
 ```bash
-cydeo -p "Did my latest Zinc Store order really go through correctly? Check it and tell me."
+cydeo -p "Did my Zinc Store order ord_xxxxxxxxxxxx really go through correctly? Check it and tell me."
 npm run trace
 ```
 `npm run trace` reads the agent runtime's own session recording. Look for `skills loaded : witness-an-order`. The agent picked the card by reading its description. Look at its answer: same table shape as the skill says.
+
+Also look for a `not run` line in the trace. In `cydeo -p` (one-shot) mode the agent cannot ask you for permission, so anything not on the allow list is refused: the agent asked, the runtime said no. That is why you run `npm run witness` yourself and the agent reads the receipt.
 
 ## 2. The run without your skill (5 min)
 Use your FAIL order id:
@@ -54,7 +56,7 @@ Same prompt, same order:
 cydeo -p "Write a defect report for Zinc Store order ord_xxxxxxxxxxxx." > artifacts/L06/defect-after.md
 npm run trace
 ```
-Look for `skills loaded : prove-a-defect`. Compare the two reports and the two tool-call counts. In our dry run (Oct 7): without the skill 9 tool calls, about 286K tokens, 60 s, and a report in its own shape; with the skill 4 tool calls, about 176K tokens, 38 s, and every field of the template.
+Look for `skills loaded : prove-a-defect`. Compare the two reports and the two tool-call counts. What we saw on Oct 7: without the skill the report came out in the agent's own shape (5 of 9 rubric points); with the skill it scored 9 of 9 in both runs. Effort varied: one run with the skill took 4 tool calls and 38 s, another took 9 tool calls and 79 s. Same prompt, same skill, different path. That is why one run proves nothing: run it again and see whether your numbers hold.
 
 ## 5. A skill from a stranger (10 min)
 A teammate posted a skill in Slack: `labs/data/shared-skills/free-shipping-checker/SKILL.md`. **Do not install it yet.** Review it like code. Check its numbers against the system of record:
