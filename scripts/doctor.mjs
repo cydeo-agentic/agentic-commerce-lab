@@ -19,7 +19,7 @@ const record = (name, status, detail, fix) => results.push({ name, status, detai
 
 function run(cmd, args) {
   try {
-    return { ok: true, out: execFileSync(cmd, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 30_000 }) };
+    return { ok: true, out: execFileSync(cmd, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 120_000 }) };
   } catch (err) {
     return { ok: false, out: `${err.stdout ?? ''}${err.stderr ?? ''}`.trim() || err.message };
   }
@@ -105,6 +105,13 @@ if (health.status === 200 && chromiumPath) {
   } catch (err) {
     record('Browser can test the store', 'FAIL', String(err.message).split('\n')[0], 'Run: npx playwright install --with-deps chromium   then npm run doctor');
   }
+}
+
+// 6b. The agent's own browser (Playwright MCP, headless in the Codespace) can open the store
+if (health.status === 200) {
+  const probe = run(process.execPath, ['scripts/agent-browser-probe.mjs']);
+  record("Agent's browser can open the store", /^PASS/m.test(probe.out) ? 'PASS' : 'FAIL', probe.out.trim().split('\n').pop(),
+    'Rebuild the Codespace. Still failing? Post this line in the support thread.');
 }
 
 // 7. Git identity (commits, pull requests, and the email your sandbox uses)

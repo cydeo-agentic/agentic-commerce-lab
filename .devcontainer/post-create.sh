@@ -11,8 +11,10 @@ npx playwright install --with-deps chromium
 echo "==> CYDEO CLI (the agent; signs in with your CYDEO account)"
 npm install -g @cydeo/cli@0.1.6
 
-echo "==> Pre-download the agent's browser tool so class never waits on it"
+echo "==> Pre-download the agent's browser tool (and the Chromium build it expects) so class never waits on it"
 npx -y @playwright/mcp@latest --help >/dev/null 2>&1 || true
+MCP_PW="$(npm view @playwright/mcp@latest dependencies.playwright 2>/dev/null || true)"
+[ -n "$MCP_PW" ] && npx -y "playwright@$MCP_PW" install chromium >/dev/null 2>&1 || true
 
 # The agent's browser uses the same Chromium as the tests (pinned with @playwright/test), never a surprise download.
 CHROMIUM="$(node -e "import('@playwright/test').then(m=>console.log(m.chromium.executablePath()))")"

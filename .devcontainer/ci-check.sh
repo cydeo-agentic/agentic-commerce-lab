@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# CI only: proves the Codespace container works end to end. (No AI Lab login in CI, so that one doctor line fails there.)
+set -uo pipefail
+export PLAYWRIGHT_MCP_EXECUTABLE_PATH="$(node -e "import('@playwright/test').then(m=>console.log(m.chromium.executablePath()))")"
+fail=0
+step() { echo; echo "================ $1"; }
+
+step "versions"
+node -v; npx stripe version | head -1; npm ls -g --depth=0 @cydeo/cli | tail -2
+env | grep '^PLAYWRIGHT_MCP_' | sed 's/=.*/=set/'
+
+step "Stripe sandbox from a cloud IP (informational: does no-signup creation work from Azure?)"
+STRIPE_SANDBOX_EMAIL="aq-ci-$(date +%s)@example.com" timeout 150 node scripts/setup-stripe.mjs </dev/null
+echo "sandbox create exit: $?"
+
+step "start the store (Stripe sandbox if it worked, otherwise offline simulator)"
+nohup node scripts/dev.mjs > /tmp/dev.log 2>&1 &
+for i in $(seq 1 90); do curl -sf localhost:3000/api/health >/dev/null && break; sleep 1; done
+curl -s localhost:3000/api/health; echo
+
+step "browser smoke tests"
+npx playwright test tests/smoke --reporter=line || fail=1
+
+step "witness gate on the Visa order (expect PASS)"
+VISA=$(curl -s localhost:3000/api/crm | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const o=JSON.parse(s).orders.find(o=>o.card==='visa');console.log(o?o.id:'')})")
+npm run --silent witness -- "$VISA" || fail=1
+
+step "agent browser (Playwright MCP, headless) opens the store"
+node scripts/agent-browser-probe.mjs || fail=1
+
+step "doctor"
+npm run --silent doctor || true
+
+step "store log"
+grep -v -E 'whsec_|_test_' /tmp/dev.log | tail -25
+exit $fail

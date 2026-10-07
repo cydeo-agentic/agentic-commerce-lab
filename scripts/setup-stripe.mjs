@@ -96,6 +96,7 @@ export async function ensureSandbox({ force = false, quiet = false } = {}) {
   const device = out.match(/\{[^{}]*"browser_url"[^{}]*\}/);
   if (device) {
     const d = JSON.parse(device[0]);
+    if (process.env.CI || !process.stdout.isTTY) throw new Error('Stripe wants a one-click browser approval. Run npm run dev in a terminal to see the link.');
     console.log(`
 [stripe] ONE CLICK NEEDED. Stripe wants you to create (or sign in to) a free Stripe account:
 [stripe]   1. Open:  ${d.browser_url}

@@ -1,0 +1,18 @@
+name: codespace-container
+
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.devcontainer/**', 'package.json', 'package-lock.json', 'scripts/**', 'store/**', 'tests/smoke/**']
+
+jobs:
+  build-and-prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the Codespace container and prove it works
+        uses: devcontainers/ci@v0.3
+        with:
+          push: never
+          runCmd: bash .devcontainer/ci-check.sh
