@@ -25,7 +25,9 @@
     "check:lab": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env scripts/check-lab.mjs",
     "prepare": "husky",
     "claim": "node scripts/claim.mjs",
-    "contract": "node scripts/contract.mjs"
+    "contract": "node scripts/contract.mjs",
+    "trace": "node scripts/agent-trace.mjs",
+    "catchup": "node scripts/catchup.mjs"
   },
   "dependencies": {
     "express": "^5.2.1",

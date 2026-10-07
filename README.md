@@ -28,6 +28,8 @@ Then open [labs/README.md](labs/README.md).
 | Rules every agent follows here | [AGENTS.md](AGENTS.md) |
 | The truth about one order | `npm run witness -- <order id>` (or `latest`) |
 | The store's live business rules | `npm run rules` |
+| What the agent really did (skills, MCP tools) | `npm run trace` |
+| Fell behind in a lab | `npm run catchup -- L06` (or `L07`) |
 | Keep your Stripe sandbox + dashboard | `npm run claim` |
 | A fresh, empty ledger | `npm run reset` (nothing is deleted; the old one is archived) |
 

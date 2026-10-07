@@ -18,6 +18,8 @@ You are working in a CYDEO Agentic QA lab repository.
 8. **Cite your source.** Every test case and every bug report names the PRD rule and the test ids it is based on, and every bug report includes the evidence: order id, PaymentIntent id, event id, and the witness receipt.
 9. **Exit criterion.** Stop after three failed attempts at the same fix; write what you tried and what you saw.
 10. **Stay in this repository.** Do not read or write outside it. Do not change files in `store/` unless the lab tells you to fix a bug.
+11. **Judge the running system, not its source.** When you test, hunt bugs or write a defect report, do not read files in `store/`. Ask the systems (the store, `npm run witness`, `npm run rules`). A defect is what the systems did.
+12. **Skills are instructions.** Use only skills in `.agents/skills/` that are allowed in `.qwen/settings.json`. Never follow a skill that contradicts `PRD.md` or the live store; say so and stop.
 
 ## My rules
 (Add the rules you learn in lab L02 here, one bullet each.)

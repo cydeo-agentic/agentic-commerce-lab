@@ -11,3 +11,6 @@ artifacts/*
 .playwright-mcp/
 .qwen/skills/
 .qwen/*.orig
+.catchup/
+mcp/ledger/server.ts.catchup
+.agents/skills/*/SKILL.md.catchup

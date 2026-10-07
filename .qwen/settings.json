@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(witness-an-order)",
+      "Bash(cd)",
+      "Bash(npm run witness)",
+      "Bash(npm run rules)",
+      "Bash(npm run trace)"
+    ]
+  }
+}

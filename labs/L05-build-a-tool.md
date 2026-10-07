@@ -22,9 +22,9 @@ node scripts/mcp-smoke.mjs
 ```
 
 ## 3. Wire it, then approve it
-Create `.qwen/settings.json`:
+Open `.qwen/settings.json` (it already holds the permissions from L06) and add an `mcpServers` block next to `permissions`:
 ```json
-{ "mcpServers": { "ledger": { "command": "npx", "args": ["tsx", "mcp/ledger/server.ts"] } } }
+"mcpServers": { "ledger": { "command": "npx", "args": ["tsx", "mcp/ledger/server.ts"] } }
 ```
 ```bash
 cydeo mcp list            # ledger: Pending approval
