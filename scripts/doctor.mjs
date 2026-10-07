@@ -110,12 +110,13 @@ if (health.status === 200 && chromiumPath) {
 // 6b. The agent's own browser (Playwright MCP, headless in the Codespace) can open the store
 if (health.status === 200) {
   const probe = run(process.execPath, ['scripts/agent-browser-probe.mjs']);
-  record("Agent's browser can open the store", /^PASS/m.test(probe.out) ? 'PASS' : 'FAIL', probe.out.trim().split('\n').pop(),
+  record("Agent's browser can open the store", /^PASS/m.test(probe.out) ? 'PASS' : 'FAIL', probe.out.trim().split('\n').pop().replace(/^(PASS|FAIL) /, ''),
     'Rebuild the Codespace. Still failing? Post this line in the support thread.');
 }
 
 // 7. Git identity (commits, pull requests, and the email your sandbox uses)
-const gitName = run('git', ['config', 'user.name']).out.trim();
+const gitRun = run('git', ['config', 'user.name']);
+const gitName = gitRun.ok ? gitRun.out.trim() : '';
 record('Git identity', gitName ? 'PASS' : 'WARN', gitName || 'not set', 'Run: git config --global user.name "Your Name" && git config --global user.email "you@example.com"');
 
 const fails = results.filter((r) => r.status === 'FAIL').length;
