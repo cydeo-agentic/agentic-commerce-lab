@@ -1,6 +1,6 @@
 # Zinc Store — Product Requirements (v1.0)
 
-Zinc Store sells desk gear online. A shopper fills a cart, pays by card through **Stripe**, and the **CRM ledger** records customers and orders when Stripe's webhook confirms what happened. Three systems must always agree: what the shopper **sees**, what **Stripe** did, and what the **ledger** recorded.
+Zinc Store sells phones, phone accessories and desk gear online. A shopper fills a cart, pays by card through **Stripe**, and the **CRM ledger** records customers and orders when Stripe's webhook confirms what happened. Three systems must always agree: what the shopper **sees**, what **Stripe** did, and what the **ledger** recorded.
 
 Every rule has an id. Test cases and bug reports cite these ids.
 

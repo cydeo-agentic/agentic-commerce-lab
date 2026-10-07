@@ -42,7 +42,14 @@ function renderTotals(prefix, cart) {
   return t;
 }
 
+// Product render for a line (the page ships one inert <template> per product).
+const art = (sku) => document.getElementById(`art-${sku}`)?.innerHTML ?? '';
+
 // ---------- catalog ----------
+document.querySelectorAll('[data-scroll]').forEach((btn) => btn.addEventListener('click', () => {
+  const scroller = document.querySelector(`[data-scroller="${btn.dataset.scroll}"]`);
+  scroller.scrollBy({ left: Number(btn.dataset.dir) * scroller.clientWidth * 0.8, behavior: 'smooth' });
+}));
 if (page === 'catalog') {
   document.querySelectorAll('[data-add]').forEach((btn) => btn.addEventListener('click', () => {
     const cart = readCart();
@@ -67,18 +74,27 @@ if (page === 'cart') {
     $('#coupon').value = cart.coupon ?? '';
     $('#cart-lines').innerHTML = cart.lines.map((l) => {
       const p = products[l.sku];
-      return `<li data-testid="cart-${l.sku}-line">
-        <div><strong>${esc(p.name)}</strong><span class="muted">${money(p.priceCents)} each</span></div>
-        <div class="qty">
-          <button class="icon" data-dec="${l.sku}" aria-label="Decrease" data-testid="cart-${l.sku}-decrease-button">−</button>
-          <span data-testid="cart-${l.sku}-qty">${l.qty}</span>
-          <button class="icon" data-inc="${l.sku}" aria-label="Increase" data-testid="cart-${l.sku}-increase-button">+</button>
+      return `<li class="bag-line" data-testid="cart-${l.sku}-line">
+        <div class="bag-line-art">${art(l.sku)}</div>
+        <div class="bag-line-main">
+          <div>
+            <h2 class="bag-line-name">${esc(p.name)}</h2>
+            <span class="bag-line-each">${money(p.priceCents)} each</span>
+          </div>
+          <div class="qty">
+            <button class="icon" data-dec="${l.sku}" aria-label="Decrease" data-testid="cart-${l.sku}-decrease-button">−</button>
+            <span data-testid="cart-${l.sku}-qty">${l.qty}</span>
+            <button class="icon" data-inc="${l.sku}" aria-label="Increase" data-testid="cart-${l.sku}-increase-button">+</button>
+          </div>
+          <div class="bag-line-end">
+            <span class="bag-line-total">${money(p.priceCents * l.qty)}</span>
+            <button class="link" data-rm="${l.sku}" data-testid="cart-${l.sku}-remove-button">Remove</button>
+          </div>
         </div>
-        <span class="line-total">${money(p.priceCents * l.qty)}</span>
-        <button class="link" data-rm="${l.sku}" data-testid="cart-${l.sku}-remove-button">Remove</button>
       </li>`;
     }).join('');
-    renderTotals('cart', cart);
+    const t = renderTotals('cart', cart);
+    $('#bag-headline').textContent = cart.lines.length ? `Your bag total is ${money(t.total)}.` : 'Your bag is empty.';
   };
   $('#cart-lines').addEventListener('click', (e) => {
     const cart = readCart();
@@ -111,6 +127,9 @@ if (page === 'checkout') {
   const totals = renderTotals('checkout', cart);
   const pay = tid('checkout-pay-button');
   pay.textContent = `Pay ${money(totals.total)}`;
+  $('#co-bag-total').textContent = money(totals.total);
+  $('#co-items').innerHTML = cart.lines.map((l) => `<li><span class="thumb">${art(l.sku)}</span>
+    <span>${esc(products[l.sku].name)}<small>Qty ${l.qty}</small></span><span>${money(products[l.sku].priceCents * l.qty)}</span></li>`).join('');
   const checkoutToken = crypto.randomUUID();
   const alertBox = tid('checkout-error-alert');
   pay.addEventListener('click', async () => {
