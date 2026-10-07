@@ -130,10 +130,12 @@ body[data-page="catalog"] .ribbon, body[data-page="crm"] .ribbon { border-bottom
 .bag-line { display: grid; grid-template-columns: 180px 1fr; gap: 32px; align-items: start; padding: 40px 0; border-bottom: 1px solid var(--line); }
 .bag-line-art { background: var(--bg); border-radius: 14px; aspect-ratio: 6 / 5; display: grid; place-items: center; padding: 10px; }
 .bag-line-art svg { width: 100%; height: 100%; }
-.bag-line-main { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; }
+/* fixed columns so the quantity steppers and prices line up on every line, whatever the name length */
+.bag-line-main { display: grid; grid-template-columns: minmax(0, 1fr) 120px 130px; gap: 24px; align-items: start; }
+.bag-line-main .qty { justify-self: center; }
 .bag-line-name { font-size: 24px; line-height: 1.17; font-weight: 600; letter-spacing: .009em; max-width: 340px; }
 .bag-line-each { display: block; margin-top: 6px; font-size: 14px; color: var(--ink-2); }
-.bag-line-end { text-align: right; min-width: 110px; }
+.bag-line-end { text-align: right; }
 .bag-line-total { font-size: 24px; font-weight: 600; letter-spacing: .009em; }
 .bag-line-end .link { display: block; margin: 8px 0 0 auto; font-size: 17px; }
 .qty { display: inline-flex; align-items: center; gap: 2px; border: 1px solid var(--line); border-radius: 980px; padding: 2px; }
@@ -230,7 +232,8 @@ body[data-page="catalog"] .gfoot, body[data-page="crm"] .gfoot { border-top-colo
   .pcard-lg .pcard-art { height: 280px; }
   .paddles { display: none; }
   .bag-line { grid-template-columns: 96px 1fr; gap: 18px; }
-  .bag-line-main { flex-direction: column; }
+  .bag-line-main { grid-template-columns: 1fr; gap: 12px; }
+  .bag-line-main .qty { justify-self: start; }
   .bag-line-name { font-size: 19px; }
   .bag-line-end { text-align: left; }
   .bag-line-end .link { margin-left: 0; }
