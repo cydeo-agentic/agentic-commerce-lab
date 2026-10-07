@@ -1,0 +1,49 @@
+{
+  "name": "agentic-commerce-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CYDEO Agentic QA flagship lab: Zinc Store (storefront + your own Stripe sandbox + CRM ledger), tested by AI agents.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "store": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env store/server.mjs",
+    "setup:stripe": "node scripts/setup-stripe.mjs",
+    "doctor": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env scripts/doctor.mjs",
+    "witness": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env scripts/witness.mjs",
+    "replay": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env scripts/replay-event.mjs",
+    "rules": "node scripts/rules-truth.mjs",
+    "reset": "node --disable-warning=ExperimentalWarning scripts/reset.mjs",
+    "test": "playwright test",
+    "test:smoke": "playwright test tests/smoke",
+    "report": "playwright show-report --host 0.0.0.0",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "gate": "npm run --silent lint && npm run --silent typecheck",
+    "check:lab": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env scripts/check-lab.mjs",
+    "prepare": "husky",
+    "claim": "node scripts/claim.mjs",
+    "contract": "node scripts/contract.mjs"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "stripe": "^23.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "@playwright/test": "1.63.0",
+    "@stripe/cli": "1.53.0",
+    "@types/node": "^24.0.0",
+    "eslint": "^10.12.0",
+    "eslint-plugin-playwright": "^2.12.1",
+    "globals": "^17.13.0",
+    "husky": "^9.1.7",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "zod": "^4.6.5"
+  }
+}

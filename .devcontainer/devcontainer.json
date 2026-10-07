@@ -1,0 +1,37 @@
+{
+  "name": "CYDEO Agentic QA · Zinc Store lab",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/sshd:1": {}
+  },
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb"
+  },
+  "containerEnv": {
+    "BASE_URL": "http://localhost:3000",
+    "PLAYWRIGHT_MCP_HEADLESS": "true",
+    "PLAYWRIGHT_MCP_BROWSER": "chromium",
+    "PLAYWRIGHT_MCP_NO_SANDBOX": "true"
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "postAttachCommand": "npm run --silent doctor -- --brief || true",
+  "forwardPorts": [3000, 9323],
+  "portsAttributes": {
+    "3000": { "label": "Zinc Store", "onAutoForward": "notify" },
+    "9323": { "label": "Playwright report", "onAutoForward": "openBrowser" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-playwright.playwright", "dbaeumer.vscode-eslint"],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": false
+      }
+    },
+    "codespaces": {
+      "openFiles": ["README.md"]
+    }
+  }
+}

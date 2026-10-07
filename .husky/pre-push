@@ -1,0 +1,2 @@
+echo "pre-push gate: lint + typecheck (a red gate blocks the push)"
+npm run --silent gate

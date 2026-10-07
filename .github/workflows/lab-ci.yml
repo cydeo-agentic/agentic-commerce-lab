@@ -1,0 +1,31 @@
+name: lab-ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gates-and-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Gates (lint + typecheck)
+        run: npm run gate
+      - run: npx playwright install --with-deps chromium
+      - name: Tests against the store (offline payment simulator; no secrets in CI)
+        run: npx playwright test
+        env:
+          STORE_PAYMENTS: offline
+      - name: Upload the HTML report (your proof artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
