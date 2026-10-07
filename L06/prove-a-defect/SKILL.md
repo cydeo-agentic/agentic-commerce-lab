@@ -8,7 +8,7 @@ description: Turn a FAILED Zinc Store witness receipt into a defect report that 
 A defect report is evidence, not a story. Every id in it must come from a receipt that the systems wrote.
 
 ## Steps
-1. Find the receipt: `artifacts/witness/<order id>.json`. If no order id was given, use the newest receipt whose `verdict` is `FAIL`. If there is no FAIL receipt, say so and stop.
+1. Find the receipt: `artifacts/witness/<order id>.json`. Read it by that exact path: `artifacts/` is git-ignored, so listings and searches hide it. If no order id was given, ask for one. If the file does not exist, ask the user to run `npm run witness -- <order id>` and stop.
 2. Read the receipt. Take from it, never from memory:
    - the order id (`ord_…`), the PaymentIntent id (`stripe.paymentIntent`), the event ids (`stripe.events[].id`);
    - every check with `ok: false`: its PRD rule and what each witness said.
