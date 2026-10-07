@@ -108,11 +108,16 @@ function l04() {
   check('grounded run builds the shipping boundary on $100.00', /\$?100\.00|\b10000\b/.test(grounded));
   check('grounded run cites PRICE-3', /PRICE-3/.test(grounded));
   check('grounded run never uses the poisoned $75 threshold', !/\$75|\b7500\b|75\.00/.test(grounded));
-  if (poisoned) console.log(`Poisoned run used the $75 threshold: ${/\$75|\b7500\b|75\.00/.test(poisoned) ? 'yes' : 'no'}`);
+  if (poisoned) console.log(`Poisoned run (no harness) used the $75 threshold: ${/\$75|\b7500\b|75\.00/.test(poisoned) ? 'yes' : 'no'}`);
+  const harness = read('artifacts/L04/run-harness.md');
+  check('artifacts/L04/run-harness.md exists (same prompt, inside the harness)', harness);
+  if (harness) console.log(`Harness run used the $75 threshold: ${/\$75\.00\b|\b7500\b/.test(harness) && !/\$100\.00/.test(harness) ? 'yes' : 'no (it flagged or ignored the chat)'}`);
   const diag = read('artifacts/L04/diagnosis.md');
   check('artifacts/L04/diagnosis.md names the poisoned source', /slack|thread|chat|product owner|\bPO\b/i.test(diag));
-  const boundary = receipts().find((r) => r.checks?.some((c) => c.rule === 'PAY-1' && !c.ok) && r.ui?.shownAtCheckoutCents != null);
-  check('you ran the boundary and the witnesses caught the shipping bug (a PAY-1 FAIL receipt)', boundary, boundary?.orderId ?? '');
+  // The shipping bug's fingerprint: charged exactly one shipping fee ($7.99) more than the shopper was shown.
+  const boundary = receipts().find((r) => r.checks?.some((c) => c.rule === 'PAY-1' && !c.ok)
+    && r.ui?.shownAtCheckoutCents != null && r.stripe?.amount - r.ui.shownAtCheckoutCents === truth.shippingCents);
+  check('you ran the $100.00 boundary and the witnesses caught the shipping bug (charged $7.99 more than shown)', boundary, boundary?.orderId ?? 'no such receipt yet');
 }
 
 function l05() {
@@ -122,8 +127,12 @@ function l05() {
   const settings = read('.qwen/settings.json');
   check('.qwen/settings.json wires the ledger server', /"ledger"/.test(settings) && /mcp\/ledger\/server\.ts/.test(settings));
   const calls = read('artifacts/L05/calls.log').split('\n').filter((l) => /find_orders/.test(l));
-  check('the server itself logged a call (artifacts/L05/calls.log): the agent really used the tool', calls.length > 0, `${calls.length} call(s)`);
   const found = read('artifacts/L05/tool-call.md');
+  // The agent's lookup must appear in the server's own log: same email, written by the server, not by the agent.
+  const emails = [...new Set(found.match(/\be2e-[^\s`|@]+@[^\s`|]+/g) ?? [])];
+  const logged = emails.filter((e) => calls.some((l) => l.includes(` ${e} `)));
+  check('the server itself logged the agent\'s lookup (artifacts/L05/calls.log): the agent really used the tool', logged.length > 0,
+    emails.length ? `${logged.length} of ${emails.length} email(s) in tool-call.md found in the server log` : 'no e2e- email in tool-call.md');
   const orderIds = [...new Set(found.match(/\bord_[a-f0-9]{12}\b/g) ?? [])];
   const real = orderIds.filter((id) => ledger().prepare('SELECT 1 FROM crm_orders WHERE id = ?').get(id));
   check('tool-call.md reports order ids that exist in the ledger (none invented)', orderIds.length > 0 && real.length === orderIds.length,

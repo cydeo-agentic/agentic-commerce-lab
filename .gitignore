@@ -9,3 +9,5 @@ artifacts/*
 *.log
 .DS_Store
 .playwright-mcp/
+.qwen/skills/
+.qwen/*.orig
