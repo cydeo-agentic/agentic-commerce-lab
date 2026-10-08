@@ -229,7 +229,8 @@ Lab doctor: <span class="f">FAIL</span>: 7 pass, 0 warn, 4 fail. Run: npm run do
         <p>Click <b>inside</b> the terminal. Then type this and press <kbd data-os="mac">Return</kbd><kbd data-os="pc">Enter</kbd>:</p>
         <div class="cmd"><code>npm run dev</code><button class="copy" type="button" data-copy="npm run dev">Copy</button></div>
         <p>Tip: click <b>Copy</b>, click inside the terminal, then paste with <kbd data-os="mac">⌘ Cmd</kbd><kbd data-os="pc">Ctrl</kbd> + <kbd>V</kbd>.<span data-os="pc"> If the browser asks “Allow paste?”, click <b>Allow</b>.</span></p>
-        <div class="see"><strong>You should see:</strong> a line that says <code>Zinc Store on http://localhost:3000</code>. Your own store is running, with your own Stripe test account.</div>
+        <div class="see"><strong>You should see:</strong> two links, <b>Zinc Store</b> and <b>Back office</b>, and then a line that says <code>Zinc Store on http://localhost:3000</code>. Your own store is running, with your own Stripe test account.</div>
+        <p>Tip: hold <kbd data-os="mac">⌘ Cmd</kbd><kbd data-os="pc">Ctrl</kbd> and click the <b>Zinc Store</b> link to open your store. The <b>Back office</b> link opens your CRM, where you see every order and customer.</p>
         <div class="careful"><strong>If it says “ONE CLICK NEEDED”:</strong> hold <kbd data-os="mac">⌘ Cmd</kbd><kbd data-os="pc">Ctrl</kbd> and click the link it shows. Sign in to Stripe, or make a free Stripe account, then click <b>Allow</b>. Come back to this tab. It keeps going by itself.</div>
         <div class="careful"><strong>Very important:</strong> leave this terminal alone from now on. Do not close it and do not type in it. This is <b>terminal 1</b>. It keeps your store alive.</div>
         <label class="done"><input type="checkbox" id="done-3"> My store is running</label>
@@ -284,7 +285,7 @@ Lab doctor: <span class="f">FAIL</span>: 7 pass, 0 warn, 4 fail. Run: npm run do
       <div class="body">
         <p>Still in <b>terminal 2</b>, type this and press <kbd data-os="mac">Return</kbd><kbd data-os="pc">Enter</kbd>:</p>
         <div class="cmd"><code>npm run doctor</code><button class="copy" type="button" data-copy="npm run doctor">Copy</button></div>
-        <p>The doctor checks 13 things. Every line must say <b>PASS</b>. It looks like this:</p>
+        <p><b>Wait about one minute.</b> The doctor checks 13 things and prints nothing until it is done. Then every line must say <b>PASS</b>. It looks like this:</p>
 <pre class="term"><span class="p">PASS</span>  Node.js 24+                  v24.21.0
 <span class="p">PASS</span>  Project dependencies         installed
 <span class="p">PASS</span>  Stripe CLI                   1.53.0
