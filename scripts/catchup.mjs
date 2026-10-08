@@ -25,7 +25,9 @@ if (!STEPS[lab]) {
   process.exit(2);
 }
 const git = (...args) => spawnSync('git', args, { encoding: 'utf8' });
-const fetched = git('fetch', '--quiet', 'origin', 'catchup');
+// Student Codespaces are made from the template, so they have no `origin`: fetch from the public lab repo by URL.
+const LAB_REPO = 'https://github.com/cydeo-dev/agentic-commerce-lab.git';
+const fetched = git('fetch', '--quiet', LAB_REPO, 'catchup');
 if (fetched.status !== 0) {
   console.log('Could not fetch the catch-up branch. Post this in the support thread:\n' + (fetched.stderr || '').trim());
   process.exit(1);
