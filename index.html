@@ -359,7 +359,7 @@ Verdict: <span class="p">PASS</span></pre>
       <summary><code>cydeo login</code> shows a red error that says <code>spawn xdg-open ENOENT</code></summary>
       <div>
         <p>Your lab was built before we fixed this. Copy this one line into terminal 2 and press <kbd data-os="mac">Return</kbd><kbd data-os="pc">Enter</kbd>:</p>
-        <div class="cmd"><code>git pull && sudo install -m 755 .devcontainer/xdg-open /usr/local/bin/xdg-open</code><button class="copy" type="button" data-copy="git pull && sudo install -m 755 .devcontainer/xdg-open /usr/local/bin/xdg-open">Copy</button></div>
+        <div class="cmd"><code>curl -fsSL https://raw.githubusercontent.com/cydeo-dev/agentic-commerce-lab/main/.devcontainer/xdg-open | sudo tee /usr/local/bin/xdg-open &gt;/dev/null &amp;&amp; sudo chmod 755 /usr/local/bin/xdg-open</code><button class="copy" type="button" data-copy="curl -fsSL https://raw.githubusercontent.com/cydeo-dev/agentic-commerce-lab/main/.devcontainer/xdg-open | sudo tee /usr/local/bin/xdg-open &gt;/dev/null &amp;&amp; sudo chmod 755 /usr/local/bin/xdg-open">Copy</button></div>
         <p>Then do step 6 again.</p>
       </div>
     </details>
@@ -367,6 +367,19 @@ Verdict: <span class="p">PASS</span></pre>
     <details>
       <summary>The “Lab doctor” line never showed up</summary>
       <div><p>If it has been more than 10 minutes, take a screenshot of the whole screen and post it in <b>#aq03-support</b>. Leave the tab open so we can help.</p></div>
+    </details>
+
+    <details>
+      <summary><code>npm run catchup</code> says “Could not fetch the catch-up branch”</summary>
+      <div>
+        <p>Your lab was built before we fixed this. Copy this one line into terminal 2 and press <kbd data-os="mac">Return</kbd><kbd data-os="pc">Enter</kbd>, then run your catchup command again:</p>
+        <div class="cmd"><code>curl -fsSL https://raw.githubusercontent.com/cydeo-dev/agentic-commerce-lab/main/scripts/catchup.mjs -o scripts/catchup.mjs</code><button class="copy" type="button" data-copy="curl -fsSL https://raw.githubusercontent.com/cydeo-dev/agentic-commerce-lab/main/scripts/catchup.mjs -o scripts/catchup.mjs">Copy</button></div>
+      </div>
+    </details>
+
+    <details>
+      <summary>I typed a command but nothing happened (or it went into a file)</summary>
+      <div><p>When your lab opens, the file <b>README.md</b> is open at the top and it takes your typing. Always <b>click inside the black terminal first</b>, then type. If you typed into README by accident, it does not break anything.</p></div>
     </details>
 
     <details>
