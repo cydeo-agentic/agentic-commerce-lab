@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<title>Zinc Store Setup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: one narrow reading column, a big numbered path of steps; each step = what to do, then "what you should see". */
+:root {
+  --bg: #eef1f4;
+  --paper: #ffffff;
+  --ink: #17202b;
+  --muted: #566273;
+  --line: #d5dbe3;
+  --accent: #1b5fd1;
+  --accent-ink: #ffffff;
+  --accent-soft: #e2ecfd;
+  --go: #13804a;
+  --go-soft: #dff3e8;
+  --warn: #9a5b00;
+  --warn-soft: #fdf0d8;
+  --term-bg: #10161f;
+  --term-ink: #d8e0ea;
+  --term-dim: #7d8a9c;
+  --term-pass: #4ade80;
+  --term-fail: #f87171;
+  --kbd-bg: #f6f8fa;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --paper: #161d27; --ink: #e8edf3; --muted: #9ba8b8; --line: #2a3442;
+    --accent: #6ea2ff; --accent-ink: #0b1220; --accent-soft: #1a2a45;
+    --go: #4cd28a; --go-soft: #13301f; --warn: #f2b25c; --warn-soft: #33260f;
+    --term-bg: #070a0f; --kbd-bg: #222b37;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --paper: #161d27; --ink: #e8edf3; --muted: #9ba8b8; --line: #2a3442;
+  --accent: #6ea2ff; --accent-ink: #0b1220; --accent-soft: #1a2a45;
+  --go: #4cd28a; --go-soft: #13301f; --warn: #f2b25c; --warn-soft: #33260f;
+  --term-bg: #070a0f; --kbd-bg: #222b37;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 80px; display: flex; flex-direction: column; gap: 28px; }
+
+/* OS switch: hide what doesn't belong to the chosen computer */
+.wrap[data-os="mac"] [data-os="pc"], .wrap[data-os="pc"] [data-os="mac"] { display: none; }
+
+header { display: flex; flex-direction: column; gap: 12px; }
+.eyebrow { font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(34px, 7vw, 52px); line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+.lede { font-size: 20px; margin: 0; max-width: 60ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 16px; }
+.facts b { color: var(--ink); }
+
+.picker { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.picker p { margin: 0; font-weight: 700; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.seg button { font: inherit; font-weight: 700; font-size: 18px; padding: 14px 10px; border-radius: 10px; border: 2px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.seg button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.seg button:focus-visible, .btn:focus-visible, .copy:focus-visible, .done input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.seg svg { width: 22px; height: 22px; flex: none; }
+
+.need { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+.need h2 { font-family: var(--display); font-size: 22px; margin: 0 0 10px; }
+.need ul { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; }
+
+.progress { display: flex; align-items: center; gap: 14px; font-weight: 700; position: sticky; top: env(safe-area-inset-top, 0px); background: var(--bg); padding-block: 10px; z-index: 2; }
+.bar { flex: 1; height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--go); border-radius: 99px; transition: width .3s; }
+.progress span { font-variant-numeric: tabular-nums; min-width: 7.5em; text-align: right; font-size: 16px; }
+
+ol.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 22px; counter-reset: step; }
+.step { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 22px; display: grid; grid-template-columns: 56px 1fr; gap: 6px 18px; }
+.step.is-done { border-color: var(--go); }
+.num { grid-row: span 2; width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-family: var(--display); font-weight: 800; font-size: 26px; display: grid; place-items: center; }
+.step.is-done .num { background: var(--go); }
+.step h2 { font-family: var(--display); font-weight: 600; font-size: 25px; line-height: 1.2; margin: 0; align-self: center; text-wrap: balance; }
+.body { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.body p { margin: 0; }
+.body ul, .body ol { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; }
+.time { font-size: 15px; color: var(--muted); }
+
+kbd { font-family: var(--mono); font-size: .82em; font-weight: 700; background: var(--kbd-bg); border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 6px; padding: 1px 7px; white-space: nowrap; }
+
+.cmd { display: flex; align-items: stretch; border-radius: 10px; overflow: hidden; background: var(--term-bg); }
+.cmd code { flex: 1; min-width: 0; color: var(--term-ink); font-family: var(--mono); font-size: 19px; font-weight: 700; padding: 14px 16px; overflow-x: auto; white-space: nowrap; }
+.cmd code::before { content: "$ "; color: var(--term-dim); }
+.copy { font: inherit; font-size: 15px; font-weight: 700; border: 0; background: var(--accent); color: var(--accent-ink); padding: 0 18px; cursor: pointer; }
+.copy.ok { background: var(--go); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; align-self: flex-start; background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: 20px; text-decoration: none; padding: 16px 26px; border-radius: 12px; }
+
+.see { border-left: 4px solid var(--go); background: var(--go-soft); border-radius: 0 10px 10px 0; padding: 12px 16px; }
+.see strong { color: var(--go); }
+.careful { border-left: 4px solid var(--warn); background: var(--warn-soft); border-radius: 0 10px 10px 0; padding: 12px 16px; }
+.careful strong { color: var(--warn); }
+
+.term { background: var(--term-bg); color: var(--term-ink); font-family: var(--mono); font-size: 14px; line-height: 1.55; border-radius: 10px; padding: 14px 16px; overflow-x: auto; white-space: pre; margin: 0; }
+.term .d { color: var(--term-dim); }
+.term .p { color: var(--term-pass); font-weight: 700; }
+.term .f { color: var(--term-fail); font-weight: 700; }
+.term-label { font-size: 14px; color: var(--muted); margin-bottom: -8px; }
+
+.done { display: flex; align-items: center; gap: 12px; font-weight: 700; cursor: pointer; padding-top: 6px; border-top: 1px dashed var(--line); padding-block: 14px 0; }
+.done input { width: 26px; height: 26px; accent-color: var(--go); cursor: pointer; flex: none; }
+
+.help { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+.help h2 { font-family: var(--display); font-size: 26px; margin: 0; }
+details { border-top: 1px solid var(--line); padding-top: 12px; }
+summary { font-weight: 700; cursor: pointer; }
+details > div { padding-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+details p { margin: 0; }
+
+.finish { text-align: center; padding: 26px 20px; border-radius: 16px; background: var(--go-soft); border: 2px solid var(--go); }
+.finish h2 { font-family: var(--display); font-size: 28px; margin: 0 0 6px; }
+.finish p { margin: 0; }
+
+@media (max-width: 520px) {
+  body { font-size: 17px; }
+  .step { grid-template-columns: 1fr; padding: 18px; }
+  .num { grid-row: auto; width: 44px; height: 44px; font-size: 22px; }
+  .step h2 { font-size: 22px; }
+  .cmd code { font-size: 16px; }
+  .btn { align-self: stretch; }
+}
+@media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="app" data-os="mac">
+  <header>
+    <div class="eyebrow">CYDEO Agentic QA · AQ-03 · Lab L00</div>
+    <h1>Set up your Zinc Store</h1>
+    <p class="lede">You will get your own online store, with its own pretend payment system, running inside your web browser. You install nothing on your computer.</p>
+    <ul class="facts">
+      <li><b>Time:</b> about 15 minutes</li>
+      <li><b>Finish before:</b> Thursday, Oct 8, 11:00 AM ET</li>
+      <li><b>Money:</b> none. Every payment is fake test money.</li>
+    </ul>
+  </header>
+
+  <section class="picker" aria-label="Choose your computer">
+    <p>First, which computer are you using? Click one.</p>
+    <div class="seg" role="group">
+      <button type="button" id="os-mac" data-pick="mac" aria-pressed="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M1 19h22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Mac
+      </button>
+      <button type="button" id="os-pc" data-pick="pc" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 16v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Windows PC
+      </button>
+    </div>
+    <p style="font-weight:400;color:var(--muted);font-size:16px">The steps below change to match your keyboard.</p>
+  </section>
+
+  <section class="need">
+    <h2>Before you start, have these ready</h2>
+    <ul>
+      <li>Your laptop, plugged in, with good internet.</li>
+      <li>The <b>Google Chrome</b> browser<span data-os="pc"> (Microsoft Edge also works)</span>.</li>
+      <li>A free <b>GitHub</b> account. No account yet? Make one at <a href="https://github.com/signup">github.com/signup</a>. It takes 2 minutes.</li>
+      <li>Your <b>CYDEO</b> login (the one you use for the LMS).</li>
+    </ul>
+  </section>
+
+  <div class="progress" aria-live="polite">
+    <div class="bar"><i id="bar"></i></div>
+    <span id="count">0 of 7 done</span>
+  </div>
+
+  <ol class="steps">
+    <!-- 1 -->
+    <li class="step" data-step="1">
+      <div class="num">1</div>
+      <h2>Open your lab</h2>
+      <div class="body">
+        <p>Click this big button. It opens in a new tab.</p>
+        <a class="btn" href="https://codespaces.new/cydeo-dev/agentic-commerce-lab?quickstart=1" target="_blank" rel="noopener">Open my lab →</a>
+        <ul>
+          <li>If GitHub asks you to sign in, sign in.</li>
+          <li>You will see a page that says <b>Create codespace</b>. Click the green <b>Create codespace</b> button. (On some screens it says <b>Create new codespace</b>. Same button.)</li>
+        </ul>
+        <div class="careful"><strong>Opened this link before?</strong> Then you see <b>Resume codespace</b> and “Previous session found”. Click the green <b>Resume this codespace</b>. Do not click <b>Create a new one</b>: that makes a second, empty lab, and your work stays in the first one.</div>
+        <div class="see"><strong>You should see:</strong> a page that looks like a code editor (it is called VS Code), with a black box at the bottom. The black box is the <b>terminal</b>. You type commands there.</div>
+        <label class="done"><input type="checkbox" id="done-1"> I did step 1</label>
+      </div>
+    </li>
+
+    <!-- 2 -->
+    <li class="step" data-step="2">
+      <div class="num">2</div>
+      <h2>Wait until your lab is ready</h2>
+      <div class="body">
+        <p class="time">About 3 to 4 minutes, only this first time.</p>
+        <p>GitHub is building your lab. <b>Do not close the tab. Do not type anything yet.</b> Go get a glass of water.</p>
+        <p class="term-label">It is ready when the terminal at the bottom shows a quick check that ends like this:</p>
+<pre class="term">👋 Welcome to Codespaces! …
+@yourname ➜ /workspaces/agentic-commerce-lab (main) $ npm run --silent doctor -- --brief || true
+<span class="d">.env not found. Continuing without it.</span>
+
+Lab doctor: <span class="f">FAIL</span>: 7 pass, 0 warn, 4 fail. Run: npm run doctor
+
+@yourname ➜ /workspaces/agentic-commerce-lab (main) $</pre>
+        <div class="see"><strong>The FAIL here is normal.</strong> You have not started your store or signed in yet. Steps 3 to 7 turn every line into PASS.</div>
+        <div class="careful"><strong>No terminal at the bottom?</strong> Press <kbd>Ctrl</kbd> + <kbd>`</kbd> (the <kbd>`</kbd> key is just left of the <kbd>1</kbd> key<span data-os="mac">, also on a Mac</span>).</div>
+        <label class="done"><input type="checkbox" id="done-2"> I see “Lab doctor” in the terminal</label>
+      </div>
+    </li>
+
+    <!-- 3 -->
+    <li class="step" data-step="3">
+      <div class="num">3</div>
+      <h2>Start your store</h2>
+      <div class="body">
+        <p>Click <b>inside</b> the terminal. Then type this and press <kbd data-os="mac">Return</kbd><kbd data-os="pc">Enter</kbd>:</p>
+        <div class="cmd"><code>npm run dev</code><button class="copy" type="button" data-copy="npm run dev">Copy</button></div>
+        <p>Tip: click <b>Copy</b>, click inside the terminal, then paste with <kbd data-os="mac">⌘ Cmd</kbd><kbd data-os="pc">Ctrl</kbd> + <kbd>V</kbd>.<span data-os="pc"> If the browser asks “Allow paste?”, click <b>Allow</b>.</span></p>
+        <div class="see"><strong>You should see:</strong> a line that says <code>Zinc Store on http://localhost:3000</code>. Your own store is running, with your own Stripe test account.</div>
+        <div class="careful"><strong>If it says “ONE CLICK NEEDED”:</strong> hold <kbd data-os="mac">⌘ Cmd</kbd><kbd data-os="pc">Ctrl</kbd> and click the link it shows. Sign in to Stripe, or make a free Stripe account, then click <b>Allow</b>. Come back to this tab. It keeps going by itself.</div>
+        <div class="careful"><strong>Very important:</strong> leave this terminal alone from now on. Do not close it and do not type in it. This is <b>terminal 1</b>. It keeps your store alive.</div>
+        <label class="done"><input type="checkbox" id="done-3"> My store is running</label>
+      </div>
+    </li>
+
+    <!-- 4 -->
+    <li class="step" data-step="4">
+      <div class="num">4</div>
+      <h2>Look at your store</h2>
+      <div class="body">
+        <p>A small box pops up in the bottom-right corner that mentions <b>port 3000</b>. Click <b>Open in Browser</b>.</p>
+        <div class="see"><strong>You should see:</strong> the Zinc Store in a new tab, with phones and accessories for sale. This store is yours alone.</div>
+        <div class="careful"><strong>Missed the pop-up?</strong> Next to the terminal, click the <b>PORTS</b> tab. Find <b>3000</b> and click the little globe icon next to it.</div>
+        <p>Now go back to the tab with the code editor.</p>
+        <label class="done"><input type="checkbox" id="done-4"> I can see my store</label>
+      </div>
+    </li>
+
+    <!-- 5 -->
+    <li class="step" data-step="5">
+      <div class="num">5</div>
+      <h2>Open a second terminal</h2>
+      <div class="body">
+        <p>At the top right of the terminal area there is a <kbd>+</kbd> button. Click it once.</p>
+        <div class="see"><strong>You should see:</strong> a new, empty terminal. This is <b>terminal 2</b>. You use terminal 2 for everything else. Terminal 1 keeps running your store.</div>
+        <label class="done"><input type="checkbox" id="done-5"> I have terminal 2</label>
+      </div>
+    </li>
+
+    <!-- 6 -->
+    <li class="step" data-step="6">
+      <div class="num">6</div>
+      <h2>Sign in to the AI agent</h2>
+      <div class="body">
+        <p>In <b>terminal 2</b>, type this and press <kbd data-os="mac">Return</kbd><kbd data-os="pc">Enter</kbd>:</p>
+        <div class="cmd"><code>cydeo login</code><button class="copy" type="button" data-copy="cydeo login">Copy</button></div>
+        <ol>
+          <li>It shows a link. Hold <kbd data-os="mac">⌘ Cmd</kbd><kbd data-os="pc">Ctrl</kbd> and click the link.</li>
+          <li>Sign in with your <b>CYDEO</b> account and click to approve.</li>
+          <li>Come back to the code editor tab and wait.</li>
+        </ol>
+        <div class="see"><strong>You should see:</strong> <code>Logged in.</code></div>
+        <label class="done"><input type="checkbox" id="done-6"> It says “Logged in.”</label>
+      </div>
+    </li>
+
+    <!-- 7 -->
+    <li class="step" data-step="7">
+      <div class="num">7</div>
+      <h2>Check that everything works</h2>
+      <div class="body">
+        <p>Still in <b>terminal 2</b>, type this and press <kbd data-os="mac">Return</kbd><kbd data-os="pc">Enter</kbd>:</p>
+        <div class="cmd"><code>npm run doctor</code><button class="copy" type="button" data-copy="npm run doctor">Copy</button></div>
+        <p>The doctor checks 13 things. Every line must say <b>PASS</b>. It looks like this:</p>
+<pre class="term"><span class="p">PASS</span>  Node.js 24+                  v24.21.0
+<span class="p">PASS</span>  Project dependencies         installed
+<span class="p">PASS</span>  Stripe CLI                   1.53.0
+<span class="p">PASS</span>  CYDEO CLI (@cydeo/cli)       0.1.6
+<span class="p">PASS</span>  AI Lab login                 token valid
+<span class="p">PASS</span>  Zinc Store running           http://localhost:3000
+<span class="d">  … more lines …</span>
+Verdict: <span class="p">PASS</span></pre>
+        <p>Then type this one and press <kbd data-os="mac">Return</kbd><kbd data-os="pc">Enter</kbd>:</p>
+        <div class="cmd"><code>npm run check:lab -- L00</code><button class="copy" type="button" data-copy="npm run check:lab -- L00">Copy</button></div>
+        <p><b>Last thing:</b> take a screenshot of the <b>Verdict: PASS</b> line and post it in <b>#aq03-support</b>.</p>
+        <p data-os="mac">To take a screenshot on a Mac: press <kbd>⌘ Cmd</kbd> + <kbd>Shift</kbd> + <kbd>4</kbd>, then drag a box around the PASS lines. The picture lands on your Desktop.</p>
+        <p data-os="pc">To take a screenshot on Windows: press <kbd>Windows key</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>, then drag a box around the PASS lines. Then paste it into Discord with <kbd>Ctrl</kbd> + <kbd>V</kbd>.</p>
+        <label class="done"><input type="checkbox" id="done-7"> I posted my PASS screenshot</label>
+      </div>
+    </li>
+  </ol>
+
+  <section class="finish" id="finish" hidden>
+    <h2>You are ready for Thursday.</h2>
+    <p>See you at 11:00 AM ET. Your store will be waiting for you.</p>
+  </section>
+
+  <section class="need">
+    <h2>Bonus: watch your tests step by step</h2>
+    <p style="margin:0 0 12px">Your store must be running (terminal 1). In terminal 2, type this and press <kbd data-os="mac">Return</kbd><kbd data-os="pc">Enter</kbd>:</p>
+    <div class="cmd"><code>npm run watch</code><button class="copy" type="button" data-copy="npm run watch">Copy</button></div>
+    <ol style="margin:12px 0 0;padding-left:22px;display:flex;flex-direction:column;gap:6px">
+      <li>A new tab opens with <b>Playwright</b>. If it does not, click the <b>PORTS</b> tab and click the globe next to <b>8080</b>.</li>
+      <li>Click <b>▶</b> at the top of the test list to run every test.</li>
+      <li>Click a test’s <b>name</b>. Then click any step: the big picture shows your store at that exact moment.</li>
+    </ol>
+    <p style="margin:12px 0 0;color:var(--muted);font-size:16px">Leave terminal 2 running while you watch. Press <kbd>Ctrl</kbd> + <kbd>C</kbd> there to stop it.</p>
+  </section>
+
+  <section class="help">
+    <h2>If something goes wrong</h2>
+    <p><b>Stuck for more than 2 minutes?</b> Copy what the terminal says (or run <code>npm run doctor</code>) and post it in <b>#aq03-support</b>. Do not try to fix your laptop and do not install anything. Everything you need is already inside your lab.</p>
+
+    <details>
+      <summary>I closed the tab. Is my work gone?</summary>
+      <div>
+        <p>No. Your lab is saved. Go to <a href="https://github.com/codespaces">github.com/codespaces</a> and click your lab to open it again. If you see “Previous session found”, click <b>Resume this codespace</b>, never <b>Create a new one</b>.</p>
+        <p>Then start your store again: in a terminal, type <code>npm run dev</code>. Open a second terminal with <kbd>+</kbd> for everything else.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Coming back on Thursday: what do I do?</summary>
+      <div>
+        <p>Your lab goes to sleep when you leave it alone for a while. That is normal.</p>
+        <ol>
+          <li>Go to <a href="https://github.com/codespaces">github.com/codespaces</a> and click your lab. (Or click <b>Open my lab</b> in step 1, then <b>Resume this codespace</b>.)</li>
+          <li>In the terminal, type <code>npm run dev</code> (this is terminal 1, leave it running).</li>
+          <li>Click <kbd>+</kbd> for terminal 2. Type <code>npm run doctor</code>. All PASS? You are ready.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary>The doctor says FAIL on “Zinc Store running”</summary>
+      <div><p>Your store is not running. Look at terminal 1. If it stopped, type <code>npm run dev</code> there again, wait for <code>Zinc Store on http://localhost:3000</code>, then run the doctor again in terminal 2.</p></div>
+    </details>
+
+    <details>
+      <summary>The doctor says FAIL on “AI Lab login”</summary>
+      <div><p>Do step 6 again: type <code>cydeo login</code> in terminal 2 and approve in the browser. Wait for <code>Logged in.</code></p></div>
+    </details>
+
+    <details>
+      <summary><code>cydeo login</code> shows a red error that says <code>spawn xdg-open ENOENT</code></summary>
+      <div>
+        <p>Your lab was built before we fixed this. Copy this one line into terminal 2 and press <kbd data-os="mac">Return</kbd><kbd data-os="pc">Enter</kbd>:</p>
+        <div class="cmd"><code>git pull && sudo install -m 755 .devcontainer/xdg-open /usr/local/bin/xdg-open</code><button class="copy" type="button" data-copy="git pull && sudo install -m 755 .devcontainer/xdg-open /usr/local/bin/xdg-open">Copy</button></div>
+        <p>Then do step 6 again.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>The “Lab doctor” line never showed up</summary>
+      <div><p>If it has been more than 10 minutes, take a screenshot of the whole screen and post it in <b>#aq03-support</b>. Leave the tab open so we can help.</p></div>
+    </details>
+
+    <details>
+      <summary>Paste does not work in the terminal</summary>
+      <div>
+        <p data-os="mac">Click inside the terminal first, then press <kbd>⌘ Cmd</kbd> + <kbd>V</kbd>. If that still fails, just type the command by hand. It is short.</p>
+        <p data-os="pc">Click inside the terminal first, then press <kbd>Ctrl</kbd> + <kbd>V</kbd>. If the browser asks to allow paste, click <b>Allow</b>. You can also right-click inside the terminal and choose <b>Paste</b>, or just type the command by hand.</p>
+      </div>
+    </details>
+  </section>
+</div>
+
+<script>
+(function () {
+  var app = document.getElementById('app');
+  function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  // Computer choice: remembered pick, else a best guess from the browser.
+  function setOS(os) {
+    app.setAttribute('data-os', os);
+    document.querySelectorAll('[data-pick]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-pick') === os));
+    });
+    set('zinc-setup-os', os);
+  }
+  var guess = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent) ? 'mac' : 'pc';
+  setOS(get('zinc-setup-os') || guess);
+  document.querySelectorAll('[data-pick]').forEach(function (b) {
+    b.addEventListener('click', function () { setOS(b.getAttribute('data-pick')); });
+  });
+
+  // Step checkboxes and the progress bar.
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.done input'));
+  function refresh() {
+    var n = 0;
+    boxes.forEach(function (b) {
+      b.closest('.step').classList.toggle('is-done', b.checked);
+      if (b.checked) n++;
+    });
+    document.getElementById('bar').style.width = (n / boxes.length * 100) + '%';
+    document.getElementById('count').textContent = n + ' of ' + boxes.length + ' done';
+    document.getElementById('finish').hidden = n !== boxes.length;
+  }
+  boxes.forEach(function (b) {
+    b.checked = get('zinc-setup-' + b.id) === '1';
+    b.addEventListener('change', function () { set('zinc-setup-' + b.id, b.checked ? '1' : '0'); refresh(); });
+  });
+  refresh();
+
+  // Copy buttons.
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.getAttribute('data-copy');
+      function ok() { btn.textContent = 'Copied'; btn.classList.add('ok'); setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1600); }
+      function fallback() {
+        var code = btn.previousElementSibling, r = document.createRange();
+        r.selectNodeContents(code);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        btn.textContent = 'Selected';
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok, fallback);
+      } else { fallback(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
