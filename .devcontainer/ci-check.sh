@@ -28,6 +28,11 @@ npm run --silent witness -- "$VISA" || fail=1
 step "agent browser (Playwright MCP, headless) opens the store"
 node scripts/agent-browser-probe.mjs || fail=1
 
+step "cydeo login waits for approval instead of crashing (no xdg-open in a Codespace)"
+timeout 15 cydeo login </dev/null > /tmp/login.log 2>&1; rc=$?
+grep -E 'device|code' /tmp/login.log | head -3
+if [ "$rc" -eq 124 ]; then echo "PASS cydeo login is waiting for approval"; else echo "FAIL cydeo login exited $rc"; tail -5 /tmp/login.log; fail=1; fi
+
 step "doctor"
 npm run --silent doctor || true
 

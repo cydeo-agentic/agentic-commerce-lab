@@ -1,0 +1,6 @@
+#!/bin/sh
+# Installed as /usr/local/bin/xdg-open in the Codespace. The container has no desktop, so there is no real xdg-open,
+# and `cydeo login` crashes (spawn xdg-open ENOENT) before it can wait for approval. In the VS Code terminal,
+# $BROWSER opens the link in the student's own browser; anywhere else this does nothing and the CLI prints the link.
+if [ -n "${BROWSER:-}" ]; then exec "$BROWSER" "$@"; fi
+exit 0

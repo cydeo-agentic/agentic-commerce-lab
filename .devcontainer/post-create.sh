@@ -10,6 +10,8 @@ npx playwright install --with-deps chromium
 
 echo "==> CYDEO CLI (the agent; signs in with your CYDEO account)"
 npm install -g @cydeo/cli@0.1.6
+# `cydeo login` opens the browser with xdg-open, which a Codespace lacks; without this it crashes before "Logged in."
+sudo install -m 755 .devcontainer/xdg-open /usr/local/bin/xdg-open
 
 echo "==> Pre-download the agent's browser tool (and the Chromium build it expects) so class never waits on it"
 npx -y @playwright/mcp@latest --help >/dev/null 2>&1 || true
