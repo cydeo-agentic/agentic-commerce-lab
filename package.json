@@ -19,6 +19,7 @@
     "test": "playwright test",
     "test:smoke": "playwright test tests/smoke",
     "report": "playwright show-report --host 0.0.0.0",
+    "watch": "playwright test --ui-host=0.0.0.0 --ui-port=8080",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "gate": "npm run --silent lint && npm run --silent typecheck",

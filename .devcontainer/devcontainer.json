@@ -17,9 +17,10 @@
   },
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "postAttachCommand": "npm run --silent doctor -- --brief || true",
-  "forwardPorts": [3000, 9323],
+  "forwardPorts": [3000, 8080, 9323],
   "portsAttributes": {
     "3000": { "label": "Zinc Store", "onAutoForward": "notify" },
+    "8080": { "label": "Playwright UI (npm run watch)", "onAutoForward": "openBrowser" },
     "9323": { "label": "Playwright report", "onAutoForward": "openBrowser" }
   },
   "customizations": {

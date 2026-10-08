@@ -33,6 +33,11 @@ timeout 15 cydeo login </dev/null > /tmp/login.log 2>&1; rc=$?
 grep -E 'device|code' /tmp/login.log | head -3
 if [ "$rc" -eq 124 ]; then echo "PASS cydeo login is waiting for approval"; else echo "FAIL cydeo login exited $rc"; tail -5 /tmp/login.log; fail=1; fi
 
+step "npm run watch serves Playwright UI mode on port 8080"
+(timeout 90 npm run --silent watch > /tmp/watch.log 2>&1 &)
+code=000; for i in $(seq 1 60); do code=$(curl -s -o /dev/null -w '%{http_code}' localhost:8080); [ "$code" != "000" ] && break; sleep 1; done
+if [ "$code" = "200" ] || [ "$code" = "302" ]; then echo "PASS Playwright UI answered HTTP $code"; else echo "FAIL Playwright UI did not answer (HTTP $code)"; tail -5 /tmp/watch.log; fail=1; fi
+
 step "doctor"
 npm run --silent doctor || true
 
