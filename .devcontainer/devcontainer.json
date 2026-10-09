@@ -6,8 +6,8 @@
     "ghcr.io/devcontainers/features/sshd:1": {}
   },
   "hostRequirements": {
-    "cpus": 2,
-    "memory": "8gb"
+    "cpus": 4,
+    "memory": "16gb"
   },
   "containerEnv": {
     "BASE_URL": "http://localhost:3000",
