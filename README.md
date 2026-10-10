@@ -37,3 +37,7 @@ Then open [labs/README.md](labs/README.md).
 The Zinc Store has bugs **on purpose**. Your job is not to make the agent say "it works". Your job is to find out what is true, prove it, and report it.
 
 No real money moves: the store only accepts sandbox (test) keys and refuses live keys.
+
+## License
+
+© 2026 CYDEO. All rights reserved. CYDEO students may use this lab for their own learning and show their own work with credit to CYDEO. Teaching, training or reselling with it needs written permission. See [LICENSE](LICENSE).

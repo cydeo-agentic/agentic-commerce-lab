@@ -1,0 +1,28 @@
+CYDEO Agentic QA Lab License
+
+© 2026 CYDEO. All rights reserved.
+
+This lab is public so CYDEO students can use it and so anyone can see how
+CYDEO teaches. Public does not mean free to reuse: no open-source license is
+granted.
+
+What you may do
+- Anyone may view this repository on GitHub.
+- CYDEO students, current and former, may run, change and keep the lab for
+  their own learning, and may show their own work in a portfolio or a job
+  interview, with credit to the CYDEO Agentic QA program.
+
+What you may not do without written permission from CYDEO
+- Use this lab, or anything adapted from it, to teach, train or assess other
+  people, including in any course, bootcamp, workshop or paid service.
+- Copy or redistribute the lab, or publish it as a template or as course
+  material.
+- Publish the lab's reference solutions, or a walkthrough of its planted bugs.
+
+Third-party software the lab installs (through npm and the dev container)
+stays under its own licenses.
+
+The lab is provided "as is", without warranty of any kind. CYDEO is not liable
+for any claim, damages or other liability arising from its use.
+
+Permission requests: www.cydeo.com
