@@ -41,6 +41,9 @@ const upstreamSha = git('rev-parse', 'FETCH_HEAD').stdout.trim();
 const show = (rev, path) => { const r = git('show', `${rev}:${path}`); return r.status === 0 ? r.stdout : null; };
 // The commit your Codespace started from: a file still equal to it there is one you never changed.
 const roots = git('rev-list', '--max-parents=0', 'HEAD').stdout.trim().split('\n').filter(Boolean);
+// Also untouched: a file identical to any version of it the lab ever shipped (the fetch brings that history).
+const shipped = (path) => new Set(git('log', '--format=%H', 'FETCH_HEAD', '--', path).stdout.trim().split('\n').filter(Boolean)
+  .map((c) => git('rev-parse', '--verify', '--quiet', `${c}:${path}`).stdout.trim()).filter(Boolean));
 const manifest = readJson(MANIFEST) ?? { files: {} };
 
 const report = { added: [], updated: [], kept: [], current: 0 };
@@ -57,7 +60,7 @@ for (const path of files) {
   }
   const mine = readFileSync(path, 'utf8');
   if (mine === next) { manifest.files[path] = sha(next); report.current++; continue; }
-  const pristine = manifest.files[path] === sha(mine) || roots.some((r) => show(r, path) === mine);
+  const pristine = manifest.files[path] === sha(mine) || roots.some((r) => show(r, path) === mine) || shipped(path).has(git('hash-object', path).stdout.trim());
   if (pristine) {
     writeFileSync(path, next);
     manifest.files[path] = sha(next);
