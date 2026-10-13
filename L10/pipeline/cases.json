@@ -1,0 +1,225 @@
+[
+  {
+    "id": "TC-01",
+    "title": "Cart quantity can be increased to the maximum of 10",
+    "rule": "CART-1",
+    "testType": "boundary",
+    "priority": "P2",
+    "testIds": ["catalog-case-add-button", "cart-case-qty", "cart-case-increase-button", "header-cart-link"],
+    "preconditions": "Store is running at http://localhost:3000 and the cart is empty. Use the 'case' SKU for this test.",
+    "steps": [
+      "Navigate to / and click catalog-case-add-button to add the 'case' product to the cart.",
+      "Click header-cart-link to go to /cart.",
+      "Verify cart-case-qty reads 1.",
+      "Click cart-case-increase-button nine times to raise the quantity to 10."
+    ],
+    "expected": "The element cart-case-qty shows the exact text '10'."
+  },
+  {
+    "id": "TC-02",
+    "title": "Cart quantity cannot exceed 10 when increase button is clicked",
+    "rule": "CART-1",
+    "testType": "boundary",
+    "priority": "P2",
+    "testIds": ["catalog-case-add-button", "cart-case-qty", "cart-case-increase-button", "header-cart-link"],
+    "preconditions": "Store is running at http://localhost:3000 and the cart is empty.",
+    "steps": [
+      "Navigate to / and click catalog-case-add-button to add the 'case' product.",
+      "Click header-cart-link to go to /cart.",
+      "Click cart-case-increase-button nine times to reach quantity 10 (verify cart-case-qty reads '10').",
+      "Click cart-case-increase-button one more time, attempting to reach 11."
+    ],
+    "expected": "The element cart-case-qty still shows the exact text '10'; the quantity does not increase to 11."
+  },
+  {
+    "id": "TC-03",
+    "title": "Shipping is $7.99 when post-discount subtotal is exactly $99.99 (just below free-shipping threshold)",
+    "rule": "PRICE-3",
+    "testType": "boundary",
+    "priority": "P1",
+    "testIds": ["cart-subtotal", "cart-shipping", "cart-tax", "cart-total"],
+    "preconditions": "Cart is empty. Add products (reading each unit price from the catalog via data-testid catalog-<sku>-price) until the cart subtotal is exactly 9999 cents ($99.99) with no coupon applied.",
+    "steps": [
+      "Navigate to / and read unit prices from catalog-<sku>-price elements for available SKUs.",
+      "Add products and adjust quantities until cart-subtotal shows exactly '$99.99' (no coupon applied).",
+      "Navigate to /cart and read cart-shipping.",
+      "Read cart-tax: 6% of 9999 cents = 599.94 cents, rounded half up = 600 cents = $6.00.",
+      "Read cart-total: 9999 + 799 + 600 = 11398 cents = $113.98."
+    ],
+    "expected": "cart-shipping shows '$7.99', cart-tax shows '$6.00', and cart-total shows '$113.98'."
+  },
+  {
+    "id": "TC-04",
+    "title": "Shipping is free when post-discount subtotal is exactly $100.00 (at free-shipping threshold)",
+    "rule": "PRICE-3",
+    "testType": "boundary",
+    "priority": "P1",
+    "testIds": ["cart-subtotal", "cart-shipping", "cart-tax", "cart-total"],
+    "preconditions": "Cart is empty. Add products until the cart subtotal is exactly 10000 cents ($100.00) with no coupon applied.",
+    "steps": [
+      "Navigate to / and read unit prices from catalog-<sku>-price elements for available SKUs.",
+      "Add products and adjust quantities until cart-subtotal shows exactly '$100.00' (no coupon applied).",
+      "Navigate to /cart and read cart-shipping.",
+      "Read cart-tax: 6% of 10000 cents = 600 cents = $6.00.",
+      "Read cart-total: 10000 + 0 + 600 = 10600 cents = $106.00."
+    ],
+    "expected": "cart-shipping shows '$0.00', cart-tax shows '$6.00', and cart-total shows '$106.00'."
+  },
+  {
+    "id": "TC-05",
+    "title": "Coupon 'agent10' (lowercase) applies a 10% discount, confirming case-insensitivity",
+    "rule": "PRICE-2",
+    "testType": "functional",
+    "priority": "P1",
+    "testIds": ["cart-coupon-input", "cart-coupon-apply-button", "cart-coupon-message", "cart-subtotal", "cart-discount", "cart-shipping", "cart-tax", "cart-total"],
+    "preconditions": "Cart has products with a subtotal of exactly $100.00 (10000 cents) and no coupon applied yet.",
+    "steps": [
+      "Navigate to /cart.",
+      "Type 'agent10' (lowercase) into cart-coupon-input.",
+      "Click cart-coupon-apply-button.",
+      "Read cart-discount: 10% of 10000 = 1000 cents = $10.00.",
+      "Post-discount subtotal = 10000 - 1000 = 9000 cents = $90.00, below $100.00 so shipping = 799 cents = $7.99.",
+      "Read cart-tax: 6% of 9000 = 540 cents = $5.40.",
+      "Read cart-total: 9000 + 799 + 540 = 10339 cents = $103.39."
+    ],
+    "expected": "cart-coupon-message shows a success confirmation, cart-discount shows '$10.00', cart-shipping shows '$7.99', cart-tax shows '$5.40', and cart-total shows '$103.39'."
+  },
+  {
+    "id": "TC-06",
+    "title": "Invalid coupon code is rejected and no discount is applied",
+    "rule": "PRICE-2",
+    "testType": "negative",
+    "priority": "P2",
+    "testIds": ["cart-coupon-input", "cart-coupon-apply-button", "cart-coupon-message", "cart-discount"],
+    "preconditions": "Cart has at least one product and no coupon currently applied.",
+    "steps": [
+      "Navigate to /cart.",
+      "Type 'SAVE50' into cart-coupon-input.",
+      "Click cart-coupon-apply-button.",
+      "Read cart-coupon-message.",
+      "Read cart-discount to confirm no discount was applied."
+    ],
+    "expected": "cart-coupon-message shows an error indicating the coupon is invalid, and cart-discount shows '$0.00'."
+  },
+  {
+    "id": "TC-07",
+    "title": "Tax is 6% of post-discount subtotal with half-up rounding at a fractional-cent boundary",
+    "rule": "PRICE-4",
+    "testType": "boundary",
+    "priority": "P2",
+    "testIds": ["cart-subtotal", "cart-discount", "cart-tax"],
+    "preconditions": "Cart has products with a subtotal of exactly $4.25 (425 cents) and no coupon applied.",
+    "steps": [
+      "Navigate to / and add products until cart-subtotal reads exactly '$4.25'.",
+      "Navigate to /cart.",
+      "Read cart-tax: 6% of 425 cents = 25.50 cents, rounded half up = 26 cents = $0.26."
+    ],
+    "expected": "cart-tax shows '$0.26' (demonstrating half-up rounding of 25.50 cents to 26 cents)."
+  },
+  {
+    "id": "TC-08",
+    "title": "Declined card shows 'Your card was declined.' on checkout",
+    "rule": "PAY-2",
+    "testType": "negative",
+    "priority": "P1",
+    "testIds": ["catalog-case-add-button", "header-cart-link", "cart-checkout-button", "checkout-name-input", "checkout-email-input", "checkout-card-declined", "checkout-pay-button", "checkout-error-alert"],
+    "preconditions": "Cart is empty. A fresh e2e- email is available, e.g. e2e-decline-20261013@example.com.",
+    "steps": [
+      "Navigate to / and click catalog-case-add-button to add a product.",
+      "Click header-cart-link, then click cart-checkout-button to go to /checkout.",
+      "Type a name into checkout-name-input.",
+      "Type 'e2e-decline-20261013@example.com' into checkout-email-input.",
+      "Select checkout-card-declined (pm_card_visa_chargeDeclined).",
+      "Click checkout-pay-button.",
+      "Read checkout-error-alert."
+    ],
+    "expected": "checkout-error-alert shows the exact text 'Your card was declined.'"
+  },
+  {
+    "id": "TC-09",
+    "title": "Insufficient-funds card shows 'Your card has insufficient funds.' on checkout",
+    "rule": "PAY-2",
+    "testType": "negative",
+    "priority": "P1",
+    "testIds": ["catalog-case-add-button", "header-cart-link", "cart-checkout-button", "checkout-name-input", "checkout-email-input", "checkout-card-insufficient", "checkout-pay-button", "checkout-error-alert"],
+    "preconditions": "Cart is empty. A fresh e2e- email is available, e.g. e2e-insufficient-20261013@example.com.",
+    "steps": [
+      "Navigate to / and click catalog-case-add-button to add a product.",
+      "Click header-cart-link, then click cart-checkout-button to go to /checkout.",
+      "Type a name into checkout-name-input.",
+      "Type 'e2e-insufficient-20261013@example.com' into checkout-email-input.",
+      "Select checkout-card-insufficient (pm_card_visa_chargeDeclinedInsufficientFunds).",
+      "Click checkout-pay-button.",
+      "Read checkout-error-alert."
+    ],
+    "expected": "checkout-error-alert shows the exact text 'Your card has insufficient funds.'"
+  },
+  {
+    "id": "TC-10",
+    "title": "Expired card shows 'Your card has expired.' on checkout",
+    "rule": "PAY-2",
+    "testType": "negative",
+    "priority": "P1",
+    "testIds": ["catalog-case-add-button", "header-cart-link", "cart-checkout-button", "checkout-name-input", "checkout-email-input", "checkout-card-expired", "checkout-pay-button", "checkout-error-alert"],
+    "preconditions": "Cart is empty. A fresh e2e- email is available, e.g. e2e-expired-20261013@example.com.",
+    "steps": [
+      "Navigate to / and click catalog-case-add-button to add a product.",
+      "Click header-cart-link, then click cart-checkout-button to go to /checkout.",
+      "Type a name into checkout-name-input.",
+      "Type 'e2e-expired-20261013@example.com' into checkout-email-input.",
+      "Select checkout-card-expired (pm_card_chargeDeclinedExpiredCard).",
+      "Click checkout-pay-button.",
+      "Read checkout-error-alert."
+    ],
+    "expected": "checkout-error-alert shows the exact text 'Your card has expired.'"
+  },
+  {
+    "id": "TC-11",
+    "title": "Cart contents survive a declined payment",
+    "rule": "CART-2",
+    "testType": "functional",
+    "priority": "P2",
+    "testIds": ["catalog-case-add-button", "catalog-charger-add-button", "header-cart-link", "cart-checkout-button", "checkout-name-input", "checkout-email-input", "checkout-card-declined", "checkout-pay-button", "checkout-error-alert", "cart-case-line", "cart-charger-line", "cart-case-qty", "cart-charger-qty"],
+    "preconditions": "Cart is empty. A fresh e2e- email is available, e.g. e2e-persist-20261013@example.com.",
+    "steps": [
+      "Navigate to / and click catalog-case-add-button, then catalog-charger-add-button to add two products.",
+      "Click header-cart-link and verify cart-case-line and cart-charger-line are visible.",
+      "Click cart-checkout-button to go to /checkout.",
+      "Type a name into checkout-name-input and 'e2e-persist-20261013@example.com' into checkout-email-input.",
+      "Select checkout-card-declined and click checkout-pay-button.",
+      "Wait for checkout-error-alert to show the decline message.",
+      "Navigate back to /cart."
+    ],
+    "expected": "Both cart-case-line and cart-charger-line are still visible, and cart-case-qty and cart-charger-qty each still show their original quantities (1)."
+  },
+  {
+    "id": "TC-12",
+    "title": "Confirmation page shows 'Processing payment...' when order is still PENDING after checkout",
+    "rule": "ORD-1,ORD-5",
+    "testType": "e2e",
+    "priority": "P1",
+    "testIds": ["catalog-case-add-button", "header-cart-link", "cart-checkout-button", "checkout-name-input", "checkout-email-input", "checkout-card-visa", "checkout-pay-button", "order-status", "order-number", "order-total", "checkout-total"],
+    "preconditions": "Cart is empty. A fresh e2e- email is available, e.g. e2e-pending-20261013@example.com. NOTE: Defect ZTM-5 means Stripe webhooks may not arrive automatically, so the order may stay PENDING; this test verifies the PENDING confirmation-page state.",
+    "steps": [
+      "Navigate to / and click catalog-case-add-button to add a product.",
+      "Click header-cart-link, then click cart-checkout-button to go to /checkout.",
+      "Read checkout-total and note the exact dollar amount shown.",
+      "Type a name into checkout-name-input and 'e2e-pending-20261013@example.com' into checkout-email-input.",
+      "Select checkout-card-visa (pm_card_visa) and click checkout-pay-button.",
+      "On the order confirmation page, read order-number (the new order id), order-status, and order-total."
+    ],
+    "expected": "order-status shows 'Processing payment...' (PENDING state per ORD-5), and order-total matches the checkout-total amount read in step 3."
+  },
+  {
+    "id": "TC-99",
+    "title": "Checkout feels fast",
+    "testType": "functional",
+    "priority": "P3",
+    "testIds": [],
+    "preconditions": "Store running",
+    "steps": [
+      "Check out a cart"
+    ],
+    "expected": "It works"
+  }
+]

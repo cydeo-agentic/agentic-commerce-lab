@@ -1,0 +1,15 @@
+[
+  {"id":"TC-01","verdict":"accept","reason":"CART-1 rule exists, all test ids valid, expected result is exact text match on quantity."},
+  {"id":"TC-02","verdict":"accept","reason":"CART-1 rule exists, all test ids valid, expected result is exact text match verifying boundary behavior."},
+  {"id":"TC-03","verdict":"accept","reason":"PRICE-3 rule exists, all test ids valid, expected results verified: shipping $7.99, tax $6.00, total $113.98 match computed values for $99.99 subtotal."},
+  {"id":"TC-04","verdict":"accept","reason":"PRICE-3 rule exists, all test ids valid, expected results verified: shipping $0.00, tax $6.00, total $106.00 match computed values for $100.00 subtotal."},
+  {"id":"TC-05","verdict":"accept","reason":"PRICE-2 rule exists, all test ids valid, expected results verified: discount $10.00, shipping $7.99, tax $5.40, total $103.39 match computed values for 10% coupon on $100.00."},
+  {"id":"TC-06","verdict":"accept","reason":"PRICE-2 rule exists, all test ids valid, expected results are exact: error message and $0.00 discount."},
+  {"id":"TC-07","verdict":"accept","reason":"PRICE-4 rule exists, all test ids valid, expected result verified: tax $0.26 matches half-up rounding of 25.50 cents to 26 cents."},
+  {"id":"TC-08","verdict":"accept","reason":"PAY-2 rule exists, all test ids valid, expected result is exact error message 'Your card was declined.'"},
+  {"id":"TC-09","verdict":"accept","reason":"PAY-2 rule exists, all test ids valid, expected result is exact error message 'Your card has insufficient funds.'"},
+  {"id":"TC-10","verdict":"accept","reason":"PAY-2 rule exists, all test ids valid, expected result is exact error message 'Your card has expired.'"},
+  {"id":"TC-11","verdict":"accept","reason":"CART-2 rule exists, all test ids valid, expected result is verifiable: cart lines and quantities persist after declined payment."},
+  {"id":"TC-12","verdict":"accept","reason":"ORD-1 and ORD-5 rules exist, all test ids valid, expected results are exact: 'Processing payment...' status and total amount match."},
+  {"id":"TC-99","verdict":"reject","reason":"No rule field present; case cites no PRD requirement."}
+]
