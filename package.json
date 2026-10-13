@@ -28,7 +28,12 @@
     "claim": "node scripts/claim.mjs",
     "contract": "node scripts/contract.mjs",
     "trace": "node scripts/agent-trace.mjs",
-    "catchup": "node scripts/catchup.mjs"
+    "catchup": "node scripts/catchup.mjs",
+    "connect": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env scripts/connect.mjs",
+    "update": "node scripts/lab-update.mjs",
+    "rtm": "node scripts/rtm.mjs",
+    "review": "node scripts/review.mjs",
+    "cost": "node scripts/cost.mjs"
   },
   "dependencies": {
     "express": "^5.2.1",

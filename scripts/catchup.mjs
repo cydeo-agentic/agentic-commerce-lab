@@ -3,6 +3,7 @@
  * Fell behind? Get the reference solution for one lab step and keep going.
  * Run: npm run catchup -- L06      (the prove-a-defect skill)
  *      npm run catchup -- L07      (the get_rules tool and the upgraded skill)
+ *      npm run catchup -- L10      (the reference output of every L10 step, so you can continue from any step)
  * References live on the repository's `catchup` branch, not in your working tree, so your agent never reads them
  * while you build your own. Nothing you wrote is overwritten: if a file exists, the reference goes next to it.
  */
@@ -16,6 +17,13 @@ const STEPS = {
   L07: [
     { ref: 'L07/server.ts', to: 'mcp/ledger/server.ts', wire: true },
     { ref: 'L07/prove-a-defect/SKILL.md', to: '.agents/skills/prove-a-defect/SKILL.md', allow: 'Skill(prove-a-defect)' },
+  ],
+  // Outputs only. Your proof still needs your own agents' runs: check:lab reads the runtime's recordings.
+  L10: [
+    { ref: 'L10/team-context.md', to: 'team-context.md' },
+    { ref: 'L10/pipeline/test-plan.md', to: 'pipeline/test-plan.md' },
+    { ref: 'L10/pipeline/cases.json', to: 'pipeline/cases.json' },
+    { ref: 'L10/pipeline/evaluation.json', to: 'pipeline/evaluation.json' },
   ],
 };
 

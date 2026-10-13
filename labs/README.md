@@ -12,7 +12,10 @@ Every lab ends with a proof check: `npm run check:lab -- <lab>`. The check reads
 | [L05 Build one tool](L05-build-a-tool.md) | Fri Oct 9 · Loop 3 | you give the agent a new hand (an MCP tool) and prove it really used it |
 | [L06 Skills](L06-skills.md) | Thu Oct 8 · second half | the agent picks a skill by its description; your own skill makes its defect reports complete, cheaper and consistent; you review a stranger's skill before installing it |
 | [L07 MCP deep dive](L07-mcp-deep-dive.md) | Fri Oct 9 · second half | a second read-only tool beats a poisoned chat message; your skill and your tool work in one session; you know when not to use MCP |
+| [L10 Context and cited test cases](L10-context-and-cited-cases.md) | Thu Oct 15 | five agents, each with its own model and tools: a read-only researcher, a planner, a case writer and a second agent that judges the cases; you approve them; only approved cases reach ZincTM |
 
-Two proofs you can always run: `npm run trace` shows what the agent really did (skills loaded, MCP tools called), read from the agent runtime's own recordings. `npm run catchup -- L06` or `L07` gives you the reference solution if you fall behind.
+Two proofs you can always run: `npm run trace` shows what the agent really did (models, subagents, skills loaded, MCP tools called), read from the agent runtime's own recordings, and `npm run cost` prices it. `npm run catchup -- L06`, `L07` or `L10` gives you the reference solution if you fall behind.
+
+New labs reach the Codespace you already have with `npm run update`. Check every login and connection before class with `npm run connect`.
 
 Two terminals all class: **terminal 1** runs `npm run dev` (leave it running). **Terminal 2** is for the agent and the checks.

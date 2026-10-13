@@ -5,8 +5,36 @@
       "Bash(cd)",
       "Bash(npm run witness)",
       "Bash(npm run rules)",
-      "Bash(npm run trace)"
+      "Bash(npm run trace)",
+      "Agent(context-researcher)",
+      "Agent(test-plan-creator)",
+      "Agent(test-case-creator)",
+      "Agent(case-evaluator)",
+      "Agent(publisher)",
+      "Bash(npm run rtm)",
+      "Bash(npm run cost)",
+      "Bash(npm run check:lab)",
+      "mcp__zinctm__tm_whoami",
+      "mcp__zinctm__tm_list_test_cases",
+      "mcp__zinctm__tm_list_defects",
+      "mcp__zinctm__tm_get_defect",
+      "mcp__zinctm__tm_list_comments",
+      "mcp__zinctm__tm_create_test_case"
+    ],
+    "deny": [
+      "Edit(.qwen/**)",
+      "Write(.qwen/**)",
+      "Edit(pipeline/approvals.json)",
+      "Write(pipeline/approvals.json)",
+      "Read(.env)",
+      "Bash(rm *)",
+      "Bash(git clean *)",
+      "Bash(git reset --hard*)",
+      "Bash(git checkout .*)"
     ]
+  },
+  "memory": {
+    "enableAutoSkill": false
   },
   "$version": 4
 }

@@ -8,7 +8,9 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
-import { agentSessions, mcpCalls, skillsLoaded } from './lib/agent-trace.mjs';
+import { agentDefinitions, agentSessions, allSubagentRuns, costOf, isWriteTool, mcpCalls, money, skillsLoaded } from './lib/agent-trace.mjs';
+import { P, caseProblems, caseRules, casesOf, readAgentJson } from './lib/pipeline.mjs';
+import { zinctmSession } from './lib/zinctm.mjs';
 
 const lab = (process.argv[2] ?? '').toUpperCase();
 const results = [];
@@ -244,12 +246,105 @@ function l07() {
   check('it names a job where you would not use MCP', /(not|wouldn't|would not|instead)/i.test(design) && /(script|api|curl|cli|command)/i.test(design));
 }
 
-const LABS = { L00: l00, L01: l01, L02: l02, L03: l03, L04: l04, L05: l05, L06: l06, L07: l07 };
+
+// L10: context and cited test cases. Every agent claim is checked against the runtime's recordings, the files the
+// plain scripts wrote, and ZincTM itself; never against what an agent said about its own work.
+async function l10() {
+  const defs = new Map(agentDefinitions().map((a) => [a.name, a]));
+  const runs = allSubagentRuns();
+  const ranAs = (name) => runs.filter((r) => r.name === name);
+  const toolsRun = (name) => ranAs(name).flatMap((r) => r.calls.filter((c) => c.ok).map((c) => c.name));
+  const ruleIds = (text) => new Set(String(text).match(/\b(CAT|CART|PRICE|PAY|ORD|CRM|WH)-\d+\b/g) ?? []);
+
+  // 1. The researcher: read-only by definition AND by recording, and it wrote down what it found.
+  const ctx = read(P.context);
+  check('team-context.md exists', ctx.length > 300, `${ctx.length} characters`);
+  const outline = ['what the product does', 'rules', 'test data', 'known bugs', 'open questions', 'sources'];
+  const missing = outline.filter((h) => !new RegExp(`^##[^\\n]*${h}`, 'im').test(ctx));
+  check('it follows the team outline', ctx && !missing.length, missing.length ? `missing: ${missing.join(', ')}` : 'all six sections');
+  check('it cites at least 5 PRD rules', ruleIds(ctx).size >= 5, `${ruleIds(ctx).size} rules`);
+  const sources = ctx.split(/^##[^\n]*sources/im)[1] ?? '';
+  check('its sources include PRD.md and ZincTM', /PRD\.md/.test(sources) && /tm_|zinctm/i.test(sources));
+  const rDef = defs.get('context-researcher');
+  const rWrites = (rDef?.tools ?? []).filter(isWriteTool);
+  check('the researcher is read-only by definition (no tool in its list can change anything)', rDef && !rWrites.length, rDef ? rWrites.join(', ') || `${rDef.tools.length} read tools` : 'no .qwen/agents/context-researcher.md');
+  check('the context-researcher agent ran (runtime recording)', ranAs('context-researcher').length > 0, `${ranAs('context-researcher').length} run(s)`);
+  const rUsed = toolsRun('context-researcher');
+  check('it ran only read tools (recording)', rUsed.length && !rUsed.some(isWriteTool), [...new Set(rUsed)].join(', '));
+  check('it read ZincTM (recording)', rUsed.some((n) => n.startsWith('mcp__zinctm__')));
+
+  // 2. The plan.
+  const plan = read(P.plan);
+  check('pipeline/test-plan.md exists', plan);
+  check('the plan traces at least 8 PRD rules', ruleIds(plan).size >= 8, `${ruleIds(plan).size} rules`);
+  const questions = (plan.split(/^##[^\n]*questions/im)[1] ?? '').split('\n').filter((l) => /\?\s*\**\s*$/.test(l));
+  check('the plan asks the team at least 2 questions', questions.length >= 2, `${questions.length} question(s)`);
+  check('the test-plan-creator agent wrote it (recording)', toolsRun('test-plan-creator').includes('write_file'));
+
+  // 3. The cases, including the uncited one you seeded.
+  const { data, error } = readAgentJson(P.cases);
+  const cases = casesOf(data);
+  check('pipeline/cases.json is valid JSON with at least 5 cases', !error && cases.length >= 5, error ?? `${cases.length} cases`);
+  check('the test-case-creator agent wrote it (recording)', toolsRun('test-case-creator').includes('write_file'));
+  const seeded = cases.find((c) => String(c.id).toUpperCase() === 'TC-99');
+  check('you seeded the uncited case TC-99 (step 3)', seeded && !caseRules(seeded).length);
+
+  // 4. The evaluator: separate agent, different model, and it caught what a script can prove is wrong.
+  const ev = new Map(casesOf(readAgentJson(P.evaluation).data).map((e) => [e.id, e]));
+  check('pipeline/evaluation.json has a verdict for every case', cases.length && cases.every((c) => ev.has(c.id)), `${ev.size} verdicts for ${cases.length} cases`);
+  check('the case-evaluator agent wrote it (recording)', toolsRun('case-evaluator').includes('write_file'));
+  const evModel = defs.get('case-evaluator')?.model;
+  const tcModel = defs.get('test-case-creator')?.model;
+  check('the evaluator runs on a different model than the case writer (fresh eyes)', evModel && tcModel && evModel !== tcModel, `${evModel} vs ${tcModel}`);
+  check('the evaluator rejected TC-99', ev.get(seeded?.id)?.verdict?.toLowerCase() === 'reject');
+  const problems = caseProblems(cases);
+  const uncited = cases.filter((c) => problems.get(c.id).some((p) => /rule/.test(p)));
+  check('every case that cites no real rule was rejected', uncited.every((c) => ev.get(c.id)?.verdict?.toLowerCase() === 'reject'), uncited.map((c) => c.id).join(', ') || 'none');
+  check('pipeline/rtm.md was rebuilt by npm run rtm after the evaluation', existsSync(P.rtm) && mtime(P.rtm) >= mtime(P.evaluation));
+
+  // 5. The human gate.
+  const ap = readAgentJson(P.approvals).data ?? {};
+  const decisions = ap.decisions ?? [];
+  check('pipeline/approvals.json was written by npm run review', ap.reviewer && ap.publishLabel && Array.isArray(ap.decisions));
+  const rejected = decisions.filter((d) => d.decision === 'reject');
+  const approved = decisions.filter((d) => d.decision === 'approve').map((d) => d.id);
+  check('you rejected at least one case, with a reason', rejected.length > 0 && rejected.every((d) => (d.reason ?? '').length >= 10), `${rejected.length} rejected`);
+  check('you approved at least 3 cases', approved.length >= 3, `${approved.length} approved`);
+  const bad = approved.filter((id) => { const c = cases.find((x) => x.id === id); return !c || problems.get(c.id).some((p) => /rule/.test(p)); });
+  check('no approved case is uncited', !bad.length, bad.join(', '));
+
+  // 6. The publisher: one write tool, used only for approved cases, and ZincTM agrees.
+  const pDef = defs.get('publisher');
+  const pWrites = (pDef?.tools ?? []).filter(isWriteTool);
+  check('the publisher has exactly one tool that changes anything: tm_create_test_case', pWrites.length === 1 && /tm_create_test_case$/.test(pWrites[0]), pWrites.join(', ') || 'none');
+  const pUsed = toolsRun('publisher');
+  check('the publisher created cases in ZincTM (recording)', pUsed.some((n) => /tm_create_test_case$/.test(n)), `${pUsed.filter((n) => /tm_create_test_case$/.test(n)).length} created`);
+  const z = await zinctmSession();
+  check('ZincTM sign-in with your cydeo login', z.ok, z.ok ? '' : `${z.step}: ${z.why}`);
+  if (z.ok && ap.publishLabel) {
+    const list = await z.get('/api/test-cases');
+    const mine = (list.data?.testCases ?? []).filter((t) => (t.labels ?? []).includes(ap.publishLabel));
+    const ids = new Set(mine.flatMap((t) => (t.labels ?? []).filter((l) => /^TC-\d+$/i.test(l)).map((l) => l.toUpperCase())));
+    const notThere = approved.filter((id) => !ids.has(String(id).toUpperCase()));
+    check('ZincTM holds every case you approved', approved.length && !notThere.length, notThere.length ? `missing: ${notThere.join(', ')}` : `${mine.length} case(s) labeled ${ap.publishLabel}`);
+    const leaked = rejected.filter((d) => ids.has(String(d.id).toUpperCase())).map((d) => d.id);
+    check('ZincTM holds none of the cases you rejected', !leaked.length, leaked.join(', '));
+    // ZincTM stores labels in lower case (price-3), so compare without case.
+    check('every published case carries its PRD rule as a label', mine.length && mine.every((t) => (t.labels ?? []).some((l) => /^(cat|cart|price|pay|ord|crm|wh)-\d+$/i.test(l))));
+  }
+
+  // What each agent cost, from the runtime's usage record (one model per agent, so a model row is an agent row).
+  const usage = {};
+  for (const s of agentSessions()) for (const [m, u] of Object.entries(s.usage?.models ?? {})) { const c = costOf(m, u); usage[m] = (usage[m] ?? 0) + (c.dollars ?? 0); }
+  for (const d of defs.values()) if (d.model) console.log(`Agent ${d.name.padEnd(19)} model ${d.model.padEnd(32)} ${ranAs(d.name).length} run(s)  ${money(usage[d.model] ?? 0)} so far (list price, npm run cost for detail)`);
+}
+
+const LABS = { L00: l00, L01: l01, L02: l02, L03: l03, L04: l04, L05: l05, L06: l06, L07: l07, L10: l10 };
 if (!LABS[lab]) {
   console.log(`Usage: npm run check:lab -- <${Object.keys(LABS).join('|')}>`);
   process.exit(2);
 }
-LABS[lab]();
+await LABS[lab]();
 console.log(`\nProof check ${lab}\n`);
 for (const r of results) console.log(`${r.ok ? 'PASS' : 'FAIL'}  ${r.name}${r.detail ? `  (${r.detail})` : ''}`);
 const failedCount = results.filter((r) => !r.ok).length;
