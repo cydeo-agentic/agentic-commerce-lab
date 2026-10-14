@@ -6,7 +6,7 @@
  *   1. nothing hides a failure: no test.skip, fixme, only or fail, no retries, no fixed waits
  *   2. every test is named after an approved case (TC-xx ...) and every test id is in .cydeo/contract.md
  *   3. every amount or status a test asserts comes from its approved case (or the catalog's prices), never from the app
- *   4. every amount in the case's expected result is asserted
+ *   4. every amount in the case's expected result is asserted, and every pricing test pays and checks order-total (PAY-1)
  *   5. after npm run drill: no test removed, and every assertion exactly as it was before the healer touched it
  * Exit code 1 if any check fails, so a CI job or a person can stop the merge.
  */
@@ -60,6 +60,10 @@ export function healGate() {
     for (const m of new Set(moneyIn(c.expected))) if (!asserted.has(m)) missing.push(`${t.caseId} never asserts ${m}`);
   }
   check('every asserted amount and status comes from the approved case, not from the app', !invented.length, invented.join('; '));
+  // Team rule PAY-1: a pricing case is proven only when the shopper pays what they were shown.
+  const unpaid = tests.filter((t) => cases.has(t.caseId) && /\bPRICE-\d/.test(JSON.stringify(cases.get(t.caseId).rule ?? cases.get(t.caseId).rules ?? ''))
+    && !(t.testIds.includes('checkout-pay-button') && t.testIds.includes('order-total') && t.assertions.some((a) => a.values.some((v) => moneyIn(v).length) && /order-total|total/i.test(a.subject)))).map((t) => t.caseId);
+  check('team rule PAY-1: every pricing test pays and checks order-total', !unpaid.length, unpaid.length ? `does not pay or never checks order-total: ${unpaid.join(', ')}` : '');
   check('every amount in the case\'s expected result is asserted', !missing.length, missing.join('; '));
 
   const basePath = `${L11_OUT}/heal-baseline.json`;

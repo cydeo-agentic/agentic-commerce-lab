@@ -46,6 +46,16 @@ export function readAgentJson(path) {
 }
 
 export const casesOf = (data) => (Array.isArray(data) ? data : Array.isArray(data?.cases) ? data.cases : []);
+
+/** The investigator's verdicts, whatever shape the model chose: [{ caseId: 'TC-04', verdict: 'product' | 'test', ... }]. */
+export function verdictsOf(data) {
+  const list = Array.isArray(data) ? data : [data?.verdicts, data?.failures, data?.results, data?.cases].find(Array.isArray) ?? [];
+  return list.filter((v) => v && typeof v === 'object').map((v) => {
+    const id = v.caseId ?? v.case ?? String(v.test ?? '').match(/\bTC-\d+\b/i)?.[0] ?? String(v.spec ?? v.file ?? '').match(/\btc-\d+/i)?.[0] ?? '';
+    const said = String(v.verdict ?? '');
+    return { ...v, caseId: String(id).toUpperCase(), verdict: /product/i.test(said) ? 'product' : /test/i.test(said) ? 'test' : said };
+  });
+}
 export const caseRules = (c) => [...new Set(String(Array.isArray(c.rule) ? c.rule.join(' ') : c.rule ?? c.rules ?? '').match(RULE_RE) ?? [])];
 
 // An expected result you can check: an exact amount, a quoted message, a status the ledger uses, an HTTP code or a test id.

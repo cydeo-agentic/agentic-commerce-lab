@@ -26,11 +26,12 @@ Before you write anything, read exactly these files: pipeline/cases.json, pipeli
    - Assert every exact value in the case's expected result: every amount, quoted message and status. Copy each value from the case. Never compute one from what the app shows.
    - Team rule PAY-1: a pricing case is proven only when the shopper pays what they were shown. If the case cites PRICE-1 to PRICE-5, after its own checks go to checkout, fill name and a unique email (l11-${Date.now()}@example.com), choose checkout-card-visa, pay, and assert that order-total shows the case's expected total.
    - Never use waitForTimeout, test.skip, test.fixme, test.only, test.fail or retries. Web-first assertions wait by themselves (give the order page { timeout: 20_000 }).
-3. Run the specs with exactly this command: npm run spec   (and only npm run spec or npm run catalog: other commands need a person's approval)
+3. Run the specs with exactly this command: npm run spec   (only npm run spec, npm run catalog and npm run heal:check run without a person's approval)
    Then read artifacts/L11/failures.md.
 4. Fix only your own mistakes: a wrong test id, a missing step, a syntax error. Then run npm run spec again. At most four runs in total.
    - A failure with "Kind: assertion" found the element and got a wrong value. Leave it red: it may be the bug we are hunting. Never change an expected value, never remove an assertion, never skip a test to make it pass.
    - The one exception: when a person has fixed and re-approved a case, bring its spec in line with the case. The case's "expected" in pipeline/approvals.json is the version the person approved; copy values from it.
-5. Link each spec to its case in ZincTM: call tm_link_script once per case with testCaseId = that case's zinctmId in pipeline/published.json, framework "playwright", filePath "tests/lab/L11/<file>", specName = the test title, automationStatus "automated". If the case has no zinctmId, skip its link and say so.
+5. Run npm run heal:check. Fix what it reports about how your specs are built (team rule PAY-1, test ids, waits, a missing amount). Never "fix" it by changing an expected value: values come only from the case as approved.
+6. Link each spec to its case in ZincTM: call tm_link_script once per case with testCaseId = that case's zinctmId in pipeline/published.json, framework "playwright", filePath "tests/lab/L11/<file>", specName = the test title, automationStatus "automated". If the case has no zinctmId, skip its link and say so.
 
 Reply with at most eight lines: each spec file, passed or failed (with its Kind), and whether it was linked.

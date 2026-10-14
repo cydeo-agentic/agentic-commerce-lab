@@ -26,10 +26,17 @@ Two design choices to notice:
 - **Agents may run a few lab scripts without asking** (`npm run spec`, `heal:check`, `trace`, `rtm`, `cost`, `check:lab`). Only `npm run spec` runs code an agent wrote, so it first refuses any spec that imports anything but `@playwright/test` or touches `process`, `require` or `eval`. Every other shell command still asks you. At work, a CI runner or a container does this job.
 - **The allow list is per session, not per agent.** `tm_link_script` and `tm_file_defect` run without asking for any agent in the session, the main one included. The agent files say who should use them; `npm run check:lab -- L11` proves from the recordings who did.
 
-## 1. Automate three cases (25 min)
+## 1. Look before you automate (5 min)
+Your cases were written yesterday without anyone looking at the screen. Open your store (the forwarded port of terminal 1). Put exactly $100.00 in the cart, then try AGENT10 on another cart. Write down exactly how the cart shows free shipping, a discount and the coupon message.
+
+Now read the expected results of your approved cases. A case that guesses a display format, such as `'$0.00'` where the store shows `Free`, will fail for the wrong reason.
+- **A format the PRD does not define** (how "free" is written, a minus sign, a message the PRD never quotes): fix the case now in `pipeline/cases.json`, then run `npm run review` in terminal 3. It asks only about the cases you changed.
+- **An amount the PRD defines:** never change it to match the screen. If the screen disagrees with the PRD, that is what today is for.
+
+## 2. Automate three cases (25 min)
 **Predict first:** which of your approved cases will go red, and why?
 ```
-Use the automation-engineer agent now, without reading anything first: it reads what it needs. Let it pick three approved cases itself, write the specs and run them. Do not edit its files.
+Use the automation-engineer agent now. Do not read or run anything yourself: it does. Let it pick three approved cases itself, write the specs and run them. Do not edit its files.
 ```
 Its team rule PAY-1 (read it in its agent file): a pricing case is proven only when the shopper pays what they were shown, so pricing specs end with a payment and check the order total.
 
@@ -45,27 +52,27 @@ Open `artifacts/L11/failures.md`. Every failure has a **Kind**:
 
 The trace, screenshot and page snapshot of every failure are kept in `artifacts/L11/evidence/`, where the next run cannot overwrite them.
 
-## 2. Product bug or test bug? (15 min)
+## 3. Product bug or test bug? (15 min)
 ```
-Use the failure-investigator agent. Save the JSON it returns, exactly as returned, to pipeline/investigation.json.
+Use the failure-investigator agent now. Do not read or run anything yourself. Save the JSON it returns, exactly as returned, to pipeline/investigation.json.
 ```
 Read each verdict and its reason. Who fixes what:
-- **A wrong locator:** the test-healer, in step 4.
+- **A wrong locator:** the test-healer, in step 5.
 - **A wrong case:** you. In our dry run, TC-04 expected shipping `'$0.00'`. The store shows `Free`, and the PRD says shipping is free without promising `$0.00`. The case held an assumption, so the test was wrong, not the store.
   1. Fix the case's `expected` in `pipeline/cases.json` yourself.
   2. Run `npm run review` in terminal 3. It asks only about cases that changed since you approved them.
   3. Then ask the agent:
 ```
-Use the automation-engineer agent to bring the spec of each case I changed in line with the case as I approved it, and run the specs.
+Use the automation-engineer agent now to bring the spec of each case I changed in line with the case as I approved it, and run the specs. Do not read or run anything yourself.
 ```
 The agent may change an expected value only after you change the case and approve it again. That is the human gate, working for a second time.
-- **A product bug:** the value is wrong and the case is right by the PRD. Go to step 3.
+- **A product bug:** the value is wrong and the case is right by the PRD. Go to step 4.
 
 In our dry run, the fixed TC-04 went red further down. The cart showed `$106.00`, but the order page said `$113.99`. That is a planted bug.
 
-## 3. File the defect (10 min)
+## 4. File the defect (10 min)
 ```
-Use the defect-reporter agent to file the product bugs. Save the JSON it returns, exactly as returned, to pipeline/defects.json.
+Use the defect-reporter agent now to file the product bugs. Do not read or run anything yourself. Save the JSON it returns, exactly as returned, to pipeline/defects.json.
 ```
 Open ZincTM, then Defects. Read your defect as the developer who must fix it. Check that it has:
 - steps;
@@ -76,7 +83,7 @@ Open ZincTM, then Defects. Read your defect as the developer who must fix it. Ch
 
 Open the case in ZincTM: its automation now points at your spec.
 
-## 4. Heal the locator, never the assertion (20 min)
+## 5. Heal the locator, never the assertion (20 min)
 A locator breaks when a test id changes. Simulate one in terminal 3:
 ```bash
 npm run drill
@@ -84,10 +91,10 @@ npm run spec
 ```
 **Predict first:** which test goes red, and will its error show an expected and a received value? Then, in terminal 2:
 ```
-Use the failure-investigator agent again. Save the JSON it returns, exactly as returned, to pipeline/investigation.json.
+Use the failure-investigator agent again. Do not read or run anything yourself. Save the JSON it returns, exactly as returned, to pipeline/investigation.json.
 ```
 ```
-Use the test-healer agent to heal the tests that fail for a test reason.
+Use the test-healer agent now to heal the tests that fail for a test reason. Do not read or run anything yourself.
 ```
 Then the gate, in terminal 3:
 ```bash
@@ -102,7 +109,7 @@ Your planted-bug test is still red. That is correct: a red test that tells the t
 
 **Stretch:** commit first (`git add tests/lab/L11 && git commit -qm "L11 specs"`). Then ask `Use the test-healer agent to make every test green.` Watch what it does, then run `npm run heal:check` and `git diff`. Whatever the agent did, the gate decides. Restore with `git checkout -- tests/lab/L11`.
 
-## 5. Price it, prove it (10 min)
+## 6. Price it, prove it (10 min)
 Leave the agent with `/quit` first: a session's usage is recorded only when it ends.
 ```bash
 npm run cost -- L11
@@ -128,7 +135,7 @@ Fill in [Review and cost](monday/L11-review-and-cost.md) for your team.
 |---|---|
 | `Agent ... requires user approval` or `Permission denied for tm_link_script` | `npm run update`, then restart `cydeo`: settings load only at start |
 | `npm run spec` says "Refused to run" | A spec imports something or touches the machine. Ask the automation-engineer to remove those lines |
-| The agent asks to run `npx playwright test ...` | Say No. Tell it: "Run only npm run spec" |
+| The agent asks to run `npx playwright test ...`, `ls` or another command | Say No. Saying No ends the agent's turn, so ask again with the same prompt. It ends in "Do not read or run anything yourself" for this reason |
 | Every test passes | Check that your pricing specs pay and check `order-total` (team rule PAY-1). Ask the automation-engineer to follow its rule |
 | A test times out at the order page | The store must be running in terminal 1 (`npm run dev`) |
 | `heal:check` fails on a value you changed in a case | Approve the change first: `npm run review` |

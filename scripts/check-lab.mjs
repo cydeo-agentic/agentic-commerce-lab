@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import { agentDefinitions, agentSessions, allSubagentRuns, costOf, finalText, isWriteTool, mcpCalls, money, skillsLoaded } from './lib/agent-trace.mjs';
-import { LAB_AGENTS, P, caseProblems, caseRules, casesOf, costPath, readAgentJson } from './lib/pipeline.mjs';
+import { LAB_AGENTS, P, caseProblems, caseRules, casesOf, costPath, readAgentJson, verdictsOf } from './lib/pipeline.mjs';
 import { L11_OUT, moneyIn, parseSpec, specFiles, unsafeReasons } from './lib/specs.mjs';
 import { healGate } from './heal-check.mjs';
 import { zinctmSession } from './lib/zinctm.mjs';
@@ -400,12 +400,12 @@ async function l11() {
   }
 
   // 4. The investigation: product or test, decided from the evidence by a separate agent.
-  const inv = casesOf(readAgentJson(P.investigation).data);
-  const verdict = first && inv.find((x) => x.test === first.title || String(x.caseId ?? '').toUpperCase() === first.title.split(' ')[0].toUpperCase());
+  const inv = verdictsOf(readAgentJson(P.investigation).data);
+  const verdict = first && inv.find((x) => x.caseId === first.title.split(' ')[0].toUpperCase());
   check('pipeline/investigation.json calls that failure a product bug and cites the rule', verdict && verdict.verdict === 'product' && /\b(CAT|CART|PRICE|PAY|ORD|CRM|WH)-\d+\b/.test(String(verdict.rule ?? '')), verdict ? `${verdict.verdict}, ${verdict.rule}` : 'no verdict for it');
   // The investigator only reads, so the main session saved its answer. The saved verdicts must be the ones it returned.
-  const returned = ranAs('failure-investigator').map((r) => { try { return casesOf(JSON.parse(finalText(r).trim().replace(/^```(?:json)?\s*/, '').replace(/```\s*$/, ''))); } catch { return []; } });
-  const same = (a, b) => a.length === b.length && a.every((x) => b.some((y) => String(y.caseId).toUpperCase() === String(x.caseId).toUpperCase() && y.verdict === x.verdict));
+  const returned = ranAs('failure-investigator').map((r) => { try { return verdictsOf(JSON.parse(finalText(r).trim().replace(/^```(?:json)?\s*/, '').replace(/```\s*$/, ''))); } catch { return []; } });
+  const same = (a, b) => a.length === b.length && a.every((x) => b.some((y) => y.caseId === x.caseId && y.verdict === x.verdict));
   check('pipeline/investigation.json holds exactly the verdicts the failure-investigator returned (recording)', inv.length && returned.some((r) => same(r, inv)), `${ranAs('failure-investigator').length} investigator run(s)`);
 
   // 5. The defect, filed by the one agent allowed to, and ZincTM agrees.
