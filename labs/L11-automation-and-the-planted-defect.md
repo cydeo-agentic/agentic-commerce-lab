@@ -18,7 +18,7 @@ Open `.qwen/agents/`. Four new files:
 |---|---|---|---|
 | automation-engineer | anthropic/claude-haiku-4.5 | `write_file`, `edit`, `run_shell_command`, `tm_link_script` | specs in `tests/lab/L11/`, each linked to its case in ZincTM |
 | failure-investigator | z-ai/glm-5.2 | **none** | its verdicts; the main session saves them as `pipeline/investigation.json` |
-| defect-reporter | google/gemini-3.1-flash-lite | `tm_file_defect`, nothing else | a defect in ZincTM |
+| defect-reporter | openai/gpt-oss-120b | `tm_file_defect`, nothing else | a defect in ZincTM |
 | test-healer | qwen/qwen3-235b-a22b-2507 | `edit`, `run_shell_command` | a repaired locator |
 
 Two design choices to notice:

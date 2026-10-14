@@ -53,7 +53,8 @@ export function healGate() {
     const allowed = new Set([...moneyIn(source), ...prices]);
     const statuses = new Set(source.match(STATUS_RE) ?? []);
     for (const a of t.assertions) for (const v of a.values) {
-      for (const m of moneyIn(v)) if (!allowed.has(m)) invented.push(`${t.caseId} asserts ${m}`);
+      // A negated check ("is not $0.00") claims no expected value, so only positive assertions must come from the case.
+      for (const m of moneyIn(v)) if (!allowed.has(m) && !a.negated) invented.push(`${t.caseId} asserts ${m}`);
       for (const s of String(v).match(STATUS_RE) ?? []) if (!statuses.has(s) && !a.negated) invented.push(`${t.caseId} asserts ${s}`);
     }
     const asserted = new Set(t.assertions.flatMap((a) => a.values.flatMap(moneyIn)));

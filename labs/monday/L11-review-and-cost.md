@@ -27,7 +27,7 @@ Measured, not guessed: the cost per run comes from our Oct 13–14 dry runs (`np
 | Case review (second agent) | claude-haiku-4.5 | $0.07 | 40 | $2.80 | 280 |
 | Automation (3 specs) | claude-haiku-4.5 | $0.28 | 40 | $11.20 | 1,120 |
 | Failure investigation | glm-5.2 | $0.03 | 20 | $0.60 | 60 |
-| Defect filing | gemini-3.1-flash-lite | $0.03 | 10 | $0.30 | 30 |
+| Defect filing | gpt-oss-120b | $0.03 | 10 | $0.30 | 30 |
 | Healing | qwen3-235b | $0.01 | 10 | $0.10 | 10 |
 | **Total** | | | | **$23.00** | **2,300** |
 
