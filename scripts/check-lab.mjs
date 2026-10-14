@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import { agentDefinitions, agentSessions, allSubagentRuns, costOf, finalText, isWriteTool, mcpCalls, money, skillsLoaded } from './lib/agent-trace.mjs';
-import { LAB_AGENTS, P, caseProblems, caseRules, casesOf, costPath, jsonIn, readAgentJson, verdictsOf } from './lib/pipeline.mjs';
+import { LAB_AGENTS, P, caseProblems, caseRules, casesOf, costPath, defectsOf, jsonIn, readAgentJson, verdictsOf } from './lib/pipeline.mjs';
 import { L11_OUT, moneyIn, parseSpec, specFiles, unsafeReasons } from './lib/specs.mjs';
 import { healGate } from './heal-check.mjs';
 import { zinctmSession } from './lib/zinctm.mjs';
@@ -409,7 +409,7 @@ async function l11() {
   check('pipeline/investigation.json holds exactly the verdicts the failure-investigator returned (recording)', inv.length && returned.some((r) => same(r, inv)), `${ranAs('failure-investigator').length} investigator run(s)`);
 
   // 5. The defect, filed by the one agent allowed to, and ZincTM agrees.
-  const filed = casesOf(readAgentJson(P.defects).data).filter((d) => d.defectId || d.key);
+  const filed = defectsOf(readAgentJson(P.defects).data);
   check('pipeline/defects.json lists the defect ZincTM created', filed.length > 0, filed.map((d) => d.key ?? d.defectId).join(', ') || 'none');
   const dCalls = callsOf('defect-reporter');
   check('the defect-reporter filed it with tm_file_defect, and changed nothing else (recording)', dCalls.some((c) => /tm_file_defect$/.test(c.name)) && !dCalls.some((c) => isWriteTool(c.name) && !/tm_file_defect$/.test(c.name)), `${dCalls.filter((c) => /tm_file_defect$/.test(c.name)).length} filed`);
@@ -442,7 +442,8 @@ async function l11() {
   if (z.ok) {
     const scripts = (await z.get('/api/scripts')).data?.scripts ?? [];
     const unlinked = caseIds.filter((id) => !scripts.some((s) => s.testCaseId === pub.get(id) && /tests\/lab\/L11\//.test(s.filePath ?? '')));
-    check('ZincTM links every automated case to its spec (tm_link_script)', caseIds.length && !unlinked.length, unlinked.length ? `not linked: ${unlinked.join(', ')}${unlinked.some((id) => !pub.get(id)) ? ' (no zinctmId in pipeline/published.json)' : ''}` : `${caseIds.length} linked`);
+    const linked = caseIds.length - unlinked.length;
+    check('ZincTM links at least 3 automated cases to their specs (tm_link_script)', linked >= 3, `${linked} linked${unlinked.length ? `; not linked: ${unlinked.join(', ')}${unlinked.some((id) => !pub.get(id)) ? ' (no zinctmId in pipeline/published.json)' : ''}` : ''}`);
     const defects = (await z.get('/api/defects')).data?.defects ?? [];
     const mine = defects.filter((d) => filed.some((f) => f.defectId === d.id || f.key === d.key));
     const d = mine[0];

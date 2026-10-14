@@ -44,7 +44,7 @@ Now read the expected results of your approved cases. A case that guesses a disp
 ```
 Use the automation-engineer agent now. Do not read or run anything yourself: it does. Let it pick three approved cases itself, write the specs and run them. Do not edit its files.
 ```
-Its team rule PAY-1 (read it in its agent file): a pricing case is proven only when the shopper pays what they were shown, so pricing specs end with a payment and check the order total.
+Its team rule PAY-1 (read it in its agent file): a pricing case is proven only when the shopper pays what they were shown. So every pricing spec ends with a payment, and checks that the order total equals the total the checkout page showed. `npm run heal:check` fails any pricing spec that skips it.
 
 Then prove what it did, without trusting its words:
 ```bash

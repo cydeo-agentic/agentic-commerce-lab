@@ -61,6 +61,13 @@ export function jsonIn(text) {
   return null;
 }
 
+/** The defects the reporter filed, whatever shape the model chose: [{ caseId, key, defectId }]. */
+export function defectsOf(data) {
+  const list = Array.isArray(data) ? data : Object.values(data ?? {}).find((v) => Array.isArray(v) && v.some((x) => x && typeof x === 'object')) ?? [];
+  return list.filter((d) => d && typeof d === 'object').map((d) => ({ ...d, caseId: String(d.caseId ?? d.case ?? String(d.title ?? '').match(/\bTC-\d+\b/i)?.[0] ?? '').toUpperCase(), key: d.key ?? d.defectKey ?? null, defectId: d.defectId ?? d.id ?? null }))
+    .filter((d) => d.key || d.defectId);
+}
+
 /** The investigator's verdicts, whatever shape the model chose: [{ caseId: 'TC-04', verdict: 'product' | 'test', ... }]. */
 export function verdictsOf(data) {
   const list = Array.isArray(data) ? data : [data?.verdicts, data?.failures, data?.results, data?.cases].find(Array.isArray) ?? [];

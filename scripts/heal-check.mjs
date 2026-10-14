@@ -62,7 +62,7 @@ export function healGate() {
   check('every asserted amount and status comes from the approved case, not from the app', !invented.length, invented.join('; '));
   // Team rule PAY-1: a pricing case is proven only when the shopper pays what they were shown.
   const unpaid = tests.filter((t) => cases.has(t.caseId) && /\bPRICE-\d/.test(JSON.stringify(cases.get(t.caseId).rule ?? cases.get(t.caseId).rules ?? ''))
-    && !(t.testIds.includes('checkout-pay-button') && t.testIds.includes('order-total') && t.assertions.some((a) => a.values.some((v) => moneyIn(v).length) && /order-total|total/i.test(a.subject)))).map((t) => t.caseId);
+    && !(t.testIds.includes('checkout-pay-button') && t.testIds.includes('order-total') && t.assertions.some((a) => /order-?total/i.test(a.subject)))).map((t) => t.caseId);
   check('team rule PAY-1: every pricing test pays and checks order-total', !unpaid.length, unpaid.length ? `does not pay or never checks order-total: ${unpaid.join(', ')}` : '');
   check('every amount in the case\'s expected result is asserted', !missing.length, missing.join('; '));
 
