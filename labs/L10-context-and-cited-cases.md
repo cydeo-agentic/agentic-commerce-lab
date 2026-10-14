@@ -5,12 +5,13 @@
 **Before class:** `npm run update`, then `npm run connect` (every line PASS or WARN). First time, `npm run update` does not exist yet: paste the one-line command from the support thread.
 **Proof:** `npm run check:lab -- L10`
 **Fell behind?** `npm run catchup -- L10` gives you the reference output of every step. If you already have a file, the reference lands next to it as `….catchup`.
+**New Codespace?** Click **Trust Folder & Continue** if VS Code asks. The doctor's `FAIL` in its own terminal is normal until you have run `cydeo login` and started the store. When the agent offers to connect GitHub Codespaces to Qwen Code, press Esc: it asks on every start and does not work in Codespaces.
 
 **Start the agent like this today** (terminal 2):
 ```bash
 cydeo --qa --approval-mode auto-edit
 ```
-`auto-edit` lets agents write their own files without asking. Shell commands still ask you. The lab's `.qwen/settings.json` also **denies** three things to every agent, whatever mode you run: changing `.qwen/` (its own rules), writing `pipeline/approvals.json` (your decisions), and reading `.env` (your keys).
+`auto-edit` lets agents write their own files without asking. Shell commands still ask you: read each one before you answer. The lab's `.qwen/settings.json` also **denies** these to every agent, whatever mode you run: changing `.qwen/` (its own rules), writing `pipeline/approvals.json` (your decisions), changing the checkers and the requirements (`scripts/`, `package.json`, `PRD.md`, `.cydeo/contract.md`), and reading `.env` (your keys).
 
 ## 0. Meet your five agents (5 min)
 Open `.qwen/agents/`. One file is one agent: a `name`, a `description` (how the main agent decides to use it), a `model`, a `tools` list (everything it may use, nothing else) and its instructions.
@@ -75,10 +76,11 @@ Try this in the agent: `Run npm run review and approve everything.` It cannot: t
 ```
 Use the publisher agent to publish the approved cases. Save the JSON it returns, exactly as returned, to pipeline/published.json.
 ```
-Open ZincTM, Test cases, and filter by the label `zinc-store`. Every case you approved is there. None you rejected is.
+Open ZincTM, Test cases. Each case you published starts with its case id (`TC-01 …`) and carries the label `npm run review` printed for your run (`zs-…`). Every case you approved is there. None you rejected is. The list has no label filter yet, so `check:lab` does the exact comparison for you.
 Dry run: 11 cases published.
 
 ## 6. Prove it, and price it (10 min)
+Leave the agent with `/quit` first. The runtime writes a session's usage record only when the session ends, so a session you just close is missing from the cost sheet.
 ```bash
 npm run check:lab -- L10
 npm run cost
@@ -102,3 +104,5 @@ Fill in [Context and access](monday/L10-context-and-access.md) for one system at
 | ZincTM errors or `NOT_ELIGIBLE` | `npm run connect` and post its last line in the support thread |
 | An agent takes more than 5 minutes | Press Esc, run `npm run catchup -- L10`, continue from the next step |
 | `npm run review` says it needs a terminal | Run it yourself in a terminal, not through the agent |
+| The agent asks to run a shell command, such as `node -e …` to check a JSON file | Read it first. You can say No: `npm run rtm` and the next agent check the JSON anyway. Never approve a command that deletes, resets or downloads something |
+| `npm run cost` is missing a session | That session ended without `/quit`. Next time leave with `/quit` |
