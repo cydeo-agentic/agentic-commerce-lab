@@ -36,7 +36,8 @@
     "cost": "node scripts/cost.mjs",
     "spec": "node scripts/spec.mjs",
     "heal:check": "node scripts/heal-check.mjs",
-    "drill": "node scripts/drill.mjs"
+    "drill": "node scripts/drill.mjs",
+    "catalog": "node scripts/catalog.mjs"
   },
   "dependencies": {
     "express": "^5.2.1",

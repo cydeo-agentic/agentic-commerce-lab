@@ -97,6 +97,18 @@ export const skillsLoaded = (s) => s.calls.filter((c) => c.name === 'skill' && c
 export const mcpCalls = (s) => s.calls.filter((c) => c.name.startsWith('mcp__') && c.ok).map((c) => ({ ...c, server: c.name.split('__')[1], tool: c.name.split('__').slice(2).join('__') }));
 export const deniedCalls = (s) => s.calls.filter((c) => !c.ok);
 
+/** The last thing a subagent said: its answer to the main session, as the runtime recorded it. */
+export function finalText(run) {
+  let text = '';
+  for (const line of readLines(run.file)) {
+    const r = parse(line);
+    if (r?.type !== 'assistant') continue;
+    const parts = (r.message?.parts ?? []).filter((p) => typeof p.text === 'string' && !p.thought);
+    if (parts.length) text = parts.map((p) => p.text).join('');
+  }
+  return text;
+}
+
 /** Every subagent run in this repository, oldest first, each with its parent session id. */
 export const allSubagentRuns = (cwd = process.cwd()) => agentSessions(cwd).flatMap((s) => s.subagents.map((r) => ({ ...r, sessionId: s.id })));
 

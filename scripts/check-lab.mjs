@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
-import { agentDefinitions, agentSessions, allSubagentRuns, costOf, isWriteTool, mcpCalls, money, skillsLoaded } from './lib/agent-trace.mjs';
+import { agentDefinitions, agentSessions, allSubagentRuns, costOf, finalText, isWriteTool, mcpCalls, money, skillsLoaded } from './lib/agent-trace.mjs';
 import { LAB_AGENTS, P, caseProblems, caseRules, casesOf, costPath, readAgentJson } from './lib/pipeline.mjs';
 import { L11_OUT, moneyIn, parseSpec, specFiles, unsafeReasons } from './lib/specs.mjs';
 import { healGate } from './heal-check.mjs';
@@ -357,7 +357,7 @@ async function l11() {
   const dWrites = writesOf('defect-reporter');
   check('the defect-reporter has exactly one tool that changes anything: tm_file_defect', dWrites.length === 1 && /tm_file_defect$/.test(dWrites[0]), dWrites.join(', ') || 'none');
   const iWrites = writesOf('failure-investigator');
-  check('the failure-investigator cannot change a test (no edit, no shell; it only writes its verdicts)', iWrites.every((t) => t === 'write_file'), iWrites.join(', ') || 'read only');
+  check('the failure-investigator is read-only by definition (it judges the evidence and cannot change it)', defs.get('failure-investigator') && !iWrites.length, iWrites.join(', ') || 'read tools only');
   const hTools = defs.get('test-healer')?.tools ?? [];
   check('the test-healer has no ZincTM tools and cannot create files', hTools.length && !hTools.some((t) => t.startsWith('mcp__') || t === 'write_file'), hTools.join(', '));
 
@@ -403,7 +403,10 @@ async function l11() {
   const inv = casesOf(readAgentJson(P.investigation).data);
   const verdict = first && inv.find((x) => x.test === first.title || String(x.caseId ?? '').toUpperCase() === first.title.split(' ')[0].toUpperCase());
   check('pipeline/investigation.json calls that failure a product bug and cites the rule', verdict && verdict.verdict === 'product' && /\b(CAT|CART|PRICE|PAY|ORD|CRM|WH)-\d+\b/.test(String(verdict.rule ?? '')), verdict ? `${verdict.verdict}, ${verdict.rule}` : 'no verdict for it');
-  check('the failure-investigator wrote it (recording)', callsOf('failure-investigator').some((c) => c.name === 'write_file' && pathOf(c).endsWith(P.investigation)));
+  // The investigator only reads, so the main session saved its answer. The saved verdicts must be the ones it returned.
+  const returned = ranAs('failure-investigator').map((r) => { try { return casesOf(JSON.parse(finalText(r).trim().replace(/^```(?:json)?\s*/, '').replace(/```\s*$/, ''))); } catch { return []; } });
+  const same = (a, b) => a.length === b.length && a.every((x) => b.some((y) => String(y.caseId).toUpperCase() === String(x.caseId).toUpperCase() && y.verdict === x.verdict));
+  check('pipeline/investigation.json holds exactly the verdicts the failure-investigator returned (recording)', inv.length && returned.some((r) => same(r, inv)), `${ranAs('failure-investigator').length} investigator run(s)`);
 
   // 5. The defect, filed by the one agent allowed to, and ZincTM agrees.
   const filed = casesOf(readAgentJson(P.defects).data).filter((d) => d.defectId || d.key);

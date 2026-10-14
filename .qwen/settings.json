@@ -24,6 +24,7 @@
       "Agent(failure-investigator)",
       "Agent(defect-reporter)",
       "Agent(test-healer)",
+      "Bash(npm run catalog)",
       "Bash(npm run spec)",
       "Bash(npm run spec -- *)",
       "Bash(npm run heal:check)",

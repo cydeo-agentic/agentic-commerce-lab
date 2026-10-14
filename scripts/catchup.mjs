@@ -4,6 +4,7 @@
  * Run: npm run catchup -- L06      (the prove-a-defect skill)
  *      npm run catchup -- L07      (the get_rules tool and the upgraded skill)
  *      npm run catchup -- L10      (the reference output of every L10 step, so you can continue from any step)
+ *      npm run catchup -- L11      (reference specs for three cases, so you can continue from step 2)
  * References live on the repository's `catchup` branch, not in your working tree, so your agent never reads them
  * while you build your own. Nothing you wrote is overwritten: if a file exists, the reference goes next to it.
  */
@@ -24,6 +25,13 @@ const STEPS = {
     { ref: 'L10/pipeline/test-plan.md', to: 'pipeline/test-plan.md' },
     { ref: 'L10/pipeline/cases.json', to: 'pipeline/cases.json' },
     { ref: 'L10/pipeline/evaluation.json', to: 'pipeline/evaluation.json' },
+  ],
+  // Specs from the dry run. They name the dry run's case ids: rename each test and file to one of YOUR approved cases
+  // with the same rule, and copy its expected values from your case (npm run heal:check holds you to them).
+  L11: [
+    { ref: 'L11/tests/lab/L11/tc-03.spec.ts', to: 'tests/lab/L11/tc-03.spec.ts' },
+    { ref: 'L11/tests/lab/L11/tc-04.spec.ts', to: 'tests/lab/L11/tc-04.spec.ts' },
+    { ref: 'L11/tests/lab/L11/tc-05.spec.ts', to: 'tests/lab/L11/tc-05.spec.ts' },
   ],
 };
 
