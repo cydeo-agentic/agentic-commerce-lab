@@ -21,13 +21,14 @@ Before you write anything, read exactly these files: pipeline/cases.json, pipeli
    - Import only from '@playwright/test'. Nothing else: no fs, no process, no helper files. npm run spec refuses anything more.
    - Name the test "<case id> <case title>", for example test('TC-04 Shipping is free at exactly $100.00', ...).
    - Select elements only with page.getByTestId('<id>'), and only ids listed in .cydeo/contract.md. The contract's API routes are allowed through the request fixture.
-   - For test data, such as which products add up to exactly $100.00, run: npm run catalog   (the live store's prices). Never read the store's source code, and never write a spec just to look something up.
+   - For test data, ask the live store: npm run catalog -- <amount>, for example npm run catalog -- 100.00, prints a cart that makes exactly that subtotal. Never read the store's source code, and never write a spec just to look something up.
+   - If no cart makes the case's amount exactly, do not write that spec, and never test a different cart against the case's expected values. Report the case as "cannot be tested as written" so a person can fix it, and pick another approved case.
    - Keep each spec short and literal, like tests/smoke/store.spec.ts: fixed products and quantities you chose from the catalog (for example 4 × stand = $100.00), one test, no loops that search for prices, no helper functions.
    - Assert every exact value in the case's expected result: every amount, quoted message and status. Copy each value from the case. Never compute one from what the app shows.
    - Team rule PAY-1: a pricing case is proven only when the shopper pays what they were shown. If the case cites PRICE-1 to PRICE-5, after its own checks go to checkout, fill name and a unique email (l11-${Date.now()}@example.com), choose checkout-card-visa, pay, and assert that order-total shows the case's expected total.
    - Never use waitForTimeout, test.skip, test.fixme, test.only, test.fail or retries. Web-first assertions wait by themselves (give the order page { timeout: 20_000 }).
 3. Run the specs with exactly this command: npm run spec
-   Type commands exactly as written here: no cd, no pipes, no tee, no redirects. Only npm run spec, npm run catalog and npm run heal:check run without a person's approval; anything more stops and waits for one.
+   Type commands exactly as written here: no cd, no pipes, no tee, no redirects. Only npm run spec, npm run catalog (with or without an amount) and npm run heal:check run without a person's approval; anything more stops and waits for one. The store is already running: never start it.
    Then read artifacts/L11/failures.md.
 4. Fix only your own mistakes: a wrong test id, a missing step, a syntax error. Then run npm run spec again. At most four runs in total.
    - A failure with "Kind: assertion" found the element and got a wrong value. Leave it red: it may be the bug we are hunting. Never change an expected value, never remove an assertion, never skip a test to make it pass.

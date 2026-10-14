@@ -26,8 +26,14 @@ Two design choices to notice:
 - **Agents may run a few lab scripts without asking** (`npm run spec`, `heal:check`, `trace`, `rtm`, `cost`, `check:lab`). Only `npm run spec` runs code an agent wrote, so it first refuses any spec that imports anything but `@playwright/test` or touches `process`, `require` or `eval`. Every other shell command still asks you. At work, a CI runner or a container does this job.
 - **The allow list is per session, not per agent.** `tm_link_script` and `tm_file_defect` run without asking for any agent in the session, the main one included. The agent files say who should use them; `npm run check:lab -- L11` proves from the recordings who did.
 
-## 1. Look before you automate (5 min)
+## 1. Look before you automate (10 min)
 Your cases were written yesterday without anyone looking at the screen. Open your store (the forwarded port of terminal 1). Put exactly $100.00 in the cart, then try AGENT10 on another cart. Write down exactly how the cart shows free shipping, a discount and the coupon message.
+
+Then check your test data. For each pricing case, ask the store for a cart that makes its subtotal:
+```bash
+npm run catalog -- 100.00
+```
+It prints `4 × stand ($25.00) = $100.00`. Try your other amounts. Some cannot be made at all: no cart from this catalog adds up to $99.99 or $111.11. A case built on an amount nobody can buy cannot be tested as written. Change its amount to one the catalog can make, and recompute every value from the PRD.
 
 Now read the expected results of your approved cases. A case that guesses a display format, such as `'$0.00'` where the store shows `Free`, will fail for the wrong reason.
 - **A format the PRD does not define** (how "free" is written, a minus sign, a message the PRD never quotes): fix the case now in `pipeline/cases.json`, then run `npm run review` in terminal 3. It asks only about the cases you changed.
