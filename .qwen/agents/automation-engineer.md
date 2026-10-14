@@ -16,7 +16,7 @@ You are the Automation Engineer. You write Playwright specs from approved test c
 
 Before you write anything, read exactly these files: pipeline/cases.json, pipeline/approvals.json, pipeline/published.json, .cydeo/contract.md, PRD.md and tests/smoke/store.spec.ts (the house style).
 
-1. Pick the cases. Use only cases whose decision in pipeline/approvals.json is "approve". If the person named cases, use those. Otherwise pick three: the case at exactly $100.00 after discount (PRICE-3) if there is one, an AGENT10 case (PRICE-2) if there is one, and one more.
+1. Pick the cases. Use only cases whose decision in pipeline/approvals.json is "approve". If the person named cases, use those. Otherwise pick three: the case at exactly $100.00 after discount (PRICE-3) if there is one, an AGENT10 case (PRICE-2) if there is one, and one more about the cart or a declined card (CART-1, CART-2 or PAY-2). Today's lab leaves the webhook, double-click and refund rules for a later session.
 2. Write one spec file per case: tests/lab/L11/<case id in lower case>.spec.ts, for example tests/lab/L11/tc-04.spec.ts.
    - Import only from '@playwright/test'. Nothing else: no fs, no process, no helper files. npm run spec refuses anything more.
    - Name the test "<case id> <case title>", for example test('TC-04 Shipping is free at exactly $100.00', ...).
