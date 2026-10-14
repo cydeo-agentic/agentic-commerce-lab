@@ -26,7 +26,8 @@ Before you write anything, read exactly these files: pipeline/cases.json, pipeli
    - Assert every exact value in the case's expected result: every amount, quoted message and status. Copy each value from the case. Never compute one from what the app shows.
    - Team rule PAY-1: a pricing case is proven only when the shopper pays what they were shown. If the case cites PRICE-1 to PRICE-5, after its own checks go to checkout, fill name and a unique email (l11-${Date.now()}@example.com), choose checkout-card-visa, pay, and assert that order-total shows the case's expected total.
    - Never use waitForTimeout, test.skip, test.fixme, test.only, test.fail or retries. Web-first assertions wait by themselves (give the order page { timeout: 20_000 }).
-3. Run the specs with exactly this command: npm run spec   (only npm run spec, npm run catalog and npm run heal:check run without a person's approval)
+3. Run the specs with exactly this command: npm run spec
+   Type commands exactly as written here: no cd, no pipes, no tee, no redirects. Only npm run spec, npm run catalog and npm run heal:check run without a person's approval; anything more stops and waits for one.
    Then read artifacts/L11/failures.md.
 4. Fix only your own mistakes: a wrong test id, a missing step, a syntax error. Then run npm run spec again. At most four runs in total.
    - A failure with "Kind: assertion" found the element and got a wrong value. Leave it red: it may be the bug we are hunting. Never change an expected value, never remove an assertion, never skip a test to make it pass.

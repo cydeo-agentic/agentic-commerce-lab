@@ -42,12 +42,22 @@ if (unsafe.length) {
   process.exit(1);
 }
 
+// cydeo runs the agent with HOME=~/.cydeo/qwen-home, so Playwright would look for its browsers there and find none.
+// Point it at the browsers installed for the real user (the Codespace installs them at creation).
+const browsers = {};
+const realHome = (process.env.HOME ?? '').replace(/[\\/]\.cydeo[\\/]qwen-home[\\/]?$/, '');
+if (!process.env.PLAYWRIGHT_BROWSERS_PATH && realHome && realHome !== process.env.HOME) {
+  const cache = process.platform === 'darwin' ? join(realHome, 'Library', 'Caches', 'ms-playwright') : join(realHome, '.cache', 'ms-playwright');
+  if (existsSync(cache)) browsers.PLAYWRIGHT_BROWSERS_PATH = cache;
+}
+
 const runId = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
 mkdirSync(L11_OUT, { recursive: true });
 const r = spawnSync('npx', ['playwright', 'test', ...targets, '--reporter=list,json,html', `--output=${L11_OUT}/test-results`], {
   stdio: ['ignore', 'inherit', 'inherit'],
   env: {
     ...process.env,
+    ...browsers,
     PLAYWRIGHT_JSON_OUTPUT_NAME: `${L11_OUT}/results.json`,
     PLAYWRIGHT_HTML_OPEN: 'never',
     PW_TEST_HTML_REPORT_OPEN: 'never',
