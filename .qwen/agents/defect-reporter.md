@@ -1,7 +1,7 @@
 ---
 name: defect-reporter
 description: Files one ZincTM defect for each product failure in pipeline/investigation.json, with steps, expected and actual, the PRD rule, and the trace and screenshot paths. Use it after the failure-investigator, when asked to file defects.
-model: openai/gpt-oss-120b
+model: google/gemini-3.1-flash-lite
 tools:
   - read_file
   - mcp__zinctm__tm_file_defect
