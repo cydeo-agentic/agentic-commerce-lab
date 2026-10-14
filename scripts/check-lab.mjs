@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import { agentDefinitions, agentSessions, allSubagentRuns, costOf, finalText, isWriteTool, mcpCalls, money, skillsLoaded } from './lib/agent-trace.mjs';
-import { LAB_AGENTS, P, caseProblems, caseRules, casesOf, costPath, readAgentJson, verdictsOf } from './lib/pipeline.mjs';
+import { LAB_AGENTS, P, caseProblems, caseRules, casesOf, costPath, jsonIn, readAgentJson, verdictsOf } from './lib/pipeline.mjs';
 import { L11_OUT, moneyIn, parseSpec, specFiles, unsafeReasons } from './lib/specs.mjs';
 import { healGate } from './heal-check.mjs';
 import { zinctmSession } from './lib/zinctm.mjs';
@@ -404,7 +404,7 @@ async function l11() {
   const verdict = first && inv.find((x) => x.caseId === first.title.split(' ')[0].toUpperCase());
   check('pipeline/investigation.json calls that failure a product bug and cites the rule', verdict && verdict.verdict === 'product' && /\b(CAT|CART|PRICE|PAY|ORD|CRM|WH)-\d+\b/.test(String(verdict.rule ?? '')), verdict ? `${verdict.verdict}, ${verdict.rule}` : 'no verdict for it');
   // The investigator only reads, so the main session saved its answer. The saved verdicts must be the ones it returned.
-  const returned = ranAs('failure-investigator').map((r) => { try { return verdictsOf(JSON.parse(finalText(r).trim().replace(/^```(?:json)?\s*/, '').replace(/```\s*$/, ''))); } catch { return []; } });
+  const returned = ranAs('failure-investigator').map((r) => verdictsOf(jsonIn(finalText(r))));
   const same = (a, b) => a.length === b.length && a.every((x) => b.some((y) => y.caseId === x.caseId && y.verdict === x.verdict));
   check('pipeline/investigation.json holds exactly the verdicts the failure-investigator returned (recording)', inv.length && returned.some((r) => same(r, inv)), `${ranAs('failure-investigator').length} investigator run(s)`);
 
@@ -422,7 +422,8 @@ async function l11() {
     const drilled = Object.entries(base.tests).filter(([, v]) => v.file === base.file).map(([title]) => title);
     const redAfter = log.some((r) => Date.parse(r.at) > Date.parse(base.at) && r.tests.some((x) => drilled.includes(x.title) && x.kind === 'locator'));
     check('the drill turned a test red for a test reason (Kind: locator)', redAfter);
-    const healed = callsOf('test-healer').filter((c) => ['edit', 'replace', 'write_file'].includes(c.name) && pathOf(c).endsWith(base.file.split('/').pop()) && Date.parse(c.at) > Date.parse(base.at));
+    // Compare file names without case: macOS accepts TC-05.spec.ts for tc-05.spec.ts.
+    const healed = callsOf('test-healer').filter((c) => ['edit', 'replace', 'write_file'].includes(c.name) && pathOf(c).toLowerCase().endsWith(base.file.split('/').pop().toLowerCase()) && Date.parse(c.at) > Date.parse(base.at));
     check('the test-healer repaired it (recording)', healed.length > 0, `${healed.length} edit(s) to ${base.file}`);
     const now = drilled.map((title) => resultIn(lastRunOf(title), title));
     check('the healed test passes again in your last run', now.length && now.every((x) => x?.status === 'passed'), now.map((x) => `${x?.title.split(' ')[0]}: ${x?.status ?? 'not run'}`).join(', '));

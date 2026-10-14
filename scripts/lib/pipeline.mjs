@@ -47,6 +47,20 @@ export function readAgentJson(path) {
 
 export const casesOf = (data) => (Array.isArray(data) ? data : Array.isArray(data?.cases) ? data.cases : []);
 
+/** The JSON inside an agent's answer: the whole text, a fenced block, or a [...] / {...} that follows its prose. */
+export function jsonIn(text) {
+  const s = String(text ?? '').trim();
+  const fenced = s.match(/```(?:json)?\s*([\s\S]*?)```/)?.[1];
+  for (const candidate of [s, fenced]) { if (!candidate) continue; try { return JSON.parse(candidate); } catch { /* keep looking */ } }
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] !== '[' && s[i] !== '{') continue;
+    const close = s.lastIndexOf(s[i] === '[' ? ']' : '}');
+    if (close <= i) continue;
+    try { return JSON.parse(s.slice(i, close + 1)); } catch { /* next opening bracket */ }
+  }
+  return null;
+}
+
 /** The investigator's verdicts, whatever shape the model chose: [{ caseId: 'TC-04', verdict: 'product' | 'test', ... }]. */
 export function verdictsOf(data) {
   const list = Array.isArray(data) ? data : [data?.verdicts, data?.failures, data?.results, data?.cases].find(Array.isArray) ?? [];

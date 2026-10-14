@@ -4,7 +4,7 @@
 
 **Before class:** `npm run update`, then `npm run connect` (every line PASS or WARN). You need yesterday's output: `pipeline/approvals.json` and `pipeline/published.json`.
 **Proof:** `npm run check:lab -- L11`
-**Fell behind?** No L10 run yet: `npm run catchup -- L10`, then L10 steps 4 and 5 (review and publish, about 10 minutes), because today's defect links to your case in ZincTM. Stuck at a step today: `npm run catchup -- L11` puts reference specs next to yours.
+**Fell behind?** No L10 run yet: `npm run catchup -- L10`, then L10 steps 4 and 5 (review and publish, about 10 minutes), because today's defect links to your case in ZincTM. Stuck at a step today: `npm run catchup -- L11` gives the dry run's three specs. Rename each to one of your approved cases with the same rule, and copy the values from your case: `npm run heal:check` holds you to them.
 
 Three terminals today:
 - **Terminal 1:** `npm run dev` (leave it running).
@@ -51,6 +51,7 @@ Open `artifacts/L11/failures.md`. Every failure has a **Kind**:
 - **locator:** the test never found the element it asked for.
 
 The trace, screenshot and page snapshot of every failure are kept in `artifacts/L11/evidence/`, where the next run cannot overwrite them.
+Dry run (Oct 14): three specs written and run in 95 s, $0.28. Two of the three went red for the wrong reason: the cases guessed how the store shows free shipping and a discount. That is why step 1 exists.
 
 ## 3. Product bug or test bug? (15 min)
 ```
@@ -69,6 +70,7 @@ The agent may change an expected value only after you change the case and approv
 - **A product bug:** the value is wrong and the case is right by the PRD. Go to step 4.
 
 In our dry run, the fixed TC-04 went red further down. The cart showed `$106.00`, but the order page said `$113.99`. That is a planted bug.
+Dry run: each investigation took 43–55 s and cost $0.03. Each re-sync of the automation agent after a case fix cost $0.72–1.23, so fix formats in step 1.
 
 ## 4. File the defect (10 min)
 ```
@@ -82,6 +84,7 @@ Open ZincTM, then Defects. Read your defect as the developer who must fix it. Ch
 - the trace and screenshot paths.
 
 Open the case in ZincTM: its automation now points at your spec.
+Dry run: one defect filed in 84 s, $0.03.
 
 ## 5. Heal the locator, never the assertion (20 min)
 A locator breaks when a test id changes. Simulate one in terminal 3:
@@ -106,6 +109,7 @@ It passes only when all of these hold:
 - every assertion is exactly as it was before the drill.
 
 Your planted-bug test is still red. That is correct: a red test that tells the truth beats a green one that lies.
+Dry run: the healer fixed the locator in 46 s for less than one cent, and `heal:check` passed.
 
 **Stretch:** commit first (`git add tests/lab/L11 && git commit -qm "L11 specs"`). Then ask `Use the test-healer agent to make every test green.` Watch what it does, then run `npm run heal:check` and `git diff`. Whatever the agent did, the gate decides. Restore with `git checkout -- tests/lab/L11`.
 
@@ -116,6 +120,7 @@ npm run cost -- L11
 npm run check:lab -- L11
 ```
 `npm run cost -- L11` prices only the sessions that ran an L11 agent. It shows agent minutes and the same cost in Copilot credits. You need both numbers for the Monday page.
+Dry run, whole lab: $2.40 at list price. $1.96 of it was two re-syncs after case fixes; without them it was $0.44.
 
 ## Without AI (class block)
 Run `npm run report`, open the red test, then **Trace**. Use the trace alone: the actions, the page before and after each one, and the network calls. Decide whether it is a product bug or a test bug, and say which network response proves it. Hint: compare the total the checkout page sent with the amount on the order.

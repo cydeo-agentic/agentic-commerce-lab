@@ -25,11 +25,15 @@ const kept = [];
 let toReview = cases;
 if (previous?.decisions?.length && process.argv[2] !== 'all') {
   const before = new Map(previous.decisions.map((d) => [d.id, d]));
-  const changed = (c) => { const d = before.get(c.id); return !d || (d.decision === 'approve' && typeof d.expected === 'string' && d.expected !== (c.expected ?? c.expectedResult ?? '')); };
+  // Approvals made before review kept copies cannot show what changed, so those cases are reviewed once more.
+  const changed = (c) => { const d = before.get(c.id); return !d || (d.decision === 'approve' && (typeof d.expected !== 'string' || d.expected !== (c.expected ?? c.expectedResult ?? ''))); };
   toReview = cases.filter(changed);
   kept.push(...previous.decisions.filter((d) => cases.some((c) => c.id === d.id && !changed(c))));
   if (!toReview.length) { console.log('Nothing new or changed since your last review. To review every case again: npm run review -- all'); process.exit(0); }
-  console.log(`\nRe-review: ${toReview.length} case(s) new or changed since your last review (${toReview.map((c) => c.id).join(', ')}). Your other ${kept.length} decision(s) stay.`);
+  const old = previous.decisions.some((d) => d.decision === 'approve' && typeof d.expected !== 'string');
+  console.log(old
+    ? `\nYour approvals are older than this review, so it cannot see what changed: ${toReview.length} case(s) once more. From now on it asks only about changed cases.`
+    : `\nRe-review: ${toReview.length} case(s) new or changed since your last review (${toReview.map((c) => c.id).join(', ')}). Your other ${kept.length} decision(s) stay.`);
 }
 const evaluation = new Map(casesOf(readAgentJson(P.evaluation).data).map((e) => [e.id, e]));
 const problems = caseProblems(cases, rules);
@@ -75,5 +79,5 @@ writeFileSync(P.approvals, JSON.stringify({ reviewer, reviewedAt: new Date().toI
 console.log(`\nSaved ${P.approvals}: ${approved} approved, ${rejected} rejected, ${cases.length - decisions.length} not decided.`);
 if (!rejected) console.log('Note: the lab asks you to reject at least one case, with the reason. A gate that approves everything is not checking.');
 console.log(previous?.decisions?.length && process.argv[2] !== 'all'
-  ? 'Next: ask the automation-engineer to bring the spec of each changed case in line with the case (labs/L11).\n'
+  ? 'Next: if a spec already tests a case you changed, ask the automation-engineer to bring it in line with the case (labs/L11).\n'
   : 'Next: ask the agent to use the publisher agent (labs/L10, step 5).\n');
