@@ -33,7 +33,10 @@
     "update": "node scripts/lab-update.mjs",
     "rtm": "node scripts/rtm.mjs",
     "review": "node scripts/review.mjs",
-    "cost": "node scripts/cost.mjs"
+    "cost": "node scripts/cost.mjs",
+    "spec": "node scripts/spec.mjs",
+    "heal:check": "node scripts/heal-check.mjs",
+    "drill": "node scripts/drill.mjs"
   },
   "dependencies": {
     "express": "^5.2.1",

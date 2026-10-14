@@ -14,7 +14,16 @@ export const P = {
   approvals: 'pipeline/approvals.json',
   published: 'pipeline/published.json',
   cost: 'pipeline/cost.md',
+  investigation: 'pipeline/investigation.json',
+  defects: 'pipeline/defects.json',
 };
+
+/** The agents each lab adds. `npm run cost -- L11` prices only the sessions that ran one of them. */
+export const LAB_AGENTS = {
+  L10: ['context-researcher', 'test-plan-creator', 'test-case-creator', 'case-evaluator', 'publisher'],
+  L11: ['automation-engineer', 'failure-investigator', 'defect-reporter', 'test-healer'],
+};
+export const costPath = (lab) => (lab ? `pipeline/cost-${lab}.md` : P.cost);
 
 const read = (p) => (existsSync(p) ? readFileSync(p, 'utf8') : '');
 

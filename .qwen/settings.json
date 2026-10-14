@@ -19,7 +19,16 @@
       "mcp__zinctm__tm_list_defects",
       "mcp__zinctm__tm_get_defect",
       "mcp__zinctm__tm_list_comments",
-      "mcp__zinctm__tm_create_test_case"
+      "mcp__zinctm__tm_create_test_case",
+      "Agent(automation-engineer)",
+      "Agent(failure-investigator)",
+      "Agent(defect-reporter)",
+      "Agent(test-healer)",
+      "Bash(npm run spec)",
+      "Bash(npm run spec -- *)",
+      "Bash(npm run heal:check)",
+      "mcp__zinctm__tm_link_script",
+      "mcp__zinctm__tm_file_defect"
     ],
     "deny": [
       "Edit(.qwen/**)",
@@ -40,6 +49,8 @@
       "Write(eslint.config.js)",
       "Edit(.husky/**)",
       "Write(.husky/**)",
+      "Edit(artifacts/L11/**)",
+      "Write(artifacts/L11/**)",
       "Read(.env)",
       "Bash(rm *)",
       "Bash(git clean *)",
