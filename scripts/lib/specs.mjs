@@ -32,20 +32,41 @@ function calleeChain(expr) {
   return parts;
 }
 
-// Literal values an assertion compares against. Options objects ({ timeout }) are not part of the claim.
-function literalsOf(node, sf) {
+// Values an assertion compares against. A const holding a literal counts as that literal; anything computed while the
+// test runs is marked <runtime>, so a before/after comparison still sees it change. Options objects ({ timeout }) are
+// not part of the claim.
+function literalsOf(node, sf, consts = new Map()) {
   if (!node) return [];
   if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) return [node.text];
   if (ts.isNumericLiteral(node)) return [node.text];
   if (ts.isRegularExpressionLiteral(node)) return [node.text];
-  if (ts.isTemplateExpression(node)) return [node.getText(sf)];
   if (ts.isPrefixUnaryExpression(node) && ts.isNumericLiteral(node.operand)) return [node.getText(sf)];
-  if (ts.isArrayLiteralExpression(node)) return node.elements.flatMap((e) => literalsOf(e, sf));
-  return [];
+  if (ts.isArrayLiteralExpression(node)) return node.elements.flatMap((e) => literalsOf(e, sf, consts));
+  if (ts.isObjectLiteralExpression(node)) return [];
+  if (ts.isIdentifier(node) && consts.has(node.text)) return consts.get(node.text);
+  if (ts.isParenthesizedExpression(node) || ts.isAsExpression(node) || ts.isNonNullExpression(node)) return literalsOf(node.expression, sf, consts);
+  return [`<runtime: ${node.getText(sf).slice(0, 60)}>`];
+}
+
+// const NAME = <literal> anywhere in the file, so toHaveText(NAME) reads as the literal it holds.
+function constLiterals(sf) {
+  const consts = new Map();
+  const visit = (node) => {
+    if (ts.isVariableDeclarationList(node) && (node.flags & ts.NodeFlags.Const)) {
+      for (const d of node.declarations) {
+        if (!ts.isIdentifier(d.name) || !d.initializer) continue;
+        const v = literalsOf(d.initializer, sf, consts);
+        if (v.length && !v.some((x) => x.startsWith('<runtime'))) consts.set(d.name.text, v);
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sf);
+  return consts;
 }
 
 // expect(x).not.toHaveText('...') -> { matcher: 'toHaveText', negated: true, kind: 'expect', subject: 'x', values: ['...'] }
-function assertionOf(call, sf) {
+function assertionOf(call, sf, consts) {
   if (!ts.isPropertyAccessExpression(call.expression)) return null;
   const matcher = call.expression.name.text;
   let e = call.expression.expression;
@@ -54,7 +75,7 @@ function assertionOf(call, sf) {
   if (!ts.isCallExpression(e)) return null;
   const chain = calleeChain(e.expression);
   if (!chain || chain[0] !== 'expect') return null;
-  const values = call.arguments.flatMap((a) => literalsOf(a, sf));
+  const values = call.arguments.flatMap((a) => literalsOf(a, sf, consts));
   return { matcher, negated, kind: chain.slice(1).join('.') || 'expect', subject: e.arguments[0]?.getText(sf) ?? '', values };
 }
 
@@ -75,6 +96,7 @@ export function parseSpec(file) {
   const lineOf = (n) => sf.getLineAndCharacterOfPosition(n.getStart(sf)).line + 1;
   const out = { file, tests: [], hiders: [], waits: [], testIds: [], imports: [], machine: [] };
   const stack = [];
+  const consts = constLiterals(sf);
 
   const visit = (node) => {
     if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) out.imports.push(node.moduleSpecifier.text);
@@ -96,7 +118,7 @@ export function parseSpec(file) {
         if (chain.length >= 2 && HIDERS.has(last)) out.hiders.push({ call: chain.join('.'), line: lineOf(node) });
         if (chain.join('.') === 'test.describe.configure' && /retries/.test(node.arguments[0]?.getText(sf) ?? '')) out.hiders.push({ call: 'test.describe.configure({ retries })', line: lineOf(node) });
         if (chain.length === 1 && node.arguments.length >= 2) {
-          const title = literalsOf(node.arguments[0], sf)[0] ?? node.arguments[0].getText(sf);
+          const title = literalsOf(node.arguments[0], sf, consts)[0] ?? node.arguments[0].getText(sf);
           opened = { title, caseId: title.match(CASE_ID_RE)?.[0]?.toUpperCase() ?? null, line: lineOf(node), assertions: [], testIds: [] };
           out.tests.push(opened);
           stack.push(opened);
@@ -104,10 +126,10 @@ export function parseSpec(file) {
       }
       if (last === 'waitForTimeout' || (chain?.length === 1 && last === 'setTimeout')) out.waits.push({ call: last, line: lineOf(node) });
       if (last === 'getByTestId') {
-        const id = literalsOf(node.arguments[0], sf)[0];
+        const id = literalsOf(node.arguments[0], sf, consts)[0];
         if (id) { out.testIds.push(id); stack.at(-1)?.testIds.push(id); }
       }
-      const a = assertionOf(node, sf);
+      const a = assertionOf(node, sf, consts);
       if (a && stack.length) stack.at(-1).assertions.push(a);
     }
     ts.forEachChild(node, visit);
