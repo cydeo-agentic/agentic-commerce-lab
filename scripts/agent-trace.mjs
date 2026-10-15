@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
  * What did the agent REALLY do? Reads the agent runtime's own session recordings for this repository and lists,
- * per session: the models it used (tokens and list-price cost), the subagents it delegated to and the tools each
+ * per session: the models it used (requests and tokens), the subagents it delegated to and the tools each
  * of them ran, the skills it loaded and the MCP tools it called. The agent can say anything; this is what it did.
  * Run: npm run trace            (last 5 sessions)
  *      npm run trace -- 20      (last 20 sessions)
  */
-import { agentDefinitions, agentSessions, costOf, deniedCalls, mcpCalls, money, projectsDir, skillsLoaded } from './lib/agent-trace.mjs';
+import { agentDefinitions, agentSessions, costOf, deniedCalls, mcpCalls, projectsDir, skillsLoaded } from './lib/agent-trace.mjs';
 
 const n = Number(process.argv[2] ?? 5);
 const sessions = agentSessions().slice(-n);
@@ -24,9 +24,8 @@ for (const s of sessions) {
   console.log(`\nSession ${s.id.slice(0, 8)}  ${s.start.replace('T', ' ').slice(0, 19)} UTC  (${s.calls.length} tool calls)`);
   if (s.usage?.models) {
     const rows = Object.entries(s.usage.models).map(([m, u]) => ({ m, ...costOf(m, u) }));
-    const total = rows.reduce((t, r) => t + (r.dollars ?? 0), 0);
-    console.log(`  models used   : ${rows.map((r) => `${r.m} (${r.requests} requests, ${r.input.toLocaleString()} in / ${r.output.toLocaleString()} out, ${money(r.dollars)})`).join('; ')}`);
-    console.log(`  session cost  : ${money(total)} at list price, ${Math.round((s.usage.durationMs ?? 0) / 1000)} s`);
+    console.log(`  models used   : ${rows.map((r) => `${r.m} (${r.requests} requests, ${r.input.toLocaleString()} in / ${r.output.toLocaleString()} out)`).join('; ')}`);
+    console.log(`  session time  : ${Math.round((s.usage.durationMs ?? 0) / 1000)} s`);
   } else {
     console.log('  models used   : not recorded yet (the runtime writes this when the session ends)');
   }

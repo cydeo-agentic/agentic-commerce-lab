@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
-import { agentDefinitions, agentSessions, allSubagentRuns, costOf, isWriteTool, mcpCalls, money, skillsLoaded } from './lib/agent-trace.mjs';
+import { agentDefinitions, agentSessions, allSubagentRuns, isWriteTool, mcpCalls, skillsLoaded } from './lib/agent-trace.mjs';
 import { P, caseProblems, caseRules, casesOf, readAgentJson } from './lib/pipeline.mjs';
 import { zinctmSession } from './lib/zinctm.mjs';
 
@@ -333,10 +333,8 @@ async function l10() {
     check('every published case carries its PRD rule as a label', mine.length && mine.every((t) => (t.labels ?? []).some((l) => /^(cat|cart|price|pay|ord|crm|wh)-\d+$/i.test(l))));
   }
 
-  // What each agent cost, from the runtime's usage record (one model per agent, so a model row is an agent row).
-  const usage = {};
-  for (const s of agentSessions()) for (const [m, u] of Object.entries(s.usage?.models ?? {})) { const c = costOf(m, u); usage[m] = (usage[m] ?? 0) + (c.dollars ?? 0); }
-  for (const d of defs.values()) if (d.model) console.log(`Agent ${d.name.padEnd(19)} model ${d.model.padEnd(32)} ${ranAs(d.name).length} run(s)  ${money(usage[d.model] ?? 0)} so far (list price, npm run cost for detail)`);
+  // Which model each agent declares, and how often the runtime recorded it running.
+  for (const d of defs.values()) if (d.model) console.log(`Agent ${d.name.padEnd(19)} model ${d.model.padEnd(32)} ${ranAs(d.name).length} run(s)`);
 }
 
 const LABS = { L00: l00, L01: l01, L02: l02, L03: l03, L04: l04, L05: l05, L06: l06, L07: l07, L10: l10 };
