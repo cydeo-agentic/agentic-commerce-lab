@@ -1,4 +1,4 @@
-# Monday page 2 · Review and cost
+# Monday page 2 · Review and evidence
 
 One page for your manager. Copy this file, replace the examples with your team's, and keep it under a page. Write nothing secret.
 
@@ -16,22 +16,21 @@ What a person checks before an AI-written test case or spec is trusted. Each lin
 | A defect has steps, expected vs actual, the rule, who loses what, and the trace | A developer can fix what they can reproduce | The defect reporter, read by a person |
 | The test proves what matters to the customer, not only what is on screen | Our cart showed $106.00 correctly; the charge was $113.99 | Team rule PAY-1 in the automation agent |
 
-## B. What each step costs
-Measured, not guessed: the cost per run comes from our Oct 13–14 dry runs (`npm run cost -- L10` and `npm run cost -- L11`, list prices, an upper bound). Replace them with yours, and the runs per month with your team's. The example team writes 40 stories a month.
+## B. What each step did, and how long it took
+Measured, not guessed: read each agent's session time in `npm run trace`. The L11 times below are from our Oct 14 dry run; replace them with yours.
 
-| Step | Model | Cost per run | Runs per month | Per month | Copilot credits |
-|---|---|---:|---:|---:|---:|
-| Research (context) | gemini-3.1-flash-lite | $0.02 | 40 stories | $0.80 | 80 |
-| Test plan | kimi-k2.7-code | $0.05 | 40 | $2.00 | 200 |
-| Test cases | glm-5.2 | $0.13 | 40 | $5.20 | 520 |
-| Case review (second agent) | claude-haiku-4.5 | $0.07 | 40 | $2.80 | 280 |
-| Automation (3 specs) | claude-haiku-4.5 | $0.28 | 40 | $11.20 | 1,120 |
-| Failure investigation | glm-5.2 | $0.03 | 20 | $0.60 | 60 |
-| Defect filing | gemini-3.1-flash-lite | $0.03 | 10 | $0.30 | 30 |
-| Healing | qwen3-235b | $0.01 | 10 | $0.10 | 10 |
-| **Total** | | | | **$23.00** | **2,300** |
+| Step | Agent | Time per run | What a person still does |
+|---|---|---:|---|
+| Research (context) | context-researcher | your number | Fixes anything wrong in `team-context.md` |
+| Test plan | test-plan-creator | your number | Answers its questions for the team |
+| Test cases | test-case-creator | your number | Nothing yet: the next two steps judge them |
+| Case review (second agent) | case-evaluator | your number | Approves or rejects every case (`npm run review`) |
+| Automation (3 specs) | automation-engineer | 95 s | Fixes a case that guessed a format, then approves it again |
+| Failure investigation | failure-investigator | 43–55 s | Decides who fixes what |
+| Defect filing | defect-reporter | 84 s | Reads the defect as the developer who must fix it |
+| Healing | test-healer | 46 s | Runs `npm run heal:check` before trusting a green test |
 
-How to compare: Copilot Business includes 1,900 credits per seat per month (about $19, so we count 1 credit per cent). A team of five has 9,500. Your manager's question is not "is it cheap?" but "what did a person stop doing, and what did it catch?" Put the defect from today next to its cost.
+Your manager's question is not "how fast is it?" but "what did a person stop doing, and what did it catch?" Put the defect from today next to the minutes it took.
 
 ## C. The same idea in the tool your company gives you
 | What you built today | Copilot | Claude Code |

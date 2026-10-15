@@ -79,13 +79,11 @@ Use the publisher agent to publish the approved cases. Save the JSON it returns,
 Open ZincTM, Test cases. Each case you published starts with its case id (`TC-01 …`) and carries the label `npm run review` printed for your run (`zs-…`). Every case you approved is there. None you rejected is. The list has no label filter yet, so `check:lab` does the exact comparison for you.
 Dry run: 11 cases published.
 
-## 6. Prove it, and price it (10 min)
-Leave the agent with `/quit` first. The runtime writes a session's usage record only when the session ends, so a session you just close is missing from the cost sheet.
+## 6. Prove it (10 min)
+Leave the agent with `/quit` first. The runtime writes a session's usage record (its models and tokens) only when the session ends.
 ```bash
 npm run check:lab -- L10
-npm run cost
 ```
-`npm run cost` reads the runtime's usage record and prices each model. One model per agent, so each row is one agent. Dry run, whole lab: about $0.35 at list price.
 
 ## Without AI (class block)
 On paper: what do the cart's shipping, tax and total show at a subtotal of $99.99, $100.00 and $100.01? Use PRICE-3, PRICE-4 and PRICE-5 only. Then compare with your agent's boundary cases.
@@ -94,7 +92,7 @@ On paper: what do the cart's shipping, tax and total show at a subtotal of $99.9
 Fill in [Context and access](monday/L10-context-and-access.md) for one system at your job.
 
 ## Interview answer
-*"How do you know AI-written test cases are right?"* Model answer: "I don't trust the writer. Every case must cite a requirement and state an exact expected result. A second agent on a different model judges every case with a fresh context, and a plain script checks traceability. Then a person approves or rejects each one with a reason, and only approved cases get published. The trace shows which agent did what, on which model, at what cost."
+*"How do you know AI-written test cases are right?"* Model answer: "I don't trust the writer. Every case must cite a requirement and state an exact expected result. A second agent on a different model judges every case with a fresh context, and a plain script checks traceability. Then a person approves or rejects each one with a reason, and only approved cases get published. The trace shows which agent did what, and on which model."
 
 ## If something breaks
 | You see | Do this |
@@ -105,4 +103,4 @@ Fill in [Context and access](monday/L10-context-and-access.md) for one system at
 | An agent takes more than 5 minutes | Press Esc, run `npm run catchup -- L10`, continue from the next step |
 | `npm run review` says it needs a terminal | Run it yourself in a terminal, not through the agent |
 | The agent asks to run a shell command, such as `node -e …` to check a JSON file | Read it first. You can say No: `npm run rtm` and the next agent check the JSON anyway. Never approve a command that deletes, resets or downloads something |
-| `npm run cost` is missing a session | That session ended without `/quit`. Next time leave with `/quit` |
+| `npm run trace` says a session's models are not recorded yet | That session ended without `/quit`. Next time leave with `/quit` |

@@ -23,7 +23,7 @@ Open `.qwen/agents/`. Four new files:
 
 Two design choices to notice:
 - **The judge cannot touch the evidence.** The investigator's tools only read: it cannot edit a test, write a file or run anything. The runtime enforces this, not its instructions.
-- **Agents may run a few lab scripts without asking** (`npm run spec`, `heal:check`, `trace`, `rtm`, `cost`, `check:lab`). Only `npm run spec` runs code an agent wrote, so it first refuses any spec that imports anything but `@playwright/test` or touches `process`, `require` or `eval`. Every other shell command still asks you. At work, a CI runner or a container does this job.
+- **Agents may run a few lab scripts without asking**, such as `npm run spec`, `heal:check`, `trace`, `rtm` and `check:lab`. Only `npm run spec` runs code an agent wrote, so it first refuses any spec that imports anything but `@playwright/test` or touches `process`, `require` or `eval`. Every other shell command still asks you. At work, a CI runner or a container does this job.
 - **The allow list is per session, not per agent.** `tm_link_script` and `tm_file_defect` run without asking for any agent in the session, the main one included. The agent files say who should use them; `npm run check:lab -- L11` proves from the recordings who did.
 
 ## 1. Look before you automate (10 min)
@@ -57,7 +57,7 @@ Open `artifacts/L11/failures.md`. Every failure has a **Kind**:
 - **locator:** the test never found the element it asked for.
 
 The trace, screenshot and page snapshot of every failure are kept in `artifacts/L11/evidence/`, where the next run cannot overwrite them.
-Dry run (Oct 14): three specs written and run in 95 s, $0.28. Two of the three went red for the wrong reason: the cases guessed how the store shows free shipping and a discount. That is why step 1 exists.
+Dry run (Oct 14): three specs written and run in 95 s. Two of the three went red for the wrong reason: the cases guessed how the store shows free shipping and a discount. That is why step 1 exists.
 
 ## 3. Product bug or test bug? (15 min)
 ```
@@ -76,7 +76,7 @@ The agent may change an expected value only after you change the case and approv
 - **A product bug:** the value is wrong and the case is right by the PRD. Go to step 4.
 
 In our dry run, the fixed TC-04 went red further down. The cart showed `$106.00`, but the order page said `$113.99`. That is a planted bug.
-Dry run: each investigation took 43–55 s and cost $0.03. Each re-sync of the automation agent after a case fix cost $0.72–1.23, so fix formats in step 1.
+Dry run: each investigation took 43–55 s. Each re-sync after a case fix is another full automation run, and in one re-sync the agent dropped the payment step, so fix formats in step 1.
 
 ## 4. File the defect (10 min)
 ```
@@ -90,7 +90,7 @@ Open ZincTM, then Defects. Read your defect as the developer who must fix it. Ch
 - the trace and screenshot paths.
 
 Open the case in ZincTM: its automation now points at your spec.
-Dry run: one defect filed in 84 s, $0.03.
+Dry run: one defect filed in 84 s.
 
 ## 5. Heal the locator, never the assertion (20 min)
 A locator breaks when a test id changes. Simulate one in terminal 3:
@@ -115,31 +115,29 @@ It passes only when all of these hold:
 - every assertion is exactly as it was before the drill.
 
 Your planted-bug test is still red. That is correct: a red test that tells the truth beats a green one that lies.
-Dry run: the healer fixed the locator in 46 s for less than one cent, and `heal:check` passed.
+Dry run: the healer fixed the locator in 46 s, and `heal:check` passed.
 
 **Stretch:** commit first (`git add tests/lab/L11 && git commit -qm "L11 specs"`). Then ask `Use the test-healer agent to make every test green.` Watch what it does, then run `npm run heal:check` and `git diff`. Whatever the agent did, the gate decides. Restore with `git checkout -- tests/lab/L11`.
 
-## 6. Price it, prove it (10 min)
-Leave the agent with `/quit` first: a session's usage is recorded only when it ends.
+## 6. Prove it (10 min)
+Leave the agent with `/quit` first: the runtime writes the record of which models a session used only when the session ends.
 ```bash
-npm run cost -- L11
 npm run check:lab -- L11
 ```
-`npm run cost -- L11` prices only the sessions that ran an L11 agent. It shows agent minutes and the same cost in Copilot credits. You need both numbers for the Monday page.
-Dry run, whole lab: $2.40 at list price. $1.96 of it was two re-syncs after case fixes; without them it was $0.44.
+It reads the runtime's recordings, `artifacts/L11/runs.log`, the gate and ZincTM, never an agent's own words.
 
 ## Without AI (class block)
 Run `npm run report`, open the red test, then **Trace**. Use the trace alone: the actions, the page before and after each one, and the network calls. Decide whether it is a product bug or a test bug, and say which network response proves it. Hint: compare the total the checkout page sent with the amount on the order.
 
 ## Monday page
-Fill in [Review and cost](monday/L11-review-and-cost.md) for your team.
+Fill in [Review and evidence](monday/L11-review-and-evidence.md) for your team.
 
 ## Interview answer
-*"Tell me about a defect you found, and what finding it cost."* Model answer (STAR):
+*"Tell me about a defect you found, and how you proved it."* Model answer (STAR):
 - **Situation:** "Our store promises free shipping at $100.00."
 - **Task:** "I had to automate the boundary case and prove it end to end."
 - **Action:** "An agent wrote the spec from the approved case. I added a team rule: a pricing case isn't proven until the customer pays. The first red was our case's fault, because it expected '$0.00' where the store shows 'Free'. I fixed the case, re-approved it, and the spec went red again at the order total."
-- **Result:** "The cart showed $106.00 and the customer was charged $113.99. A second agent confirmed it against the rule, a third filed it in our test-management tool with the trace and the screenshot, and a gate proved no test was weakened. The agents cost about [your number] at list price."
+- **Result:** "The cart showed $106.00 and the customer was charged $113.99. A second agent confirmed it against the rule, a third filed it in our test-management tool with the trace and the screenshot, and a gate proved no test was weakened. It took [your minutes] from approved case to filed defect."
 
 ## If something breaks
 | You see | Do this |
@@ -150,4 +148,5 @@ Fill in [Review and cost](monday/L11-review-and-cost.md) for your team.
 | Every test passes | Check that your pricing specs pay and check `order-total` (team rule PAY-1). Ask the automation-engineer to follow its rule |
 | A test times out at the order page | The store must be running in terminal 1 (`npm run dev`) |
 | `heal:check` fails on a value you changed in a case | Approve the change first: `npm run review` |
-| `npm run cost -- L11` says no sessions | Leave the agent with `/quit`, then run it again |
+| `check:lab` says "no usage on the declared model" | Leave the agent with `/quit`, then run it again: the runtime writes that record when a session ends |
+| The agent answers in another language | In the agent, type `/language output English` |

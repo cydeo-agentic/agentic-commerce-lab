@@ -8,8 +8,8 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
-import { agentDefinitions, agentSessions, allSubagentRuns, costOf, finalText, isWriteTool, mcpCalls, money, skillsLoaded } from './lib/agent-trace.mjs';
-import { LAB_AGENTS, P, caseProblems, caseRules, casesOf, costPath, defectsOf, jsonIn, readAgentJson, verdictsOf } from './lib/pipeline.mjs';
+import { agentDefinitions, agentSessions, allSubagentRuns, finalText, isWriteTool, mcpCalls, skillsLoaded } from './lib/agent-trace.mjs';
+import { LAB_AGENTS, P, caseProblems, caseRules, casesOf, defectsOf, jsonIn, readAgentJson, verdictsOf } from './lib/pipeline.mjs';
 import { L11_OUT, moneyIn, parseSpec, specFiles, unsafeReasons } from './lib/specs.mjs';
 import { healGate } from './heal-check.mjs';
 import { zinctmSession } from './lib/zinctm.mjs';
@@ -335,10 +335,8 @@ async function l10() {
     check('every published case carries its PRD rule as a label', mine.length && mine.every((t) => (t.labels ?? []).some((l) => /^(cat|cart|price|pay|ord|crm|wh)-\d+$/i.test(l))));
   }
 
-  // What each agent cost, from the runtime's usage record (one model per agent, so a model row is an agent row).
-  const usage = {};
-  for (const s of agentSessions()) for (const [m, u] of Object.entries(s.usage?.models ?? {})) { const c = costOf(m, u); usage[m] = (usage[m] ?? 0) + (c.dollars ?? 0); }
-  for (const d of defs.values()) if (d.model) console.log(`Agent ${d.name.padEnd(19)} model ${d.model.padEnd(32)} ${ranAs(d.name).length} run(s)  ${money(usage[d.model] ?? 0)} so far (list price, npm run cost for detail)`);
+  // Which model each agent declares, and how often the runtime recorded it running.
+  for (const d of defs.values()) if (d.model) console.log(`Agent ${d.name.padEnd(19)} model ${d.model.padEnd(32)} ${ranAs(d.name).length} run(s)`);
 }
 
 // L11: automation and the planted defect. The run's own files (Playwright's report, the evidence it kept, runs.log),
@@ -465,19 +463,8 @@ async function l11() {
       unreviewed.length ? `changed without your approval: ${unreviewed.join(', ')}` : drifted.length ? `re-approved by you: ${drifted.join(', ')}; update them in ZincTM too, so the record matches` : '');
   }
 
-  // 8. The cost sheet adds up, and each agent ran on its own model.
-  const sheetPath = costPath('L11');
-  const sheet = read(sheetPath);
+  // 8. Each L11 agent ran on its declared model (the runtime's usage record is written when a session ends).
   const l11Sessions = agentSessions().filter((s) => s.subagents.some((r) => LAB_AGENTS.L11.includes(r.name)));
-  const lastEnd = Math.max(0, ...l11Sessions.map((s) => Date.parse(s.end ?? s.start)));
-  check(`${sheetPath} exists, made after your last L11 agent run (npm run cost -- L11)`, sheet && mtime(sheetPath) >= lastEnd - 1000, sheet ? '' : 'not yet');
-  if (sheet) {
-    const rowCosts = [...sheet.matchAll(/^\|[^\n]*\|\s*\$([\d.]+)\s*\|\s*[\d-]+\s*\|\s*$/gm)].map((m) => Number(m[1]));
-    const stated = Number(sheet.match(/\*\*Total: \$([\d.]+)\*\*/)?.[1] ?? NaN);
-    let actual = 0;
-    for (const s of l11Sessions) for (const [m, u] of Object.entries(s.usage?.models ?? {})) actual += costOf(m, u).dollars ?? 0;
-    check('the cost sheet adds up: its rows sum to its total, and the total matches the runtime\'s usage record', rowCosts.length && Math.abs(rowCosts.reduce((a, b) => a + b, 0) - stated) <= 0.005 * rowCosts.length + 0.006 && Math.abs(stated - actual) < 0.011, `rows ${money(rowCosts.reduce((a, b) => a + b, 0))}, total ${money(stated)}, usage record ${money(actual)}`);
-  }
   const offModel = LAB_AGENTS.L11.filter((n) => defs.get(n)?.model && ranAs(n).length && !l11Sessions.some((s) => s.subagents.some((r) => r.name === n) && s.usage?.models?.[defs.get(n).model]));
   check('each L11 agent ran on its declared model (usage record)', LAB_AGENTS.L11.every((n) => ranAs(n).length) && !offModel.length, LAB_AGENTS.L11.map((n) => `${n} ${ranAs(n).length} run(s)`).join(', ') + (offModel.length ? `; no usage on the declared model: ${offModel.join(', ')} (end each session with /quit)` : ''));
   if (first) console.log(`Caught: planted bug ${first.bug}`);

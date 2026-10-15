@@ -15,7 +15,7 @@ Every lab ends with a proof check: `npm run check:lab -- <lab>`. The check reads
 | [L10 Context and cited test cases](L10-context-and-cited-cases.md) | Thu Oct 15 | five agents, each with its own model and tools: a read-only researcher, a planner, a case writer and a second agent that judges the cases; you approve them; only approved cases reach ZincTM |
 | [L11 Automation and the planted defect](L11-automation-and-the-planted-defect.md) | Fri Oct 16 | four more agents: approved cases become Playwright specs, a separate agent decides product bug or test bug, one agent files the defect with its evidence, and a healer fixes a locator; a script proves no test was weakened |
 
-Two proofs you can always run: `npm run trace` shows what the agent really did (models, subagents, skills loaded, MCP tools called), read from the agent runtime's own recordings, and `npm run cost` prices it. `npm run catchup -- L06`, `L07`, `L10` or `L11` gives you the reference solution if you fall behind.
+A proof you can always run: `npm run trace` shows what the agent really did (models, subagents, skills loaded, MCP tools called), read from the agent runtime's own recordings. `npm run catchup -- L06`, `L07`, `L10` or `L11` gives you the reference solution if you fall behind.
 
 New labs reach the Codespace you already have with `npm run update`. Check every login and connection before class with `npm run connect`.
 
