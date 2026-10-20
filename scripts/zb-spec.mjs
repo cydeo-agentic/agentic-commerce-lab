@@ -59,7 +59,7 @@ for (const m of src.matchAll(/getByTestId\(\s*(['"`])([^'"`]*?)\1?\s*\)/g)) {
   if (raw.includes('${')) {
     const prefix = raw.split('${')[0].replace(/-$/, '');
     if (!prefixes.has(prefix)) problems.push(`getByTestId(\`${raw}\`): "${prefix}-{…}" is not a templated id in the contract`);
-  } else if (!staticIds.has(raw)) problems.push(`getByTestId('${raw}'): not in the contract`);
+  } else if (!staticIds.has(raw) && ![...prefixes].some((p) => raw.startsWith(`${p}-`))) problems.push(`getByTestId('${raw}'): not in the contract`);
 }
 if (/getByTestId\(\s*[^'"`\s]/.test(src)) problems.push('getByTestId(<variable>): write the id as a literal so it can be checked against the contract');
 for (const m of src.matchAll(/data-testid\^=\\?["']([a-z0-9-]+?)-?\\?["']/g)) {
@@ -80,7 +80,7 @@ for (const [re, why] of [
 ]) if (re.test(src)) problems.push(`uses ${why}`);
 
 // ── 4. Cases: one test per case, expected values unchanged ──────────────────
-const titles = [...src.matchAll(/\btest\(\s*(['"`])(ZB-[A-Z]+-\d+)\b/g)].map((m) => ({ id: m[2], at: m.index }));
+const titles = [...src.matchAll(/\btest\(\s*(['"`])(ZB-[A-Z0-9]+-\d+)\b/g)].map((m) => ({ id: m[2], at: m.index }));
 for (const c of cases) {
   const hits = titles.filter((t) => t.id === c.id);
   if (hits.length !== 1) {
@@ -126,7 +126,7 @@ try { report = JSON.parse(readFileSync(join(OUT, 'results', `${area}.json`), 'ut
 const walk = (suite) => [...(suite.specs ?? []), ...(suite.suites ?? []).flatMap(walk)];
 for (const spec of report ? report.suites.flatMap(walk) : []) {
   const res = spec.tests?.[0]?.results?.at(-1);
-  const id = spec.title.match(/ZB-[A-Z]+-\d+/)?.[0] ?? spec.title;
+  const id = spec.title.match(/ZB-[A-Z0-9]+-\d+/)?.[0] ?? spec.title;
   // eslint-disable-next-line no-control-regex
   const err = (res?.error?.message ?? '').replace(/\u001b\[[0-9;]*m/g, '');
   status.tests.push({

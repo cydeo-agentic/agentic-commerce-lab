@@ -58,7 +58,7 @@ function readStatus(area) {
 }
 function writtenTests(area) {
   const f = join(ZB, 'tests', `${area}.spec.ts`);
-  return existsSync(f) ? [...readFileSync(f, 'utf8').matchAll(/\btest\(\s*['"`]ZB-[A-Z]+-\d+/g)].length : 0;
+  return existsSync(f) ? [...readFileSync(f, 'utf8').matchAll(/\btest\(\s*['"`]ZB-[A-Z0-9]+-\d+/g)].length : 0;
 }
 const mmss = (ms) => `${String(Math.floor(ms / 60000)).padStart(2, '0')}:${String(Math.floor((ms % 60000) / 1000)).padStart(2, '0')}`;
 
