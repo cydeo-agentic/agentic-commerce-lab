@@ -89,7 +89,15 @@ for (const c of cases) {
   }
   const start = hits[0].at;
   const next = titles.filter((t) => t.at > start).map((t) => t.at).sort((a, b) => a - b)[0] ?? src.length;
-  const block = src.slice(start, next);
+  // The body only: the title repeats the expected text, so a changed assertion could hide behind it.
+  const whole = src.slice(start, next);
+  const titleEnd = whole.search(/,\s*async\s*\(/);
+  const block = titleEnd > 0 ? whole.slice(titleEnd) : whole;
+  for (const id of c.testIds ?? []) {
+    const prefix = id.includes('{') ? id.split('{')[0].replace(/-$/, '') : null;
+    const used = prefix ? block.includes(`${prefix}-`) : block.includes(`'${id}'`) || block.includes(`"${id}"`) || block.includes(`\`${id}\``);
+    if (!used) problems.push(`${c.id}: the case uses test id "${id}" but the test never touches it (do every step of the case)`);
+  }
   for (const e of c.expected ?? []) {
     if (e.value === null || e.value === undefined) continue;
     // Literal values only: URL, regex, timing and HTTP checks are written as patterns, not literals.
