@@ -122,13 +122,25 @@ export async function apiPost(page: Page, path: string, data: unknown = {}) {
 // ── The funder: one signed-in API session per worker, used only to put money into test customers ──
 let funderReady: Promise<{ api: APIRequestContext; fromAccountId: string }> | null = null;
 
+/** Funder logins: ZB_FUNDERS="email:password,email:password" (one per worker, round robin) or ZB_FUNDER_EMAIL/PASSWORD. */
+function funderLogins(): { email: string; password: string }[] {
+  const list = (process.env.ZB_FUNDERS ?? '').split(',').map((s) => s.trim()).filter(Boolean).map((s) => {
+    const i = s.indexOf(':');
+    return { email: s.slice(0, i), password: s.slice(i + 1) };
+  });
+  if (process.env.ZB_FUNDER_EMAIL && process.env.ZB_FUNDER_PASSWORD) {
+    list.push({ email: process.env.ZB_FUNDER_EMAIL, password: process.env.ZB_FUNDER_PASSWORD });
+  }
+  return list;
+}
+
 function funder() {
   funderReady ??= (async () => {
-    const email = process.env.ZB_FUNDER_EMAIL;
-    const password = process.env.ZB_FUNDER_PASSWORD;
-    if (!email || !password) {
-      throw new Error('fund() needs a funded ZincBank login: set ZB_FUNDER_EMAIL and ZB_FUNDER_PASSWORD in zincbank/.env');
+    const logins = funderLogins();
+    if (!logins.length) {
+      throw new Error('fund() needs a funded ZincBank login: run npm run zb:setup (it writes zincbank/.env)');
     }
+    const { email, password } = logins[Number(process.env.TEST_PARALLEL_INDEX ?? 0) % logins.length];
     const api = await request.newContext({ baseURL: BASE_URL });
     await envelope(await api.post('/api/auth/login', { data: { email, password } }), 'Signing in the funder');
     const accounts = (await envelope(await api.get('/api/accounts'), 'Reading the funder accounts')).accounts as {
