@@ -128,7 +128,21 @@ export async function createCustomer(api: APIRequestContext, opts: CustomerOptio
 
 /** Sign the page's browser in as `c` (the API sets the session cookie the browser then uses). */
 export async function signInAs(page: Page, c: Customer): Promise<void> {
-  await envelope(await page.request.post('/api/auth/login', { data: { email: c.email, password: c.password } }), `Signing in ${c.email}`);
+  await signInWith(page.request, c.email, c.password);
+}
+
+/**
+ * Sign in through the ZincBank API. ZincBank signs in from its server, and a burst of sign-ins can trip the
+ * auth service's rate limit, which ZincBank reports as 401 for a password that is right. Retry with a pause.
+ */
+async function signInWith(api: APIRequestContext, email: string, password: string): Promise<void> {
+  for (const pause of [0, 2_000, 5_000, 10_000]) {
+    if (pause) await new Promise((r) => setTimeout(r, pause));
+    const res = await api.post('/api/auth/login', { data: { email, password } });
+    if (res.ok()) return;
+    if (res.status() !== 401 && res.status() !== 429) await envelope(res, `Signing in ${email}`);
+  }
+  throw new Error(`Signing in ${email} failed 4 times (401/429: the sign-in rate limit, or a wrong password)`);
 }
 
 /** POST to a ZincBank API as the signed-in page. Money-moving routes get an Idempotency-Key. Returns `data`. */
@@ -167,7 +181,7 @@ function funderList(): Funder[] {
 async function ready(f: Funder): Promise<Funder> {
   if (f.api) return f;
   const api = await request.newContext({ baseURL: BASE_URL });
-  await envelope(await api.post('/api/auth/login', { data: { email: f.email, password: f.password } }), 'Signing in a funder');
+  await signInWith(api, f.email, f.password);
   const accounts = (await envelope(await api.get('/api/accounts'), 'Reading the funder accounts')).accounts as {
     id: string; type: string; balanceCents: number;
   }[];
