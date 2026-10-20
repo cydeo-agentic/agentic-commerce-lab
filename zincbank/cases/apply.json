@@ -78,7 +78,7 @@
     "title": "Back from step 3 keeps what was typed on step 2",
     "given": [
       "A visitor who is NOT signed in (no fixture needed)",
-      "A unique applicant email (fixture: uniqueEmail('apply'))"
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
       "Open /apply",
@@ -103,7 +103,7 @@
     "title": "The SSN field formats 123456789 as 123-45-6789",
     "given": [
       "A visitor who is NOT signed in (no fixture needed)",
-      "A unique applicant email (fixture: uniqueEmail('apply'))"
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
       "Open /apply",
@@ -144,7 +144,7 @@
     "title": "Identity without an employment status does not advance",
     "given": [
       "A visitor who is NOT signed in (no fixture needed)",
-      "A unique applicant email (fixture: uniqueEmail('apply'))"
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
       "Open /apply",
@@ -171,7 +171,7 @@
     "title": "A ZIP that starts with 0 (01001) is accepted",
     "given": [
       "A visitor who is NOT signed in (no fixture needed)",
-      "A unique applicant email (fixture: uniqueEmail('apply'))"
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
       "Open /apply",
@@ -205,7 +205,7 @@
     "title": "A 4-digit ZIP (2019) is rejected with \"Enter a valid 5-digit ZIP\"",
     "given": [
       "A visitor who is NOT signed in (no fixture needed)",
-      "A unique applicant email (fixture: uniqueEmail('apply'))"
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
       "Open /apply",
@@ -238,7 +238,7 @@
     "title": "A 7-character password is rejected with \"Use at least 8 characters\"",
     "given": [
       "A visitor who is NOT signed in (no fixture needed)",
-      "A unique applicant email (fixture: uniqueEmail('apply'))"
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
       "Open /apply",
@@ -274,7 +274,7 @@
     "title": "A confirm password that differs only in capital letters is rejected",
     "given": [
       "A visitor who is NOT signed in (no fixture needed)",
-      "A unique applicant email (fixture: uniqueEmail('apply'))"
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
       "Open /apply",
@@ -311,7 +311,7 @@
     "title": "A full application with savings is approved and opens the dashboard",
     "given": [
       "A visitor who is NOT signed in (no fixture needed)",
-      "A unique applicant email (fixture: uniqueEmail('apply'))"
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
       "Open /apply",
