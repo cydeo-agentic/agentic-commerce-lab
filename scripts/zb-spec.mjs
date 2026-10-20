@@ -80,6 +80,30 @@ for (const [re, why] of [
 ]) if (re.test(src)) problems.push(`uses ${why}`);
 
 // ── 4. Cases: one test per case, expected values unchanged ──────────────────
+// Helpers a test calls (and beforeEach hooks) count as part of that test: their clicks are the test's clicks.
+function braceBlock(text, open) {
+  let depth = 0;
+  for (let i = open; i < text.length; i++) {
+    if (text[i] === '{') depth++;
+    else if (text[i] === '}' && --depth === 0) return text.slice(open, i + 1);
+  }
+  return text.slice(open);
+}
+const helpers = {};
+for (const m of src.matchAll(/(?:async\s+)?function\s+(\w+)\s*\([^)]*\)[^{]*\{/g)) helpers[m[1]] = braceBlock(src, m.index + m[0].length - 1);
+for (const m of src.matchAll(/const\s+(\w+)\s*=\s*(?:async\s*)?\([^)]*\)\s*(?::[^=]+)?=>\s*/g)) {
+  const after = m.index + m[0].length;
+  helpers[m[1]] = src[after] === '{' ? braceBlock(src, after) : src.slice(after, src.indexOf('\n', after));
+}
+const hooks = [...src.matchAll(/test\.beforeEach\(/g)].map((m) => braceBlock(src, src.indexOf('{', m.index))).join('\n');
+function withHelpers(body) {
+  let out = `${body}\n${hooks}`;
+  for (let pass = 0; pass < 3; pass++) {
+    for (const [name, code] of Object.entries(helpers)) if (new RegExp(`\\b${name}\\(`).test(out) && !out.includes(code)) out += `\n${code}`;
+  }
+  return out;
+}
+
 const titles = [...src.matchAll(/\btest\(\s*(['"`])(ZB-[A-Z0-9]+-\d+)\b/g)].map((m) => ({ id: m[2], at: m.index }));
 for (const c of cases) {
   const hits = titles.filter((t) => t.id === c.id);
@@ -92,7 +116,7 @@ for (const c of cases) {
   // The body only: the title repeats the expected text, so a changed assertion could hide behind it.
   const whole = src.slice(start, next);
   const titleEnd = whole.search(/,\s*async\s*\(/);
-  const block = titleEnd > 0 ? whole.slice(titleEnd) : whole;
+  const block = withHelpers(titleEnd > 0 ? whole.slice(titleEnd) : whole);
   for (const id of c.testIds ?? []) {
     const prefix = id.includes('{') ? id.split('{')[0].replace(/-$/, '') : null;
     const used = prefix ? block.includes(`${prefix}-`) : block.includes(`'${id}'`) || block.includes(`"${id}"`) || block.includes(`\`${id}\``);
