@@ -10,9 +10,15 @@
       "Open /transactions"
     ],
     "expected": [
-      { "testId": "transactions-empty", "assert": "toHaveText", "value": "No transactions for this account and range." }
+      {
+        "testId": "transactions-empty",
+        "assert": "toHaveText",
+        "value": "No transactions for this account and range."
+      }
     ],
-    "testIds": ["transactions-empty"]
+    "testIds": [
+      "transactions-empty"
+    ]
   },
   {
     "id": "ZB-TXN-02",
@@ -27,12 +33,32 @@
       "Find the rows: elements whose test id starts with txn-row- inside transactions-table"
     ],
     "expected": [
-      { "testId": "txn-row-{id}", "assert": "toHaveCount", "value": 1 },
-      { "testId": "txn-row-{id}", "assert": "toContainText", "value": "P2P" },
-      { "testId": "txn-row-{id}", "assert": "toContainText", "value": "+$10.00" },
-      { "testId": "transactions-total", "assert": "toHaveText", "value": "1 total" }
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 1
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toContainText",
+        "value": "P2P"
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toContainText",
+        "value": "+$10.00"
+      },
+      {
+        "testId": "transactions-total",
+        "assert": "toHaveText",
+        "value": "1 total"
+      }
     ],
-    "testIds": ["transactions-table", "txn-row-{id}", "transactions-total"]
+    "testIds": [
+      "transactions-table",
+      "transactions-total",
+      "txn-row-{id}"
+    ]
   },
   {
     "id": "ZB-TXN-03",
@@ -46,9 +72,15 @@
       "Open /transactions"
     ],
     "expected": [
-      { "testId": "transactions-balance", "assert": "toHaveText", "value": "$10.00" }
+      {
+        "testId": "transactions-balance",
+        "assert": "toHaveText",
+        "value": "$10.00"
+      }
     ],
-    "testIds": ["transactions-balance"]
+    "testIds": [
+      "transactions-balance"
+    ]
   },
   {
     "id": "ZB-TXN-04",
@@ -64,10 +96,23 @@
       "Find the rows: elements whose test id starts with txn-row- inside transactions-table, filtered to the row that has the text Transfer"
     ],
     "expected": [
-      { "testId": "txn-row-{id}", "filterText": "Transfer", "assert": "toContainText", "value": "-$2.00" },
-      { "testId": "txn-row-{id}", "filterText": "Transfer", "assert": "toContainText", "value": "$8.00" }
+      {
+        "testId": "txn-row-{id}",
+        "filterText": "Transfer",
+        "assert": "toContainText",
+        "value": "-$2.00"
+      },
+      {
+        "testId": "txn-row-{id}",
+        "filterText": "Transfer",
+        "assert": "toContainText",
+        "value": "$8.00"
+      }
     ],
-    "testIds": ["transactions-table", "txn-row-{id}"]
+    "testIds": [
+      "transactions-table",
+      "txn-row-{id}"
+    ]
   },
   {
     "id": "ZB-TXN-05",
@@ -84,11 +129,28 @@
       "Find the rows: elements whose test id starts with txn-row- inside transactions-table"
     ],
     "expected": [
-      { "testId": "transactions-balance", "assert": "toHaveText", "value": "$2.00" },
-      { "testId": "txn-row-{id}", "assert": "toHaveCount", "value": 1 },
-      { "testId": "txn-row-{id}", "assert": "toContainText", "value": "+$2.00" }
+      {
+        "testId": "transactions-balance",
+        "assert": "toHaveText",
+        "value": "$2.00"
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 1
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toContainText",
+        "value": "+$2.00"
+      }
     ],
-    "testIds": ["transactions-account", "transactions-balance", "transactions-table", "txn-row-{id}"]
+    "testIds": [
+      "transactions-account",
+      "transactions-balance",
+      "transactions-table",
+      "txn-row-{id}"
+    ]
   },
   {
     "id": "ZB-TXN-06",
@@ -113,13 +175,41 @@
       "Click transactions-apply"
     ],
     "expected": [
-      { "testId": "txn-row-{id}", "assert": "toHaveCount", "value": 1 },
-      { "testId": null, "assert": "toMatch", "value": "^\\d{4}-\\d{2}-\\d{2}$", "subject": "the transaction day converted to YYYY-MM-DD" },
-      { "testId": "transactions-empty", "assert": "toBeVisible" },
-      { "testId": "txn-row-{id}", "assert": "toHaveCount", "value": 1 },
-      { "testId": "transactions-total", "assert": "toHaveText", "value": "1 total" }
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 1
+      },
+      {
+        "testId": null,
+        "assert": "toMatch",
+        "value": "^\\d{4}-\\d{2}-\\d{2}$",
+        "subject": "the transaction day converted to YYYY-MM-DD"
+      },
+      {
+        "testId": "transactions-empty",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 1
+      },
+      {
+        "testId": "transactions-total",
+        "assert": "toHaveText",
+        "value": "1 total"
+      }
     ],
-    "testIds": ["transactions-table", "txn-row-{id}", "transactions-from", "transactions-to", "transactions-apply", "transactions-empty", "transactions-total"]
+    "testIds": [
+      "transactions-apply",
+      "transactions-empty",
+      "transactions-from",
+      "transactions-table",
+      "transactions-to",
+      "transactions-total",
+      "txn-row-{id}"
+    ]
   },
   {
     "id": "ZB-TXN-07",
@@ -137,10 +227,24 @@
       "Click transactions-apply"
     ],
     "expected": [
-      { "testId": "txn-row-{id}", "assert": "toHaveCount", "value": 1 },
-      { "testId": "transactions-empty", "assert": "toBeVisible" }
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 1
+      },
+      {
+        "testId": "transactions-empty",
+        "assert": "toBeVisible"
+      }
     ],
-    "testIds": ["transactions-table", "txn-row-{id}", "transactions-from", "transactions-to", "transactions-apply", "transactions-empty"]
+    "testIds": [
+      "transactions-apply",
+      "transactions-empty",
+      "transactions-from",
+      "transactions-table",
+      "transactions-to",
+      "txn-row-{id}"
+    ]
   },
   {
     "id": "ZB-TXN-08",
@@ -157,9 +261,18 @@
       "Inside that row, click the button whose test id starts with txn-reverse-"
     ],
     "expected": [
-      { "testId": "transactions-reverse-result", "assert": "toHaveText", "value": "Reversed 2.00 — original marked reversed." }
+      {
+        "testId": "transactions-reverse-result",
+        "assert": "toHaveText",
+        "value": "Reversed 2.00 — original marked reversed."
+      }
     ],
-    "testIds": ["transactions-table", "txn-row-{id}", "txn-reverse-{id}", "transactions-reverse-result"]
+    "testIds": [
+      "transactions-reverse-result",
+      "transactions-table",
+      "txn-reverse-{id}",
+      "txn-row-{id}"
+    ]
   },
   {
     "id": "ZB-TXN-09",
@@ -179,11 +292,30 @@
       "Reload the page"
     ],
     "expected": [
-      { "testId": "transactions-reverse-result", "assert": "toBeVisible" },
-      { "testId": "txn-reversed-{id}", "filterText": "Transfer", "assert": "toHaveText", "value": "Reversed" },
-      { "testId": "transactions-balance", "assert": "toHaveText", "value": "$10.00" }
+      {
+        "testId": "transactions-reverse-result",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "txn-reversed-{id}",
+        "filterText": "Transfer",
+        "assert": "toHaveText",
+        "value": "Reversed"
+      },
+      {
+        "testId": "transactions-balance",
+        "assert": "toHaveText",
+        "value": "$10.00"
+      }
     ],
-    "testIds": ["transactions-table", "txn-row-{id}", "txn-reverse-{id}", "transactions-reverse-result", "txn-reversed-{id}", "transactions-balance"]
+    "testIds": [
+      "transactions-balance",
+      "transactions-reverse-result",
+      "transactions-table",
+      "txn-reverse-{id}",
+      "txn-reversed-{id}",
+      "txn-row-{id}"
+    ]
   },
   {
     "id": "ZB-TXN-10",
@@ -200,13 +332,37 @@
       "Click transactions-next"
     ],
     "expected": [
-      { "testId": "transactions-total", "assert": "toHaveText", "value": "27 total" },
-      { "testId": "txn-row-{id}", "assert": "toHaveCount", "value": 25 },
-      { "testId": "transactions-prev", "assert": "toBeDisabled" },
-      { "testId": "txn-row-{id}", "assert": "toHaveCount", "value": 2 },
-      { "testId": "transactions-next", "assert": "toBeDisabled" }
+      {
+        "testId": "transactions-total",
+        "assert": "toHaveText",
+        "value": "27 total"
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 25
+      },
+      {
+        "testId": "transactions-prev",
+        "assert": "toBeDisabled"
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 2
+      },
+      {
+        "testId": "transactions-next",
+        "assert": "toBeDisabled"
+      }
     ],
-    "testIds": ["transactions-total", "transactions-table", "txn-row-{id}", "transactions-prev", "transactions-next"]
+    "testIds": [
+      "transactions-next",
+      "transactions-prev",
+      "transactions-table",
+      "transactions-total",
+      "txn-row-{id}"
+    ]
   },
   {
     "id": "ZB-TXN-11",
@@ -222,9 +378,20 @@
       "Send a GET request to that href as the signed-in page (page.request.get) and read the status and the content-type header"
     ],
     "expected": [
-      { "testId": "transactions-statement", "assert": "toHaveAttribute", "value": null, "valueFrom": "Attribute href ends with /api/statements/<customer.checkingId>?year=<4 digits>&month=<1 or 2 digits> (regex /api/statements/<checkingId>\\?year=\\d{4}&month=\\d{1,2}$)" },
-      { "testId": null, "assert": "httpGet", "value": "200 application/pdf" }
+      {
+        "testId": "transactions-statement",
+        "assert": "toHaveAttribute",
+        "value": null,
+        "valueFrom": "Attribute href ends with /api/statements/<customer.checkingId>?year=<4 digits>&month=<1 or 2 digits> (regex /api/statements/<checkingId>\\?year=\\d{4}&month=\\d{1,2}$)"
+      },
+      {
+        "testId": null,
+        "assert": "httpGet",
+        "value": "200 application/pdf"
+      }
     ],
-    "testIds": ["transactions-statement"]
+    "testIds": [
+      "transactions-statement"
+    ]
   }
 ]

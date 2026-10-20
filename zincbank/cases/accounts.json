@@ -10,11 +10,27 @@
       "Open /accounts"
     ],
     "expected": [
-      { "testId": "accounts-card-{accountId}", "assert": "toBeVisible", "valueFrom": "accountId is the customer's checking account id (customer.checkingId)" },
-      { "testId": "accounts-card-{accountId}", "assert": "toBeVisible", "valueFrom": "accountId is the customer's savings account id (customer.savingsId)" },
-      { "testId": "accounts-card-{accountId}", "assert": "toHaveCount", "value": 2, "scope": "elements whose test id starts with accounts-card- inside accounts-list" }
+      {
+        "testId": "accounts-card-{accountId}",
+        "assert": "toBeVisible",
+        "valueFrom": "accountId is the customer's checking account id (customer.checkingId)"
+      },
+      {
+        "testId": "accounts-card-{accountId}",
+        "assert": "toBeVisible",
+        "valueFrom": "accountId is the customer's savings account id (customer.savingsId)"
+      },
+      {
+        "testId": "accounts-card-{accountId}",
+        "assert": "toHaveCount",
+        "value": 2,
+        "scope": "elements whose test id starts with accounts-card- inside accounts-list"
+      }
     ],
-    "testIds": ["accounts-card-{accountId}", "accounts-list"]
+    "testIds": [
+      "accounts-card-{id}",
+      "accounts-list"
+    ]
   },
   {
     "id": "ZB-ACCT-02",
@@ -29,10 +45,24 @@
       "Click accounts-open-savings"
     ],
     "expected": [
-      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "the customer's email (checked before the first step)" },
-      { "testId": "accounts-card-{accountId}", "assert": "toHaveCount", "value": 3, "scope": "elements whose test id starts with accounts-card- inside accounts-list" }
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": "accounts-card-{accountId}",
+        "assert": "toHaveCount",
+        "value": 3,
+        "scope": "elements whose test id starts with accounts-card- inside accounts-list"
+      }
     ],
-    "testIds": ["accounts-open-savings", "accounts-list", "accounts-card-{accountId}"]
+    "testIds": [
+      "accounts-card-{id}",
+      "accounts-list",
+      "accounts-open-savings"
+    ]
   },
   {
     "id": "ZB-ACCT-03",
@@ -46,10 +76,23 @@
       "Click accounts-card-{accountId} where accountId is the customer's checking account id (customer.checkingId)"
     ],
     "expected": [
-      { "testId": null, "assert": "toHaveURL", "value": null, "valueFrom": "URL ends with /accounts/ followed by the customer's checking account id (customer.checkingId)" },
-      { "testId": "account-detail-number", "assert": "toHaveText", "value": null, "valueFrom": "the customer's full checking account number (customer.checkingNumber)" }
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": null,
+        "valueFrom": "URL ends with /accounts/ followed by the customer's checking account id (customer.checkingId)"
+      },
+      {
+        "testId": "account-detail-number",
+        "assert": "toHaveText",
+        "value": null,
+        "valueFrom": "the customer's full checking account number (customer.checkingNumber)"
+      }
     ],
-    "testIds": ["accounts-card-{accountId}", "account-detail-number"]
+    "testIds": [
+      "account-detail-number",
+      "accounts-card-{id}"
+    ]
   },
   {
     "id": "ZB-ACCT-04",
@@ -62,9 +105,15 @@
       "Open /accounts/{checkingId} where checkingId is the customer's checking account id (customer.checkingId)"
     ],
     "expected": [
-      { "testId": "account-detail-routing", "assert": "toHaveText", "value": "123456780" }
+      {
+        "testId": "account-detail-routing",
+        "assert": "toHaveText",
+        "value": "123456780"
+      }
     ],
-    "testIds": ["account-detail-routing"]
+    "testIds": [
+      "account-detail-routing"
+    ]
   },
   {
     "id": "ZB-ACCT-05",
@@ -79,9 +128,15 @@
       "Open /accounts/{checkingId} where checkingId is the customer's checking account id (customer.checkingId)"
     ],
     "expected": [
-      { "testId": "account-detail-balance", "assert": "toHaveText", "value": "$75.00" }
+      {
+        "testId": "account-detail-balance",
+        "assert": "toHaveText",
+        "value": "$75.00"
+      }
     ],
-    "testIds": ["account-detail-balance"]
+    "testIds": [
+      "account-detail-balance"
+    ]
   },
   {
     "id": "ZB-ACCT-06",
@@ -96,11 +151,26 @@
       "Open /accounts/{otherCheckingId} where otherCheckingId is the second customer's checking account id, and keep the navigation response"
     ],
     "expected": [
-      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "the customer's email (checked before the first step)" },
-      { "testId": null, "assert": "status", "value": 404 },
-      { "testId": "account-detail-number", "assert": "toHaveCount", "value": 0 }
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": null,
+        "assert": "status",
+        "value": 404
+      },
+      {
+        "testId": "account-detail-number",
+        "assert": "toHaveCount",
+        "value": 0
+      }
     ],
-    "testIds": ["account-detail-number"]
+    "testIds": [
+      "account-detail-number"
+    ]
   },
   {
     "id": "ZB-ACCT-07",
@@ -118,10 +188,24 @@
       "Stop the timer"
     ],
     "expected": [
-      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "the customer's email (checked before the first step)" },
-      { "testId": "accounts-list", "assert": "toBeVisible" },
-      { "testId": null, "assert": "loadTimeUnderMs", "value": 3000 }
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": "accounts-list",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": null,
+        "assert": "loadTimeUnderMs",
+        "value": 3000
+      }
     ],
-    "testIds": ["accounts-list"]
+    "testIds": [
+      "accounts-list"
+    ]
   }
 ]

@@ -64,11 +64,11 @@
       }
     ],
     "testIds": [
-      "payee-add-name",
       "payee-add-account",
+      "payee-add-name",
       "payee-add-submit",
       "payee-manager",
-      "payee-row-{payeeId}"
+      "payee-row-{id}"
     ]
   },
   {
@@ -98,10 +98,9 @@
       }
     ],
     "testIds": [
-      "payee-add-name",
       "payee-add-account",
-      "payee-add-submit",
-      "payee-add-error"
+      "payee-add-error",
+      "payee-add-submit"
     ]
   },
   {
@@ -132,10 +131,10 @@
       }
     ],
     "testIds": [
-      "payee-add-name",
       "payee-add-account",
-      "payee-add-submit",
-      "payee-add-error"
+      "payee-add-error",
+      "payee-add-name",
+      "payee-add-submit"
     ]
   },
   {
@@ -165,8 +164,8 @@
       }
     ],
     "testIds": [
-      "payee-delete-{payeeId}",
-      "payee-row-{payeeId}"
+      "payee-delete-{id}",
+      "payee-row-{id}"
     ]
   },
   {
@@ -193,11 +192,11 @@
       }
     ],
     "testIds": [
+      "billpay-amount",
       "billpay-from",
       "billpay-payee",
-      "billpay-amount",
-      "billpay-submit",
-      "billpay-result"
+      "billpay-result",
+      "billpay-submit"
     ]
   },
   {
@@ -224,11 +223,11 @@
       }
     ],
     "testIds": [
+      "billpay-amount",
       "billpay-from",
       "billpay-payee",
-      "billpay-amount",
-      "billpay-submit",
-      "billpay-result"
+      "billpay-result",
+      "billpay-submit"
     ]
   },
   {
@@ -255,11 +254,11 @@
       }
     ],
     "testIds": [
+      "billpay-amount",
       "billpay-from",
       "billpay-payee",
-      "billpay-amount",
-      "billpay-submit",
-      "billpay-result"
+      "billpay-result",
+      "billpay-submit"
     ]
   },
   {
@@ -286,11 +285,11 @@
       }
     ],
     "testIds": [
+      "billpay-amount",
       "billpay-from",
       "billpay-payee",
-      "billpay-amount",
-      "billpay-submit",
-      "billpay-result"
+      "billpay-result",
+      "billpay-submit"
     ]
   },
   {
@@ -333,13 +332,13 @@
       }
     ],
     "testIds": [
+      "billpay-amount",
       "billpay-from",
       "billpay-payee",
-      "billpay-amount",
-      "billpay-submit",
       "billpay-result",
+      "billpay-submit",
       "transactions-table",
-      "txn-row-{ledgerEntryId}"
+      "txn-row-{id}"
     ]
   }
 ]

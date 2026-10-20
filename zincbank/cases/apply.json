@@ -10,10 +10,20 @@
       "Open /apply"
     ],
     "expected": [
-      { "testId": "apply-step-0", "assert": "toBeVisible" },
-      { "testId": "apply-progress", "assert": "toHaveText", "value": "Step 1 of 6 · Choose your accounts" }
+      {
+        "testId": "apply-step-0",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-progress",
+        "assert": "toHaveText",
+        "value": "Step 1 of 6 · Choose your accounts"
+      }
     ],
-    "testIds": ["apply-step-0", "apply-progress"]
+    "testIds": [
+      "apply-progress",
+      "apply-step-0"
+    ]
   },
   {
     "id": "ZB-APPLY-02",
@@ -27,10 +37,21 @@
       "Click apply-next"
     ],
     "expected": [
-      { "testId": "apply-step-1", "assert": "toBeVisible" },
-      { "testId": "apply-progress", "assert": "toHaveText", "value": "Step 2 of 6 · About you" }
+      {
+        "testId": "apply-step-1",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-progress",
+        "assert": "toHaveText",
+        "value": "Step 2 of 6 · About you"
+      }
     ],
-    "testIds": ["apply-next", "apply-step-1", "apply-progress"]
+    "testIds": [
+      "apply-next",
+      "apply-progress",
+      "apply-step-1"
+    ]
   },
   {
     "id": "ZB-APPLY-03",
@@ -46,10 +67,22 @@
       "Click apply-next again"
     ],
     "expected": [
-      { "testId": "apply-step-1", "assert": "toContainText", "value": "First name is required" },
-      { "testId": "apply-progress", "assert": "toHaveText", "value": "Step 2 of 6 · About you" }
+      {
+        "testId": "apply-step-1",
+        "assert": "toContainText",
+        "value": "First name is required"
+      },
+      {
+        "testId": "apply-progress",
+        "assert": "toHaveText",
+        "value": "Step 2 of 6 · About you"
+      }
     ],
-    "testIds": ["apply-next", "apply-step-1", "apply-progress"]
+    "testIds": [
+      "apply-next",
+      "apply-progress",
+      "apply-step-1"
+    ]
   },
   {
     "id": "ZB-APPLY-04",
@@ -67,10 +100,25 @@
       "Click apply-next"
     ],
     "expected": [
-      { "testId": "apply-step-1", "assert": "toContainText", "value": "Enter a valid email address" },
-      { "testId": "apply-step-2", "assert": "toHaveCount", "value": 0 }
+      {
+        "testId": "apply-step-1",
+        "assert": "toContainText",
+        "value": "Enter a valid email address"
+      },
+      {
+        "testId": "apply-step-2",
+        "assert": "toHaveCount",
+        "value": 0
+      }
     ],
-    "testIds": ["apply-next", "apply-firstname-input", "apply-lastname-input", "apply-email-input", "apply-step-1", "apply-step-2"]
+    "testIds": [
+      "apply-email-input",
+      "apply-firstname-input",
+      "apply-lastname-input",
+      "apply-next",
+      "apply-step-1",
+      "apply-step-2"
+    ]
   },
   {
     "id": "ZB-APPLY-05",
@@ -91,11 +139,26 @@
       "Click apply-back"
     ],
     "expected": [
-      { "testId": "apply-step-2", "assert": "toBeVisible" },
-      { "testId": "apply-step-1", "assert": "toBeVisible" },
-      { "testId": "apply-firstname-input", "assert": "toHaveValue", "value": "Nora" }
+      {
+        "testId": "apply-step-2",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-step-1",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-firstname-input",
+        "assert": "toHaveValue",
+        "value": "Nora"
+      }
     ],
-    "testIds": ["apply-next", "apply-firstname-input", "apply-lastname-input", "apply-email-input", "apply-step-2", "apply-back", "apply-step-1"]
+    "testIds": [
+      "apply-back",
+      "apply-firstname-input",
+      "apply-next",
+      "apply-step-1"
+    ]
   },
   {
     "id": "ZB-APPLY-06",
@@ -116,10 +179,20 @@
       "Type 123456789 into apply-ssn-input"
     ],
     "expected": [
-      { "testId": "apply-step-2", "assert": "toBeVisible" },
-      { "testId": "apply-ssn-input", "assert": "toHaveValue", "value": "123-45-6789" }
+      {
+        "testId": "apply-step-2",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-ssn-input",
+        "assert": "toHaveValue",
+        "value": "123-45-6789"
+      }
     ],
-    "testIds": ["apply-next", "apply-firstname-input", "apply-lastname-input", "apply-email-input", "apply-step-2", "apply-ssn-input"]
+    "testIds": [
+      "apply-next",
+      "apply-ssn-input"
+    ]
   },
   {
     "id": "ZB-APPLY-07",
@@ -134,9 +207,16 @@
       "Type 5551234567 into apply-phone-input"
     ],
     "expected": [
-      { "testId": "apply-phone-input", "assert": "toHaveValue", "value": "(555) 123-4567" }
+      {
+        "testId": "apply-phone-input",
+        "assert": "toHaveValue",
+        "value": "(555) 123-4567"
+      }
     ],
-    "testIds": ["apply-next", "apply-phone-input"]
+    "testIds": [
+      "apply-next",
+      "apply-phone-input"
+    ]
   },
   {
     "id": "ZB-APPLY-08",
@@ -159,11 +239,27 @@
       "Click apply-next"
     ],
     "expected": [
-      { "testId": "apply-step-2", "assert": "toBeVisible" },
-      { "testId": "apply-step-2", "assert": "toContainText", "value": "Select your employment status" },
-      { "testId": "apply-progress", "assert": "toHaveText", "value": "Step 3 of 6 · Identity (simulated)" }
+      {
+        "testId": "apply-step-2",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-step-2",
+        "assert": "toContainText",
+        "value": "Select your employment status"
+      },
+      {
+        "testId": "apply-progress",
+        "assert": "toHaveText",
+        "value": "Step 3 of 6 · Identity (simulated)"
+      }
     ],
-    "testIds": ["apply-next", "apply-firstname-input", "apply-lastname-input", "apply-email-input", "apply-step-2", "apply-ssn-input", "apply-employment-select", "apply-progress"]
+    "testIds": [
+      "apply-next",
+      "apply-progress",
+      "apply-ssn-input",
+      "apply-step-2"
+    ]
   },
   {
     "id": "ZB-APPLY-09",
@@ -192,12 +288,36 @@
       "Click apply-next"
     ],
     "expected": [
-      { "testId": "apply-step-2", "assert": "toBeVisible" },
-      { "testId": "apply-step-3", "assert": "toBeVisible" },
-      { "testId": "apply-step-4", "assert": "toBeVisible" },
-      { "testId": "apply-progress", "assert": "toHaveText", "value": "Step 5 of 6 · Security" }
+      {
+        "testId": "apply-step-2",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-step-3",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-step-4",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-progress",
+        "assert": "toHaveText",
+        "value": "Step 5 of 6 · Security"
+      }
     ],
-    "testIds": ["apply-next", "apply-firstname-input", "apply-lastname-input", "apply-email-input", "apply-step-2", "apply-ssn-input", "apply-employment-select", "apply-step-3", "apply-addressline-input", "apply-city-input", "apply-state-select", "apply-zip-input", "apply-step-4", "apply-progress"]
+    "testIds": [
+      "apply-addressline-input",
+      "apply-city-input",
+      "apply-employment-select",
+      "apply-next",
+      "apply-progress",
+      "apply-ssn-input",
+      "apply-state-select",
+      "apply-step-3",
+      "apply-step-4",
+      "apply-zip-input"
+    ]
   },
   {
     "id": "ZB-APPLY-10",
@@ -226,11 +346,30 @@
       "Click apply-next"
     ],
     "expected": [
-      { "testId": "apply-step-2", "assert": "toBeVisible" },
-      { "testId": "apply-step-3", "assert": "toBeVisible" },
-      { "testId": "apply-step-3", "assert": "toContainText", "value": "Enter a valid 5-digit ZIP" }
+      {
+        "testId": "apply-step-2",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-step-3",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-step-3",
+        "assert": "toContainText",
+        "value": "Enter a valid 5-digit ZIP"
+      }
     ],
-    "testIds": ["apply-next", "apply-firstname-input", "apply-lastname-input", "apply-email-input", "apply-step-2", "apply-ssn-input", "apply-employment-select", "apply-step-3", "apply-addressline-input", "apply-city-input", "apply-state-select", "apply-zip-input"]
+    "testIds": [
+      "apply-addressline-input",
+      "apply-city-input",
+      "apply-employment-select",
+      "apply-next",
+      "apply-ssn-input",
+      "apply-state-select",
+      "apply-step-3",
+      "apply-zip-input"
+    ]
   },
   {
     "id": "ZB-APPLY-11",
@@ -262,11 +401,33 @@
       "Click apply-next"
     ],
     "expected": [
-      { "testId": "apply-step-2", "assert": "toBeVisible" },
-      { "testId": "apply-step-3", "assert": "toBeVisible" },
-      { "testId": "apply-step-4", "assert": "toContainText", "value": "Use at least 8 characters" }
+      {
+        "testId": "apply-step-2",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-step-3",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-step-4",
+        "assert": "toContainText",
+        "value": "Use at least 8 characters"
+      }
     ],
-    "testIds": ["apply-next", "apply-firstname-input", "apply-lastname-input", "apply-email-input", "apply-step-2", "apply-ssn-input", "apply-employment-select", "apply-step-3", "apply-addressline-input", "apply-city-input", "apply-state-select", "apply-zip-input", "apply-password-input", "apply-confirm-input", "apply-step-4"]
+    "testIds": [
+      "apply-addressline-input",
+      "apply-city-input",
+      "apply-confirm-input",
+      "apply-employment-select",
+      "apply-next",
+      "apply-password-input",
+      "apply-ssn-input",
+      "apply-state-select",
+      "apply-step-3",
+      "apply-step-4",
+      "apply-zip-input"
+    ]
   },
   {
     "id": "ZB-APPLY-12",
@@ -298,12 +459,39 @@
       "Click apply-next"
     ],
     "expected": [
-      { "testId": "apply-step-2", "assert": "toBeVisible" },
-      { "testId": "apply-step-3", "assert": "toBeVisible" },
-      { "testId": "apply-step-4", "assert": "toContainText", "value": "Passwords must match" },
-      { "testId": "apply-step-5", "assert": "toHaveCount", "value": 0 }
+      {
+        "testId": "apply-step-2",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-step-3",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-step-4",
+        "assert": "toContainText",
+        "value": "Passwords must match"
+      },
+      {
+        "testId": "apply-step-5",
+        "assert": "toHaveCount",
+        "value": 0
+      }
     ],
-    "testIds": ["apply-next", "apply-firstname-input", "apply-lastname-input", "apply-email-input", "apply-step-2", "apply-ssn-input", "apply-employment-select", "apply-step-3", "apply-addressline-input", "apply-city-input", "apply-state-select", "apply-zip-input", "apply-password-input", "apply-confirm-input", "apply-step-4", "apply-step-5"]
+    "testIds": [
+      "apply-addressline-input",
+      "apply-city-input",
+      "apply-confirm-input",
+      "apply-employment-select",
+      "apply-next",
+      "apply-password-input",
+      "apply-ssn-input",
+      "apply-state-select",
+      "apply-step-3",
+      "apply-step-4",
+      "apply-step-5",
+      "apply-zip-input"
+    ]
   },
   {
     "id": "ZB-APPLY-13",
@@ -341,15 +529,59 @@
       "Click apply-decision-continue"
     ],
     "expected": [
-      { "testId": "apply-step-2", "assert": "toBeVisible" },
-      { "testId": "apply-step-3", "assert": "toBeVisible" },
-      { "testId": "apply-review-summary", "assert": "toContainText", "value": "Checking + Savings" },
-      { "testId": "apply-review-summary", "assert": "toContainText", "value": "•••-••-6789" },
-      { "testId": "apply-decision-approved", "assert": "toContainText", "value": "Welcome to ZincBank, Nora" },
-      { "testId": null, "assert": "toHaveURL", "value": "/dashboard" },
-      { "testId": "dashboard-welcome", "assert": "toHaveText", "value": "Welcome, Nora" }
+      {
+        "testId": "apply-step-2",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-step-3",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-review-summary",
+        "assert": "toContainText",
+        "value": "Checking + Savings"
+      },
+      {
+        "testId": "apply-review-summary",
+        "assert": "toContainText",
+        "value": "•••-••-6789"
+      },
+      {
+        "testId": "apply-decision-approved",
+        "assert": "toContainText",
+        "value": "Welcome to ZincBank, Nora"
+      },
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": "/dashboard"
+      },
+      {
+        "testId": "dashboard-welcome",
+        "assert": "toHaveText",
+        "value": "Welcome, Nora"
+      }
     ],
-    "testIds": ["apply-account-savings-toggle", "apply-next", "apply-firstname-input", "apply-lastname-input", "apply-email-input", "apply-step-2", "apply-ssn-input", "apply-employment-select", "apply-step-3", "apply-addressline-input", "apply-city-input", "apply-state-select", "apply-zip-input", "apply-password-input", "apply-confirm-input", "apply-review-summary", "apply-terms-checkbox", "apply-submit", "apply-decision-approved", "apply-decision-continue", "dashboard-welcome"]
+    "testIds": [
+      "apply-account-savings-toggle",
+      "apply-addressline-input",
+      "apply-city-input",
+      "apply-confirm-input",
+      "apply-decision-approved",
+      "apply-decision-continue",
+      "apply-employment-select",
+      "apply-next",
+      "apply-password-input",
+      "apply-review-summary",
+      "apply-ssn-input",
+      "apply-state-select",
+      "apply-step-3",
+      "apply-submit",
+      "apply-terms-checkbox",
+      "apply-zip-input",
+      "dashboard-welcome"
+    ]
   },
   {
     "id": "ZB-APPLY-14",
@@ -365,8 +597,13 @@
       "Open /apply again"
     ],
     "expected": [
-      { "testId": "apply-next", "assert": "toBeVisible" }
+      {
+        "testId": "apply-next",
+        "assert": "toBeVisible"
+      }
     ],
-    "testIds": ["apply-next"]
+    "testIds": [
+      "apply-next"
+    ]
   }
 ]

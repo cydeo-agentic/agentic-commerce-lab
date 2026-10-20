@@ -10,9 +10,15 @@
       "Open /move-money"
     ],
     "expected": [
-      { "testId": "schedule-empty", "assert": "toHaveText", "value": "Nothing scheduled yet." }
+      {
+        "testId": "schedule-empty",
+        "assert": "toHaveText",
+        "value": "Nothing scheduled yet."
+      }
     ],
-    "testIds": ["schedule-empty"]
+    "testIds": [
+      "schedule-empty"
+    ]
   },
   {
     "id": "ZB-SCHED-02",
@@ -32,9 +38,22 @@
       "Click schedule-submit"
     ],
     "expected": [
-      { "testId": "schedule-result", "assert": "toHaveText", "value": null, "valueFrom": "Scheduled for <tomorrow as MM/DD/YYYY (helper usDate(isoDay(1)))>." }
+      {
+        "testId": "schedule-result",
+        "assert": "toHaveText",
+        "value": null,
+        "valueFrom": "Scheduled for <tomorrow as MM/DD/YYYY (helper usDate(isoDay(1)))>."
+      }
     ],
-    "testIds": ["schedule-type", "schedule-from", "schedule-to", "schedule-amount", "schedule-date", "schedule-submit", "schedule-result"]
+    "testIds": [
+      "schedule-amount",
+      "schedule-date",
+      "schedule-from",
+      "schedule-result",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
   },
   {
     "id": "ZB-SCHED-03",
@@ -56,12 +75,39 @@
       "Inside those rows, find the element whose test id starts with schedule-status-"
     ],
     "expected": [
-      { "testId": "schedule-result", "assert": "toContainText", "value": "Scheduled for" },
-      { "testId": "schedule-row-{id}", "assert": "toHaveCount", "value": 1 },
-      { "testId": "schedule-row-{id}", "assert": "toContainText", "value": "$10.00" },
-      { "testId": "schedule-status-{id}", "assert": "toHaveText", "value": "scheduled" }
+      {
+        "testId": "schedule-result",
+        "assert": "toContainText",
+        "value": "Scheduled for"
+      },
+      {
+        "testId": "schedule-row-{id}",
+        "assert": "toHaveCount",
+        "value": 1
+      },
+      {
+        "testId": "schedule-row-{id}",
+        "assert": "toContainText",
+        "value": "$10.00"
+      },
+      {
+        "testId": "schedule-status-{id}",
+        "assert": "toHaveText",
+        "value": "scheduled"
+      }
     ],
-    "testIds": ["schedule-type", "schedule-from", "schedule-to", "schedule-amount", "schedule-date", "schedule-submit", "schedule-result", "schedule-list", "schedule-row-{id}", "schedule-status-{id}"]
+    "testIds": [
+      "schedule-amount",
+      "schedule-date",
+      "schedule-from",
+      "schedule-list",
+      "schedule-result",
+      "schedule-row-{id}",
+      "schedule-status-{id}",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
   },
   {
     "id": "ZB-SCHED-04",
@@ -80,9 +126,21 @@
       "Click schedule-submit"
     ],
     "expected": [
-      { "testId": "schedule-result", "assert": "toHaveText", "value": "INVALID_SCHEDULED_DATE" }
+      {
+        "testId": "schedule-result",
+        "assert": "toHaveText",
+        "value": "INVALID_SCHEDULED_DATE"
+      }
     ],
-    "testIds": ["schedule-type", "schedule-from", "schedule-to", "schedule-amount", "schedule-date", "schedule-submit", "schedule-result"]
+    "testIds": [
+      "schedule-amount",
+      "schedule-date",
+      "schedule-from",
+      "schedule-result",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
   },
   {
     "id": "ZB-SCHED-05",
@@ -101,9 +159,21 @@
       "Click schedule-submit"
     ],
     "expected": [
-      { "testId": "schedule-result", "assert": "toHaveText", "value": "INVALID_SCHEDULED_DATE" }
+      {
+        "testId": "schedule-result",
+        "assert": "toHaveText",
+        "value": "INVALID_SCHEDULED_DATE"
+      }
     ],
-    "testIds": ["schedule-type", "schedule-from", "schedule-to", "schedule-amount", "schedule-date", "schedule-submit", "schedule-result"]
+    "testIds": [
+      "schedule-amount",
+      "schedule-date",
+      "schedule-from",
+      "schedule-result",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
   },
   {
     "id": "ZB-SCHED-06",
@@ -122,9 +192,21 @@
       "Click schedule-submit"
     ],
     "expected": [
-      { "testId": "schedule-result", "assert": "toHaveText", "value": "VALIDATION_ERROR" }
+      {
+        "testId": "schedule-result",
+        "assert": "toHaveText",
+        "value": "VALIDATION_ERROR"
+      }
     ],
-    "testIds": ["schedule-type", "schedule-from", "schedule-to", "schedule-amount", "schedule-date", "schedule-submit", "schedule-result"]
+    "testIds": [
+      "schedule-amount",
+      "schedule-date",
+      "schedule-from",
+      "schedule-result",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
   },
   {
     "id": "ZB-SCHED-07",
@@ -145,10 +227,30 @@
       "Inside those rows, click the button whose test id starts with schedule-cancel-"
     ],
     "expected": [
-      { "testId": "schedule-result", "assert": "toHaveText", "value": "Scheduled payment cancelled." },
-      { "testId": "schedule-status-{id}", "assert": "toHaveText", "value": "cancelled" }
+      {
+        "testId": "schedule-result",
+        "assert": "toHaveText",
+        "value": "Scheduled payment cancelled."
+      },
+      {
+        "testId": "schedule-status-{id}",
+        "assert": "toHaveText",
+        "value": "cancelled"
+      }
     ],
-    "testIds": ["schedule-type", "schedule-from", "schedule-to", "schedule-amount", "schedule-date", "schedule-submit", "schedule-list", "schedule-row-{id}", "schedule-cancel-{id}", "schedule-result", "schedule-status-{id}"]
+    "testIds": [
+      "schedule-amount",
+      "schedule-cancel-{id}",
+      "schedule-date",
+      "schedule-from",
+      "schedule-list",
+      "schedule-result",
+      "schedule-row-{id}",
+      "schedule-status-{id}",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
   },
   {
     "id": "ZB-SCHED-08",
@@ -170,10 +272,29 @@
       "Wait for the row's schedule-status- element to read cancelled, then look for any schedule-cancel- button inside the rows"
     ],
     "expected": [
-      { "testId": "schedule-status-{id}", "assert": "toHaveText", "value": "cancelled" },
-      { "testId": "schedule-cancel-{id}", "assert": "toHaveCount", "value": 0 }
+      {
+        "testId": "schedule-status-{id}",
+        "assert": "toHaveText",
+        "value": "cancelled"
+      },
+      {
+        "testId": "schedule-cancel-{id}",
+        "assert": "toHaveCount",
+        "value": 0
+      }
     ],
-    "testIds": ["schedule-type", "schedule-from", "schedule-to", "schedule-amount", "schedule-date", "schedule-submit", "schedule-list", "schedule-row-{id}", "schedule-cancel-{id}", "schedule-status-{id}"]
+    "testIds": [
+      "schedule-amount",
+      "schedule-cancel-{id}",
+      "schedule-date",
+      "schedule-from",
+      "schedule-list",
+      "schedule-row-{id}",
+      "schedule-status-{id}",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
   },
   {
     "id": "ZB-SCHED-09",
@@ -187,11 +308,26 @@
       "In schedule-type choose the option with value bill_pay"
     ],
     "expected": [
-      { "testId": "schedule-to", "assert": "toHaveCount", "value": 0 },
-      { "testId": "schedule-payee", "assert": "toBeDisabled" },
-      { "testId": "schedule-payee", "assert": "toContainText", "value": "Add a payee first" }
+      {
+        "testId": "schedule-to",
+        "assert": "toHaveCount",
+        "value": 0
+      },
+      {
+        "testId": "schedule-payee",
+        "assert": "toBeDisabled"
+      },
+      {
+        "testId": "schedule-payee",
+        "assert": "toContainText",
+        "value": "Add a payee first"
+      }
     ],
-    "testIds": ["schedule-type", "schedule-to", "schedule-payee"]
+    "testIds": [
+      "schedule-payee",
+      "schedule-to",
+      "schedule-type"
+    ]
   },
   {
     "id": "ZB-SCHED-10",
@@ -212,9 +348,29 @@
       "Find the rows: elements whose test id starts with schedule-row- inside schedule-list, filtered to the row that has the text Water Co"
     ],
     "expected": [
-      { "testId": "schedule-result", "assert": "toHaveText", "value": null, "valueFrom": "Scheduled for <the date two days from today as MM/DD/YYYY (helper usDate(isoDay(2)))>." },
-      { "testId": "schedule-row-{id}", "filterText": "Water Co", "assert": "toContainText", "value": "$15.00" }
+      {
+        "testId": "schedule-result",
+        "assert": "toHaveText",
+        "value": null,
+        "valueFrom": "Scheduled for <the date two days from today as MM/DD/YYYY (helper usDate(isoDay(2)))>."
+      },
+      {
+        "testId": "schedule-row-{id}",
+        "filterText": "Water Co",
+        "assert": "toContainText",
+        "value": "$15.00"
+      }
     ],
-    "testIds": ["schedule-type", "schedule-from", "schedule-payee", "schedule-amount", "schedule-date", "schedule-submit", "schedule-result", "schedule-list", "schedule-row-{id}"]
+    "testIds": [
+      "schedule-amount",
+      "schedule-date",
+      "schedule-from",
+      "schedule-list",
+      "schedule-payee",
+      "schedule-result",
+      "schedule-row-{id}",
+      "schedule-submit",
+      "schedule-type"
+    ]
   }
 ]

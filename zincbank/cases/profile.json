@@ -10,11 +10,27 @@
       "Open /profile"
     ],
     "expected": [
-      { "testId": "profile-firstname-input", "assert": "toHaveValue", "value": null, "valueFrom": "The customer's first name (customer.firstName)" },
-      { "testId": "profile-email-input", "assert": "toHaveValue", "value": null, "valueFrom": "The customer's email (customer.email)" },
-      { "testId": "profile-email-input", "assert": "toBeDisabled" }
+      {
+        "testId": "profile-firstname-input",
+        "assert": "toHaveValue",
+        "value": null,
+        "valueFrom": "The customer's first name (customer.firstName)"
+      },
+      {
+        "testId": "profile-email-input",
+        "assert": "toHaveValue",
+        "value": null,
+        "valueFrom": "The customer's email (customer.email)"
+      },
+      {
+        "testId": "profile-email-input",
+        "assert": "toBeDisabled"
+      }
     ],
-    "testIds": ["profile-firstname-input", "profile-email-input"]
+    "testIds": [
+      "profile-email-input",
+      "profile-firstname-input"
+    ]
   },
   {
     "id": "ZB-PROF-02",
@@ -32,11 +48,28 @@
       "Reload the page"
     ],
     "expected": [
-      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "customer.email" },
-      { "testId": "profile-form-status", "assert": "toHaveText", "value": "Profile saved" },
-      { "testId": "profile-phone-input", "assert": "toHaveValue", "value": "(703) 555-0199" }
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "customer.email"
+      },
+      {
+        "testId": "profile-form-status",
+        "assert": "toHaveText",
+        "value": "Profile saved"
+      },
+      {
+        "testId": "profile-phone-input",
+        "assert": "toHaveValue",
+        "value": "(703) 555-0199"
+      }
     ],
-    "testIds": ["profile-phone-input", "profile-save", "profile-form-status"]
+    "testIds": [
+      "profile-form-status",
+      "profile-phone-input",
+      "profile-save"
+    ]
   },
   {
     "id": "ZB-PROF-03",
@@ -52,10 +85,23 @@
       "Click profile-save"
     ],
     "expected": [
-      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "customer.email" },
-      { "testId": "profile-form-status", "assert": "toHaveText", "value": "First name cannot be empty" }
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "customer.email"
+      },
+      {
+        "testId": "profile-form-status",
+        "assert": "toHaveText",
+        "value": "First name cannot be empty"
+      }
     ],
-    "testIds": ["profile-firstname-input", "profile-save", "profile-form-status"]
+    "testIds": [
+      "profile-firstname-input",
+      "profile-form-status",
+      "profile-save"
+    ]
   },
   {
     "id": "ZB-PROF-04",
@@ -71,8 +117,17 @@
       "Click profile-changepassword-submit"
     ],
     "expected": [
-      { "testId": "profile-password-status", "assert": "toHaveText", "value": "Password changed" }
+      {
+        "testId": "profile-password-status",
+        "assert": "toHaveText",
+        "value": "Password changed"
+      }
     ],
-    "testIds": ["profile-currentpassword-input", "profile-newpassword-input", "profile-changepassword-submit", "profile-password-status"]
+    "testIds": [
+      "profile-changepassword-submit",
+      "profile-currentpassword-input",
+      "profile-newpassword-input",
+      "profile-password-status"
+    ]
   }
 ]

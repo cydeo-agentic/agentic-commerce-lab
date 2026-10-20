@@ -45,8 +45,8 @@
       }
     ],
     "testIds": [
-      "p2p-recipient-email",
       "p2p-lookup",
+      "p2p-recipient-email",
       "p2p-recipient-name"
     ]
   },
@@ -72,8 +72,8 @@
       }
     ],
     "testIds": [
-      "p2p-recipient-email",
       "p2p-lookup",
+      "p2p-recipient-email",
       "p2p-result"
     ]
   },
@@ -99,8 +99,8 @@
       }
     ],
     "testIds": [
-      "p2p-recipient-email",
       "p2p-lookup",
+      "p2p-recipient-email",
       "p2p-result"
     ]
   },
@@ -164,13 +164,13 @@
       }
     ],
     "testIds": [
-      "p2p-recipient-email",
-      "p2p-lookup",
       "p2p-amount",
+      "p2p-lookup",
+      "p2p-recipient-email",
       "p2p-review",
-      "p2p-review-recipient",
+      "p2p-review-amount",
       "p2p-review-email",
-      "p2p-review-amount"
+      "p2p-review-recipient"
     ]
   },
   {
@@ -198,12 +198,12 @@
       }
     ],
     "testIds": [
-      "p2p-recipient-email",
-      "p2p-lookup",
       "p2p-amount",
-      "p2p-review",
       "p2p-confirm",
-      "p2p-result"
+      "p2p-lookup",
+      "p2p-recipient-email",
+      "p2p-result",
+      "p2p-review"
     ]
   },
   {
@@ -237,13 +237,13 @@
       }
     ],
     "testIds": [
-      "p2p-recipient-email",
-      "p2p-lookup",
       "p2p-amount",
-      "p2p-review",
       "p2p-confirm",
+      "p2p-lookup",
+      "p2p-recipient-email",
       "p2p-remaining",
-      "p2p-result"
+      "p2p-result",
+      "p2p-review"
     ]
   },
   {
@@ -275,12 +275,12 @@
       }
     ],
     "testIds": [
-      "p2p-recipient-email",
-      "p2p-lookup",
       "p2p-amount",
-      "p2p-review",
       "p2p-edit",
-      "p2p-form"
+      "p2p-form",
+      "p2p-lookup",
+      "p2p-recipient-email",
+      "p2p-review"
     ]
   },
   {
@@ -316,8 +316,8 @@
       }
     ],
     "testIds": [
-      "p2p-recipient-email",
       "p2p-lookup",
+      "p2p-recipient-email",
       "p2p-recipient-name",
       "p2p-review"
     ]
@@ -350,12 +350,12 @@
       }
     ],
     "testIds": [
-      "p2p-recipient-email",
-      "p2p-lookup",
       "p2p-amount",
-      "p2p-review",
+      "p2p-form",
+      "p2p-lookup",
+      "p2p-recipient-email",
       "p2p-result",
-      "p2p-form"
+      "p2p-review"
     ]
   },
   {
@@ -383,12 +383,12 @@
       }
     ],
     "testIds": [
-      "p2p-recipient-email",
-      "p2p-lookup",
       "p2p-amount",
-      "p2p-review",
       "p2p-confirm",
-      "p2p-result"
+      "p2p-lookup",
+      "p2p-recipient-email",
+      "p2p-result",
+      "p2p-review"
     ]
   }
 ]

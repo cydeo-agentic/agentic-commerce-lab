@@ -10,9 +10,15 @@
       "Open /login"
     ],
     "expected": [
-      { "testId": "login-page", "assert": "toContainText", "value": "Sign in to ZincBank" }
+      {
+        "testId": "login-page",
+        "assert": "toContainText",
+        "value": "Sign in to ZincBank"
+      }
     ],
-    "testIds": ["login-page"]
+    "testIds": [
+      "login-page"
+    ]
   },
   {
     "id": "ZB-LOGIN-02",
@@ -28,10 +34,23 @@
       "Click login-submit"
     ],
     "expected": [
-      { "testId": null, "assert": "toHaveURL", "value": "/dashboard" },
-      { "testId": "dashboard-welcome", "assert": "toHaveText", "value": "Welcome, Lena" }
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": "/dashboard"
+      },
+      {
+        "testId": "dashboard-welcome",
+        "assert": "toHaveText",
+        "value": "Welcome, Lena"
+      }
     ],
-    "testIds": ["login-email-input", "login-password-input", "login-submit", "dashboard-welcome"]
+    "testIds": [
+      "dashboard-welcome",
+      "login-email-input",
+      "login-password-input",
+      "login-submit"
+    ]
   },
   {
     "id": "ZB-LOGIN-03",
@@ -47,10 +66,23 @@
       "Click login-submit"
     ],
     "expected": [
-      { "testId": "login-error", "assert": "toHaveText", "value": "Invalid email or password." },
-      { "testId": null, "assert": "toHaveURL", "value": "/login" }
+      {
+        "testId": "login-error",
+        "assert": "toHaveText",
+        "value": "Invalid email or password."
+      },
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": "/login"
+      }
     ],
-    "testIds": ["login-email-input", "login-password-input", "login-submit", "login-error"]
+    "testIds": [
+      "login-email-input",
+      "login-error",
+      "login-password-input",
+      "login-submit"
+    ]
   },
   {
     "id": "ZB-LOGIN-04",
@@ -65,9 +97,16 @@
       "Click login-submit"
     ],
     "expected": [
-      { "testId": "login-error", "assert": "toHaveText", "value": "Enter your email and password." }
+      {
+        "testId": "login-error",
+        "assert": "toHaveText",
+        "value": "Enter your email and password."
+      }
     ],
-    "testIds": ["login-email-input", "login-password-input", "login-submit", "login-error"]
+    "testIds": [
+      "login-error",
+      "login-submit"
+    ]
   },
   {
     "id": "ZB-LOGIN-05",
@@ -80,10 +119,19 @@
       "Open /dashboard"
     ],
     "expected": [
-      { "testId": null, "assert": "toHaveURL", "value": "/login" },
-      { "testId": "login-page", "assert": "toBeVisible" }
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": "/login"
+      },
+      {
+        "testId": "login-page",
+        "assert": "toBeVisible"
+      }
     ],
-    "testIds": ["login-page"]
+    "testIds": [
+      "login-page"
+    ]
   },
   {
     "id": "ZB-LOGIN-06",
@@ -97,10 +145,20 @@
       "Click login-apply-link"
     ],
     "expected": [
-      { "testId": null, "assert": "toHaveURL", "value": "/apply" },
-      { "testId": "apply-page", "assert": "toBeVisible" }
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": "/apply"
+      },
+      {
+        "testId": "apply-page",
+        "assert": "toBeVisible"
+      }
     ],
-    "testIds": ["login-apply-link", "apply-page"]
+    "testIds": [
+      "apply-page",
+      "login-apply-link"
+    ]
   },
   {
     "id": "ZB-LOGIN-07",
@@ -115,11 +173,26 @@
       "Click nav-signout"
     ],
     "expected": [
-      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "the customer's email (checked before the first step)" },
-      { "testId": null, "assert": "toHaveURL", "value": "/login" },
-      { "testId": "login-page", "assert": "toBeVisible" }
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": "/login"
+      },
+      {
+        "testId": "login-page",
+        "assert": "toBeVisible"
+      }
     ],
-    "testIds": ["nav-signout", "login-page"]
+    "testIds": [
+      "login-page",
+      "nav-signout"
+    ]
   },
   {
     "id": "ZB-LOGIN-08",
@@ -136,10 +209,25 @@
       "Open /dashboard again"
     ],
     "expected": [
-      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "the customer's email (checked before the first step)" },
-      { "testId": null, "assert": "toHaveURL", "value": "/login" },
-      { "testId": null, "assert": "toHaveURL", "value": "/login" }
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": "/login"
+      },
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": "/login"
+      }
     ],
-    "testIds": ["nav-signout"]
+    "testIds": [
+      "nav-signout"
+    ]
   }
 ]

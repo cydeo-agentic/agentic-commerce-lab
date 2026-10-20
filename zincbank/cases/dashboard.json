@@ -10,9 +10,16 @@
       "Open /dashboard"
     ],
     "expected": [
-      { "testId": "dashboard-welcome", "assert": "toHaveText", "value": null, "valueFrom": "Welcome, followed by the customer's first name (Welcome, {firstName})" }
+      {
+        "testId": "dashboard-welcome",
+        "assert": "toHaveText",
+        "value": null,
+        "valueFrom": "Welcome, followed by the customer's first name (Welcome, {firstName})"
+      }
     ],
-    "testIds": ["dashboard-welcome"]
+    "testIds": [
+      "dashboard-welcome"
+    ]
   },
   {
     "id": "ZB-DASH-02",
@@ -26,10 +33,21 @@
       "Open /dashboard"
     ],
     "expected": [
-      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "the customer's email (checked before the first step)" },
-      { "testId": "dashboard-total-deposit", "assert": "toHaveText", "value": "$0.00" }
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": "dashboard-total-deposit",
+        "assert": "toHaveText",
+        "value": "$0.00"
+      }
     ],
-    "testIds": ["dashboard-total-deposit"]
+    "testIds": [
+      "dashboard-total-deposit"
+    ]
   },
   {
     "id": "ZB-DASH-03",
@@ -44,9 +62,15 @@
       "Open /dashboard"
     ],
     "expected": [
-      { "testId": "dashboard-total-deposit", "assert": "toHaveText", "value": "$250.00" }
+      {
+        "testId": "dashboard-total-deposit",
+        "assert": "toHaveText",
+        "value": "$250.00"
+      }
     ],
-    "testIds": ["dashboard-total-deposit"]
+    "testIds": [
+      "dashboard-total-deposit"
+    ]
   },
   {
     "id": "ZB-DASH-04",
@@ -59,11 +83,26 @@
       "Open /dashboard"
     ],
     "expected": [
-      { "testId": "dashboard-account-card-{accountId}", "assert": "toBeVisible", "valueFrom": "accountId is the customer's checking account id (customer.checkingId)" },
-      { "testId": "dashboard-account-card-{accountId}", "assert": "toBeVisible", "valueFrom": "accountId is the customer's savings account id (customer.savingsId)" },
-      { "testId": "dashboard-account-card-{accountId}", "assert": "toHaveCount", "value": 2, "scope": "all elements whose test id starts with dashboard-account-card- on the page" }
+      {
+        "testId": "dashboard-account-card-{accountId}",
+        "assert": "toBeVisible",
+        "valueFrom": "accountId is the customer's checking account id (customer.checkingId)"
+      },
+      {
+        "testId": "dashboard-account-card-{accountId}",
+        "assert": "toBeVisible",
+        "valueFrom": "accountId is the customer's savings account id (customer.savingsId)"
+      },
+      {
+        "testId": "dashboard-account-card-{accountId}",
+        "assert": "toHaveCount",
+        "value": 2,
+        "scope": "all elements whose test id starts with dashboard-account-card- on the page"
+      }
     ],
-    "testIds": ["dashboard-account-card-{accountId}"]
+    "testIds": [
+      "dashboard-account-card-{id}"
+    ]
   },
   {
     "id": "ZB-DASH-05",
@@ -77,10 +116,21 @@
       "Open /dashboard"
     ],
     "expected": [
-      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "the customer's email (checked before the first step)" },
-      { "testId": "dashboard-recent-empty", "assert": "toHaveText", "value": "No activity yet." }
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": "dashboard-recent-empty",
+        "assert": "toHaveText",
+        "value": "No activity yet."
+      }
     ],
-    "testIds": ["dashboard-recent-empty"]
+    "testIds": [
+      "dashboard-recent-empty"
+    ]
   },
   {
     "id": "ZB-DASH-06",
@@ -96,10 +146,23 @@
       "Inside dashboard-recent-activity, find the rows whose test id starts with txn-row-"
     ],
     "expected": [
-      { "testId": "txn-row-{transactionId}", "assert": "toHaveCount", "value": 1, "scope": "rows whose test id starts with txn-row- inside dashboard-recent-activity" },
-      { "testId": "txn-row-{transactionId}", "assert": "toContainText", "value": "$250.00", "scope": "the first such row inside dashboard-recent-activity" }
+      {
+        "testId": "txn-row-{transactionId}",
+        "assert": "toHaveCount",
+        "value": 1,
+        "scope": "rows whose test id starts with txn-row- inside dashboard-recent-activity"
+      },
+      {
+        "testId": "txn-row-{transactionId}",
+        "assert": "toContainText",
+        "value": "$250.00",
+        "scope": "the first such row inside dashboard-recent-activity"
+      }
     ],
-    "testIds": ["dashboard-recent-activity", "txn-row-{transactionId}"]
+    "testIds": [
+      "dashboard-recent-activity",
+      "txn-row-{id}"
+    ]
   },
   {
     "id": "ZB-DASH-07",
@@ -114,11 +177,26 @@
       "Click dashboard-quick-transfer"
     ],
     "expected": [
-      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "the customer's email (checked before the first step)" },
-      { "testId": null, "assert": "toHaveURL", "value": "/move-money" },
-      { "testId": "transfer-form", "assert": "toBeVisible" }
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": "/move-money"
+      },
+      {
+        "testId": "transfer-form",
+        "assert": "toBeVisible"
+      }
     ],
-    "testIds": ["dashboard-quick-transfer", "transfer-form"]
+    "testIds": [
+      "dashboard-quick-transfer",
+      "transfer-form"
+    ]
   },
   {
     "id": "ZB-DASH-08",
@@ -133,10 +211,25 @@
       "Open /dashboard"
     ],
     "expected": [
-      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "the customer's email (checked before the first step)" },
-      { "testId": "dashboard-card-summary", "assert": "toContainText", "value": "$10,000.00" },
-      { "testId": "dashboard-card-summary", "assert": "toContainText", "value": "17.99%" }
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": "dashboard-card-summary",
+        "assert": "toContainText",
+        "value": "$10,000.00"
+      },
+      {
+        "testId": "dashboard-card-summary",
+        "assert": "toContainText",
+        "value": "17.99%"
+      }
     ],
-    "testIds": ["dashboard-card-summary"]
+    "testIds": [
+      "dashboard-card-summary"
+    ]
   }
 ]
