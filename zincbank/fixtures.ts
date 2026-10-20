@@ -125,49 +125,82 @@ export async function addPayee(page: Page, name: string, externalAccountNumber: 
   return (await apiPost(page, '/api/payees', { name, externalAccountNumber })).payee;
 }
 
-// ── The funder: one signed-in API session per worker, used only to put money into test customers ──
-let funderReady: Promise<{ api: APIRequestContext; fromAccountId: string }> | null = null;
+// ── Funders: logins that put money into test customers. Each can send $5,000.00 a day by P2P. ──────────
+// fund() starts with this worker's funder and moves on when one is out of allowance or money. After a test,
+// the customer fixture sends whatever is left back to the funder, so funder (and student) balances stay whole.
+type Funder = { email: string; password: string; api?: APIRequestContext; fromAccountId?: string; spent?: boolean };
+let funders: Funder[] | null = null;
+const fundedBy = new Map<string, string>(); // customer email -> funder email
 
-/** Funder logins: ZB_FUNDERS="email:password,email:password" (one per worker, round robin) or ZB_FUNDER_EMAIL/PASSWORD. */
-function funderLogins(): { email: string; password: string }[] {
-  const list = (process.env.ZB_FUNDERS ?? '').split(',').map((s) => s.trim()).filter(Boolean).map((s) => {
+/** Funder logins: ZB_FUNDERS="email:password,email:password" and/or ZB_FUNDER_EMAIL/ZB_FUNDER_PASSWORD. */
+function funderList(): Funder[] {
+  if (funders) return funders;
+  const list: Funder[] = (process.env.ZB_FUNDERS ?? '').split(',').map((s) => s.trim()).filter(Boolean).map((s) => {
     const i = s.indexOf(':');
     return { email: s.slice(0, i), password: s.slice(i + 1) };
   });
   if (process.env.ZB_FUNDER_EMAIL && process.env.ZB_FUNDER_PASSWORD) {
     list.push({ email: process.env.ZB_FUNDER_EMAIL, password: process.env.ZB_FUNDER_PASSWORD });
   }
-  return list;
+  if (!list.length) throw new Error('fund() needs a funded ZincBank login: run npm run zb:setup (it writes zincbank/.env)');
+  const start = Number(process.env.TEST_PARALLEL_INDEX ?? 0) % list.length;
+  funders = [...list.slice(start), ...list.slice(0, start)];
+  return funders;
 }
 
-function funder() {
-  funderReady ??= (async () => {
-    const logins = funderLogins();
-    if (!logins.length) {
-      throw new Error('fund() needs a funded ZincBank login: run npm run zb:setup (it writes zincbank/.env)');
-    }
-    const { email, password } = logins[Number(process.env.TEST_PARALLEL_INDEX ?? 0) % logins.length];
-    const api = await request.newContext({ baseURL: BASE_URL });
-    await envelope(await api.post('/api/auth/login', { data: { email, password } }), 'Signing in the funder');
-    const accounts = (await envelope(await api.get('/api/accounts'), 'Reading the funder accounts')).accounts as {
-      id: string; type: string; balanceCents: number;
-    }[];
-    const from = accounts.filter((a) => a.type !== 'credit_card').sort((a, b) => b.balanceCents - a.balanceCents)[0];
-    return { api, fromAccountId: from.id };
-  })();
-  return funderReady;
+async function ready(f: Funder): Promise<Funder> {
+  if (f.api) return f;
+  const api = await request.newContext({ baseURL: BASE_URL });
+  await envelope(await api.post('/api/auth/login', { data: { email: f.email, password: f.password } }), 'Signing in a funder');
+  const accounts = (await envelope(await api.get('/api/accounts'), 'Reading the funder accounts')).accounts as {
+    id: string; type: string; balanceCents: number;
+  }[];
+  f.fromAccountId = accounts.filter((a) => a.type !== 'credit_card').sort((a, b) => b.balanceCents - a.balanceCents)[0].id;
+  f.api = api;
+  return f;
 }
 
-/** Put `cents` into c's checking (a P2P send from the funder). The funder's daily P2P limit is $5,000.00. */
+/** Put `cents` into c's checking (a P2P send from a funder). */
 export async function fundCustomer(c: Customer, cents: number): Promise<void> {
-  const f = await funder();
-  await envelope(
-    await f.api.post('/api/p2p/transfers', {
+  const problems: string[] = [];
+  for (const f of funderList().filter((x) => !x.spent)) {
+    await ready(f);
+    const res = await f.api!.post('/api/p2p/transfers', {
       data: { fromAccountId: f.fromAccountId, recipientEmail: c.email, amountCents: cents, memo: 'zbtest funding' },
       headers: { 'Idempotency-Key': randomUUID() },
-    }),
-    `Funding ${c.email} with ${usd(cents)}`,
-  );
+    });
+    const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: { code?: string } };
+    if (res.ok() && body.ok) {
+      fundedBy.set(c.email, f.email);
+      return;
+    }
+    const code = body.error?.code ?? `HTTP ${res.status()}`;
+    problems.push(`${f.email}: ${code}`);
+    if (code === 'P2P_LIMIT_EXCEEDED' || code === 'INSUFFICIENT_FUNDS') {
+      f.spent = true;
+      continue;
+    }
+    break;
+  }
+  throw new Error(`Funding ${c.email} with ${usd(cents)} failed (${problems.join('; ')})`);
+}
+
+/** Send what is left in a funded customer's deposit accounts back to its funder. Best effort, never fails a test. */
+async function giveBack(page: Page, c: Customer): Promise<void> {
+  const to = fundedBy.get(c.email);
+  if (!to) return;
+  try {
+    const res = await page.request.get('/api/accounts');
+    const accounts = ((await res.json()).data?.accounts ?? []) as { id: string; type: string; balanceCents: number }[];
+    for (const a of accounts.filter((x) => x.type !== 'credit_card' && x.balanceCents > 0)) {
+      await page.request.post('/api/p2p/transfers', {
+        data: { fromAccountId: a.id, recipientEmail: to, amountCents: a.balanceCents, memo: 'zbtest give back' },
+        headers: { 'Idempotency-Key': randomUUID() },
+      });
+    }
+  } catch {
+    // The test may have signed out or closed the page; the few dollars stay with the test customer.
+  }
 }
 
 type Fixtures = {
@@ -187,6 +220,7 @@ export const test = base.extend<Fixtures>({
     const c = await newCustomer();
     await signInAs(page, c);
     await use(c);
+    await giveBack(page, c);
   },
   signIn: async ({ page }, use) => {
     await use((c) => signInAs(page, c));

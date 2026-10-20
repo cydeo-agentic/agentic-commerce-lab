@@ -52,20 +52,20 @@
   {
     "id": "ZB-DASH-03",
     "area": "dashboard",
-    "title": "After $250.00 arrives, the total deposit balance is $250.00",
+    "title": "After $25.00 arrives, the total deposit balance is $25.00",
     "given": [
       "A new signed-in customer (fixture: customer)",
-      "$250.00 in checking (fixture: fund(customer, 25_000))"
+      "$25.00 in checking (fixture: fund(customer, 2_500))"
     ],
     "steps": [
-      "Precondition via fixture: fund(customer, 25_000) puts $250.00 into the customer's checking",
+      "Precondition via fixture: fund(customer, 2_500) puts $25.00 into the customer's checking",
       "Open /dashboard"
     ],
     "expected": [
       {
         "testId": "dashboard-total-deposit",
         "assert": "toHaveText",
-        "value": "$250.00"
+        "value": "$25.00"
       }
     ],
     "testIds": [
@@ -135,13 +135,13 @@
   {
     "id": "ZB-DASH-06",
     "area": "dashboard",
-    "title": "Money received shows in recent activity as $250.00",
+    "title": "Money received shows in recent activity as $25.00",
     "given": [
       "A new signed-in customer (fixture: customer)",
-      "$250.00 in checking (fixture: fund(customer, 25_000))"
+      "$25.00 in checking (fixture: fund(customer, 2_500))"
     ],
     "steps": [
-      "Precondition via fixture: fund(customer, 25_000) puts $250.00 into the customer's checking",
+      "Precondition via fixture: fund(customer, 2_500) puts $25.00 into the customer's checking",
       "Open /dashboard",
       "Inside dashboard-recent-activity, find the rows whose test id starts with txn-row-"
     ],
@@ -155,7 +155,7 @@
       {
         "testId": "txn-row-{transactionId}",
         "assert": "toContainText",
-        "value": "$250.00",
+        "value": "$25.00",
         "scope": "the first such row inside dashboard-recent-activity"
       }
     ],

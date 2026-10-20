@@ -118,20 +118,20 @@
   {
     "id": "ZB-ACCT-05",
     "area": "accounts",
-    "title": "The account detail shows the balance $75.00 after $75.00 arrives",
+    "title": "The account detail shows the balance $7.50 after $7.50 arrives",
     "given": [
       "A new signed-in customer (fixture: customer)",
-      "$75.00 in checking (fixture: fund(customer, 7_500))"
+      "$7.50 in checking (fixture: fund(customer, 750))"
     ],
     "steps": [
-      "Precondition via fixture: fund(customer, 7_500) puts $75.00 into the customer's checking",
+      "Precondition via fixture: fund(customer, 750) puts $7.50 into the customer's checking",
       "Open /accounts/{checkingId} where checkingId is the customer's checking account id (customer.checkingId)"
     ],
     "expected": [
       {
         "testId": "account-detail-balance",
         "assert": "toHaveText",
-        "value": "$75.00"
+        "value": "$7.50"
       }
     ],
     "testIds": [
