@@ -111,7 +111,7 @@
       "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
     ],
     "steps": [
-      "Precondition via API (apiPost): POST /api/payees with { name: 'Gas Co', externalAccountNumber: '111222333' }",
+      "Precondition: const payee = await addPayee(page, 'Gas Co', '111222333') (helper from '../fixtures'; it returns the payee itself).",
       "Open /move-money",
       "Type Gas Co into payee-add-name",
       "Type 111222333 into payee-add-account",
@@ -145,7 +145,7 @@
       "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
     ],
     "steps": [
-      "Precondition via API (apiPost): POST /api/payees with { name: 'Phone Co', externalAccountNumber: '444555666' } — keep the returned payee id (response payee.id) as the Phone Co payee id",
+      "Precondition: const payee = await addPayee(page, 'Phone Co', '444555666') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
       "Open /move-money",
       "Click payee-delete-{payeeId} (payeeId = the Phone Co payee id)"
     ],
@@ -177,7 +177,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Precondition via API (apiPost): POST /api/payees with { name: 'Water Co', externalAccountNumber: '555000111' } — keep the returned payee id (response payee.id) as the Water Co payee id",
+      "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
       "Open /move-money",
       "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
@@ -208,7 +208,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Precondition via API (apiPost): POST /api/payees with { name: 'Water Co', externalAccountNumber: '555000111' } — keep the returned payee id (response payee.id) as the Water Co payee id",
+      "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
       "Open /move-money",
       "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
@@ -239,7 +239,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Precondition via API (apiPost): POST /api/payees with { name: 'Water Co', externalAccountNumber: '555000111' } — keep the returned payee id (response payee.id) as the Water Co payee id",
+      "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
       "Open /move-money",
       "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
@@ -270,7 +270,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Precondition via API (apiPost): POST /api/payees with { name: 'Water Co', externalAccountNumber: '555000111' } — keep the returned payee id (response payee.id) as the Water Co payee id",
+      "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
       "Open /move-money",
       "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
@@ -301,7 +301,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Precondition via API (apiPost): POST /api/payees with { name: 'Water Co', externalAccountNumber: '555000111' } — keep the returned payee id (response payee.id) as the Water Co payee id",
+      "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
       "Open /move-money",
       "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",

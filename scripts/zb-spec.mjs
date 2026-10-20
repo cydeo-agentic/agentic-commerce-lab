@@ -166,7 +166,8 @@ for (const spec of report ? report.suites.flatMap(walk) : []) {
   const err = (res?.error?.message ?? '').replace(/\u001b\[[0-9;]*m/g, '');
   status.tests.push({
     id, title: spec.title, status: res?.status === 'passed' ? 'passed' : 'failed',
-    error: err ? err.split('\n').filter((l) => /Expected|Received|Error|Timeout|waiting for/.test(l)).slice(0, 4).join(' | ') : undefined,
+    error: err ? (err.split('\n').filter((l) => /Expected|Received|Error|timeout|waiting for/i.test(l)).slice(0, 4).join(' | ') +
+      (/Test timeout/.test(err) ? ' | HINT: the test hung; usually a locator that matches nothing (check how you built the id)' : '')) : undefined,
   });
 }
 // A test that failed on a WRONG VALUE and is green now, after its code changed, may have been bent to fit the

@@ -8,6 +8,7 @@
  *   - signIn        sign `page` in as a customer (API sign-in; the browser shares the cookie)
  *   - fund          put money in a customer's checking (a P2P send from the funder login in zincbank/.env)
  *   - apiPost       call a ZincBank API as the signed-in page (for preconditions only, never for the check)
+ *   - addPayee      add a payee as the signed-in page; returns the payee ({ id, name })
  *
  * Money: inputs take dollar strings ("25.00"); the API and these helpers take integer cents.
  */
@@ -117,6 +118,11 @@ export async function signInAs(page: Page, c: Customer): Promise<void> {
 /** POST to a ZincBank API as the signed-in page. Money-moving routes get an Idempotency-Key. Returns `data`. */
 export async function apiPost(page: Page, path: string, data: unknown = {}) {
   return envelope(await page.request.post(path, { data, headers: { 'Idempotency-Key': randomUUID() } }), `POST ${path}`);
+}
+
+/** Add a payee as the signed-in page. Returns the payee itself: `(await addPayee(page, 'Water Co', '555000111')).id`. */
+export async function addPayee(page: Page, name: string, externalAccountNumber: string): Promise<{ id: string; name: string }> {
+  return (await apiPost(page, '/api/payees', { name, externalAccountNumber })).payee;
 }
 
 // ── The funder: one signed-in API session per worker, used only to put money into test customers ──

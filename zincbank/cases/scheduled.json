@@ -337,7 +337,7 @@
       "A new signed-in customer (fixture: customer)"
     ],
     "steps": [
-      "Precondition via API (apiPost): POST /api/payees with { name: 'Water Co', externalAccountNumber: '555000111' }; keep the returned payee id (response data.payee.id)",
+      "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
       "Open /move-money",
       "In schedule-type choose the option with value bill_pay",
       "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
