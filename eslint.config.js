@@ -9,7 +9,7 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   {
     ...playwright.configs['flat/recommended'],
-    files: ['tests/**/*.ts'],
+    files: ['tests/**/*.ts', 'zincbank/tests/**/*.ts'],
     rules: {
       ...playwright.configs['flat/recommended'].rules,
       // The gates this program teaches: no fixed sleeps, no focused or skipped-by-accident tests.

@@ -1,0 +1,306 @@
+[
+  {
+    "id": "ZB-XFER-01",
+    "area": "transfers",
+    "title": "$2.50 checking to savings succeeds with new balance $7.50",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
+      "Type 2.50 into transfer-amount",
+      "Click transfer-submit"
+    ],
+    "expected": [
+      {
+        "testId": "transfer-result",
+        "assert": "toHaveText",
+        "value": "Transferred — new balance $7.50."
+      }
+    ],
+    "testIds": [
+      "transfer-from",
+      "transfer-to",
+      "transfer-amount",
+      "transfer-submit",
+      "transfer-result"
+    ]
+  },
+  {
+    "id": "ZB-XFER-02",
+    "area": "transfers",
+    "title": "A transfer between own accounts leaves the total deposit balance at $10.00",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
+      "Type 4.00 into transfer-amount",
+      "Click transfer-submit",
+      "After the transfer-result shows, open /dashboard",
+      "Read dashboard-total-deposit"
+    ],
+    "expected": [
+      {
+        "testId": "transfer-result",
+        "assert": "toHaveText",
+        "value": "Transferred — new balance $6.00."
+      },
+      {
+        "testId": "dashboard-total-deposit",
+        "assert": "toHaveText",
+        "value": "$10.00"
+      }
+    ],
+    "testIds": [
+      "transfer-from",
+      "transfer-to",
+      "transfer-amount",
+      "transfer-submit",
+      "transfer-result",
+      "dashboard-total-deposit"
+    ]
+  },
+  {
+    "id": "ZB-XFER-03",
+    "area": "transfers",
+    "title": "The same account as From and To is rejected with SAME_ACCOUNT_TRANSFER",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money",
+      "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In transfer-to choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "Type 1.00 into transfer-amount",
+      "Click transfer-submit"
+    ],
+    "expected": [
+      {
+        "testId": "transfer-result",
+        "assert": "toHaveText",
+        "value": "SAME_ACCOUNT_TRANSFER"
+      }
+    ],
+    "testIds": [
+      "transfer-from",
+      "transfer-to",
+      "transfer-amount",
+      "transfer-submit",
+      "transfer-result"
+    ]
+  },
+  {
+    "id": "ZB-XFER-04",
+    "area": "transfers",
+    "title": "One cent more than the balance ($10.01 of $10.00) is rejected with INSUFFICIENT_FUNDS",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
+      "Type 10.01 into transfer-amount",
+      "Click transfer-submit"
+    ],
+    "expected": [
+      {
+        "testId": "transfer-result",
+        "assert": "toHaveText",
+        "value": "INSUFFICIENT_FUNDS"
+      }
+    ],
+    "testIds": [
+      "transfer-from",
+      "transfer-to",
+      "transfer-amount",
+      "transfer-submit",
+      "transfer-result"
+    ]
+  },
+  {
+    "id": "ZB-XFER-05",
+    "area": "transfers",
+    "title": "The exact balance ($10.00) can be transferred, leaving $0.00",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
+      "Type 10.00 into transfer-amount",
+      "Click transfer-submit"
+    ],
+    "expected": [
+      {
+        "testId": "transfer-result",
+        "assert": "toHaveText",
+        "value": "Transferred — new balance $0.00."
+      }
+    ],
+    "testIds": [
+      "transfer-from",
+      "transfer-to",
+      "transfer-amount",
+      "transfer-submit",
+      "transfer-result"
+    ]
+  },
+  {
+    "id": "ZB-XFER-06",
+    "area": "transfers",
+    "title": "The minimum amount $0.01 is accepted",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
+      "Type 0.01 into transfer-amount",
+      "Click transfer-submit"
+    ],
+    "expected": [
+      {
+        "testId": "transfer-result",
+        "assert": "toHaveText",
+        "value": "Transferred — new balance $9.99."
+      }
+    ],
+    "testIds": [
+      "transfer-from",
+      "transfer-to",
+      "transfer-amount",
+      "transfer-submit",
+      "transfer-result"
+    ]
+  },
+  {
+    "id": "ZB-XFER-07",
+    "area": "transfers",
+    "title": "$0.02 is accepted",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
+      "Type 0.02 into transfer-amount",
+      "Click transfer-submit"
+    ],
+    "expected": [
+      {
+        "testId": "transfer-result",
+        "assert": "toHaveText",
+        "value": "Transferred — new balance $9.98."
+      }
+    ],
+    "testIds": [
+      "transfer-from",
+      "transfer-to",
+      "transfer-amount",
+      "transfer-submit",
+      "transfer-result"
+    ]
+  },
+  {
+    "id": "ZB-XFER-08",
+    "area": "transfers",
+    "title": "Three decimals (1.234) are rejected with INVALID_AMOUNT",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money",
+      "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
+      "Type 1.234 into transfer-amount",
+      "Click transfer-submit"
+    ],
+    "expected": [
+      {
+        "testId": "transfer-result",
+        "assert": "toHaveText",
+        "value": "INVALID_AMOUNT"
+      }
+    ],
+    "testIds": [
+      "transfer-from",
+      "transfer-to",
+      "transfer-amount",
+      "transfer-submit",
+      "transfer-result"
+    ]
+  },
+  {
+    "id": "ZB-XFER-09",
+    "area": "transfers",
+    "title": "Letters (abc) are rejected with INVALID_AMOUNT",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money",
+      "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
+      "Type abc into transfer-amount",
+      "Click transfer-submit"
+    ],
+    "expected": [
+      {
+        "testId": "transfer-result",
+        "assert": "toHaveText",
+        "value": "INVALID_AMOUNT"
+      }
+    ],
+    "testIds": [
+      "transfer-from",
+      "transfer-to",
+      "transfer-amount",
+      "transfer-submit",
+      "transfer-result"
+    ]
+  },
+  {
+    "id": "ZB-XFER-10",
+    "area": "transfers",
+    "title": "Zero (0) is rejected with INVALID_AMOUNT",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money",
+      "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
+      "Type 0 into transfer-amount",
+      "Click transfer-submit"
+    ],
+    "expected": [
+      {
+        "testId": "transfer-result",
+        "assert": "toHaveText",
+        "value": "INVALID_AMOUNT"
+      }
+    ],
+    "testIds": [
+      "transfer-from",
+      "transfer-to",
+      "transfer-amount",
+      "transfer-submit",
+      "transfer-result"
+    ]
+  }
+]

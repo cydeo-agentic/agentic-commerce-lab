@@ -6,7 +6,14 @@
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["tests", "mcp", "playwright.config.ts"]
+  "include": [
+    "tests",
+    "mcp",
+    "playwright.config.ts",
+    "zincbank"
+  ]
 }

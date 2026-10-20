@@ -78,7 +78,7 @@ export function usDate(iso: string): string {
 }
 
 async function envelope(res: Awaited<ReturnType<APIRequestContext['post']>>, what: string) {
-  const body = await res.json().catch(() => ({}));
+  const body = (await res.json().catch(() => ({}))) as { ok?: boolean; data?: any; error?: unknown }; // eslint-disable-line @typescript-eslint/no-explicit-any
   if (!res.ok() || !body.ok) throw new Error(`${what} failed: HTTP ${res.status()} ${JSON.stringify(body.error ?? body)}`);
   return body.data;
 }

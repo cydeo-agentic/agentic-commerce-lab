@@ -1,0 +1,145 @@
+[
+  {
+    "id": "ZB-LOGIN-01",
+    "area": "login",
+    "title": "Login page shows the bank name \"Sign in to ZincBank\"",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)"
+    ],
+    "steps": [
+      "Open /login"
+    ],
+    "expected": [
+      { "testId": "login-page", "assert": "toContainText", "value": "Sign in to ZincBank" }
+    ],
+    "testIds": ["login-page"]
+  },
+  {
+    "id": "ZB-LOGIN-02",
+    "area": "login",
+    "title": "Valid credentials open the dashboard with a welcome",
+    "given": [
+      "A new customer who is NOT signed in, first name Lena (fixture: newCustomer({ firstName: 'Lena' }))"
+    ],
+    "steps": [
+      "Open /login",
+      "Type the customer's email into login-email-input",
+      "Type the customer's password into login-password-input",
+      "Click login-submit"
+    ],
+    "expected": [
+      { "testId": null, "assert": "toHaveURL", "value": "/dashboard" },
+      { "testId": "dashboard-welcome", "assert": "toHaveText", "value": "Welcome, Lena" }
+    ],
+    "testIds": ["login-email-input", "login-password-input", "login-submit", "dashboard-welcome"]
+  },
+  {
+    "id": "ZB-LOGIN-03",
+    "area": "login",
+    "title": "Wrong password shows \"Invalid email or password.\"",
+    "given": [
+      "A new customer who is NOT signed in (fixture: newCustomer())"
+    ],
+    "steps": [
+      "Open /login",
+      "Type the customer's email into login-email-input",
+      "Type Wrong-Passw0rd into login-password-input",
+      "Click login-submit"
+    ],
+    "expected": [
+      { "testId": "login-error", "assert": "toHaveText", "value": "Invalid email or password." },
+      { "testId": null, "assert": "toHaveURL", "value": "/login" }
+    ],
+    "testIds": ["login-email-input", "login-password-input", "login-submit", "login-error"]
+  },
+  {
+    "id": "ZB-LOGIN-04",
+    "area": "login",
+    "title": "Empty email and password show \"Enter your email and password.\"",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)"
+    ],
+    "steps": [
+      "Open /login",
+      "Leave login-email-input and login-password-input empty",
+      "Click login-submit"
+    ],
+    "expected": [
+      { "testId": "login-error", "assert": "toHaveText", "value": "Enter your email and password." }
+    ],
+    "testIds": ["login-email-input", "login-password-input", "login-submit", "login-error"]
+  },
+  {
+    "id": "ZB-LOGIN-05",
+    "area": "login",
+    "title": "A signed-out visit to /dashboard is sent to the login page",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)"
+    ],
+    "steps": [
+      "Open /dashboard"
+    ],
+    "expected": [
+      { "testId": null, "assert": "toHaveURL", "value": "/login" },
+      { "testId": "login-page", "assert": "toBeVisible" }
+    ],
+    "testIds": ["login-page"]
+  },
+  {
+    "id": "ZB-LOGIN-06",
+    "area": "login",
+    "title": "\"Open an account\" link opens the application",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)"
+    ],
+    "steps": [
+      "Open /login",
+      "Click login-apply-link"
+    ],
+    "expected": [
+      { "testId": null, "assert": "toHaveURL", "value": "/apply" },
+      { "testId": "apply-page", "assert": "toBeVisible" }
+    ],
+    "testIds": ["login-apply-link", "apply-page"]
+  },
+  {
+    "id": "ZB-LOGIN-07",
+    "area": "login",
+    "title": "Sign out returns to the login page",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "The customer's email contains zbtest- (it was made by the fixture)"
+    ],
+    "steps": [
+      "Open /dashboard",
+      "Click nav-signout"
+    ],
+    "expected": [
+      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "the customer's email (checked before the first step)" },
+      { "testId": null, "assert": "toHaveURL", "value": "/login" },
+      { "testId": "login-page", "assert": "toBeVisible" }
+    ],
+    "testIds": ["nav-signout", "login-page"]
+  },
+  {
+    "id": "ZB-LOGIN-08",
+    "area": "login",
+    "title": "After sign out, /dashboard no longer opens",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "The customer's email contains zbtest- (it was made by the fixture)"
+    ],
+    "steps": [
+      "Open /dashboard",
+      "Click nav-signout",
+      "Check the URL ends with /login",
+      "Open /dashboard again"
+    ],
+    "expected": [
+      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "the customer's email (checked before the first step)" },
+      { "testId": null, "assert": "toHaveURL", "value": "/login" },
+      { "testId": null, "assert": "toHaveURL", "value": "/login" }
+    ],
+    "testIds": ["nav-signout"]
+  }
+]

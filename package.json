@@ -37,7 +37,12 @@
     "spec": "node scripts/spec.mjs",
     "heal:check": "node scripts/heal-check.mjs",
     "drill": "node scripts/drill.mjs",
-    "catalog": "node scripts/catalog.mjs"
+    "catalog": "node scripts/catalog.mjs",
+    "zb:setup": "node scripts/zb-setup.mjs",
+    "zb:spec": "node scripts/zb-spec.mjs",
+    "zb:auto": "node scripts/zb-auto.mjs",
+    "zb:test": "playwright test -c zincbank/playwright.config.ts",
+    "zb:report": "playwright show-report artifacts/zb/report --host 0.0.0.0"
   },
   "dependencies": {
     "express": "^5.2.1",

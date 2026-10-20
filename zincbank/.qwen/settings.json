@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run zb:spec -- *)"
+    ],
+    "deny": [
+      "Edit(.qwen/**)",
+      "Write(.qwen/**)",
+      "Edit(cases/**)",
+      "Write(cases/**)",
+      "Edit(.cydeo/**)",
+      "Write(.cydeo/**)",
+      "Edit(fixtures.ts)",
+      "Write(fixtures.ts)",
+      "Edit(playwright.config.ts)",
+      "Write(playwright.config.ts)",
+      "Edit(AGENTS.md)",
+      "Write(AGENTS.md)",
+      "Edit(QWEN.md)",
+      "Write(QWEN.md)",
+      "Edit(../scripts/**)",
+      "Write(../scripts/**)",
+      "Edit(../package.json)",
+      "Write(../package.json)",
+      "Read(.env)",
+      "Read(../.env)",
+      "Bash(rm *)",
+      "Bash(git *)",
+      "Bash(cat .env*)"
+    ]
+  },
+  "memory": {
+    "enableAutoSkill": false
+  },
+  "$version": 4
+}

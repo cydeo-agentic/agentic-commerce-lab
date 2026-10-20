@@ -1,0 +1,394 @@
+[
+  {
+    "id": "ZB-P2P-01",
+    "area": "p2p",
+    "title": "The panel shows Remaining today: $5,000.00 of $5,000.00",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "A second customer named Rita Reyes, not signed in (fixture: newCustomer({ firstName: 'Rita', lastName: 'Reyes' })) — keep her email",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "Read p2p-remaining"
+    ],
+    "expected": [
+      {
+        "testId": "p2p-remaining",
+        "assert": "toHaveText",
+        "value": "Remaining today: $5,000.00 of $5,000.00"
+      }
+    ],
+    "testIds": [
+      "p2p-remaining"
+    ]
+  },
+  {
+    "id": "ZB-P2P-02",
+    "area": "p2p",
+    "title": "Looking up a customer shows Sending to Rita R.",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "A second customer named Rita Reyes, not signed in (fixture: newCustomer({ firstName: 'Rita', lastName: 'Reyes' })) — keep her email",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "Type Rita's email (rita.email) into p2p-recipient-email",
+      "Click p2p-lookup"
+    ],
+    "expected": [
+      {
+        "testId": "p2p-recipient-name",
+        "assert": "toHaveText",
+        "value": "Sending to Rita R."
+      }
+    ],
+    "testIds": [
+      "p2p-recipient-email",
+      "p2p-lookup",
+      "p2p-recipient-name"
+    ]
+  },
+  {
+    "id": "ZB-P2P-03",
+    "area": "p2p",
+    "title": "An unknown email shows RECIPIENT_NOT_FOUND",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "A second customer named Rita Reyes, not signed in (fixture: newCustomer({ firstName: 'Rita', lastName: 'Reyes' })) — keep her email",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "Type zbtest-nobody-0000@zinc.test into p2p-recipient-email",
+      "Click p2p-lookup"
+    ],
+    "expected": [
+      {
+        "testId": "p2p-result",
+        "assert": "toHaveText",
+        "value": "RECIPIENT_NOT_FOUND"
+      }
+    ],
+    "testIds": [
+      "p2p-recipient-email",
+      "p2p-lookup",
+      "p2p-result"
+    ]
+  },
+  {
+    "id": "ZB-P2P-04",
+    "area": "p2p",
+    "title": "Looking up your own email shows RECIPIENT_IS_SELF",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "A second customer named Rita Reyes, not signed in (fixture: newCustomer({ firstName: 'Rita', lastName: 'Reyes' })) — keep her email",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "Type the signed-in customer's own email (customer.email) into p2p-recipient-email",
+      "Click p2p-lookup"
+    ],
+    "expected": [
+      {
+        "testId": "p2p-result",
+        "assert": "toHaveText",
+        "value": "RECIPIENT_IS_SELF"
+      }
+    ],
+    "testIds": [
+      "p2p-recipient-email",
+      "p2p-lookup",
+      "p2p-result"
+    ]
+  },
+  {
+    "id": "ZB-P2P-05",
+    "area": "p2p",
+    "title": "Review is disabled until a recipient is found",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "A second customer named Rita Reyes, not signed in (fixture: newCustomer({ firstName: 'Rita', lastName: 'Reyes' })) — keep her email",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "Do not look up any recipient",
+      "Type 2.50 into p2p-amount"
+    ],
+    "expected": [
+      {
+        "testId": "p2p-review",
+        "assert": "toBeDisabled"
+      }
+    ],
+    "testIds": [
+      "p2p-amount",
+      "p2p-review"
+    ]
+  },
+  {
+    "id": "ZB-P2P-06",
+    "area": "p2p",
+    "title": "The review shows the name, the typed email and $2.50",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "A second customer named Rita Reyes, not signed in (fixture: newCustomer({ firstName: 'Rita', lastName: 'Reyes' })) — keep her email",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "Type Rita's email (rita.email) into p2p-recipient-email",
+      "Click p2p-lookup",
+      "Type 2.50 into p2p-amount",
+      "Click p2p-review"
+    ],
+    "expected": [
+      {
+        "testId": "p2p-review-recipient",
+        "assert": "toHaveText",
+        "value": "Rita R."
+      },
+      {
+        "testId": "p2p-review-email",
+        "assert": "toHaveText",
+        "value": null,
+        "valueFrom": "Rita's email"
+      },
+      {
+        "testId": "p2p-review-amount",
+        "assert": "toHaveText",
+        "value": "$2.50"
+      }
+    ],
+    "testIds": [
+      "p2p-recipient-email",
+      "p2p-lookup",
+      "p2p-amount",
+      "p2p-review",
+      "p2p-review-recipient",
+      "p2p-review-email",
+      "p2p-review-amount"
+    ]
+  },
+  {
+    "id": "ZB-P2P-07",
+    "area": "p2p",
+    "title": "Sending $2.50 says Sent $2.50 to Rita R. — new balance $7.50.",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "A second customer named Rita Reyes, not signed in (fixture: newCustomer({ firstName: 'Rita', lastName: 'Reyes' })) — keep her email",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "Type Rita's email (rita.email) into p2p-recipient-email",
+      "Click p2p-lookup",
+      "Type 2.50 into p2p-amount",
+      "Click p2p-review",
+      "Click p2p-confirm"
+    ],
+    "expected": [
+      {
+        "testId": "p2p-result",
+        "assert": "toHaveText",
+        "value": "Sent $2.50 to Rita R. — new balance $7.50."
+      }
+    ],
+    "testIds": [
+      "p2p-recipient-email",
+      "p2p-lookup",
+      "p2p-amount",
+      "p2p-review",
+      "p2p-confirm",
+      "p2p-result"
+    ]
+  },
+  {
+    "id": "ZB-P2P-08",
+    "area": "p2p",
+    "title": "After sending $2.50 the remaining allowance is $4,997.50",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "A second customer named Rita Reyes, not signed in (fixture: newCustomer({ firstName: 'Rita', lastName: 'Reyes' })) — keep her email",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "Type Rita's email (rita.email) into p2p-recipient-email",
+      "Click p2p-lookup",
+      "Type 2.50 into p2p-amount",
+      "Click p2p-review",
+      "Click p2p-confirm",
+      "Read p2p-remaining after the send"
+    ],
+    "expected": [
+      {
+        "testId": "p2p-result",
+        "assert": "toContainText",
+        "value": "Sent $2.50"
+      },
+      {
+        "testId": "p2p-remaining",
+        "assert": "toHaveText",
+        "value": "Remaining today: $4,997.50 of $5,000.00"
+      }
+    ],
+    "testIds": [
+      "p2p-recipient-email",
+      "p2p-lookup",
+      "p2p-amount",
+      "p2p-review",
+      "p2p-confirm",
+      "p2p-remaining",
+      "p2p-result"
+    ]
+  },
+  {
+    "id": "ZB-P2P-09",
+    "area": "p2p",
+    "title": "Edit on the review returns to the form with the amount kept",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "A second customer named Rita Reyes, not signed in (fixture: newCustomer({ firstName: 'Rita', lastName: 'Reyes' })) — keep her email",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "Type Rita's email (rita.email) into p2p-recipient-email",
+      "Click p2p-lookup",
+      "Type 2.50 into p2p-amount",
+      "Click p2p-review",
+      "Click p2p-edit"
+    ],
+    "expected": [
+      {
+        "testId": "p2p-form",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "p2p-amount",
+        "assert": "toHaveValue",
+        "value": "2.50"
+      }
+    ],
+    "testIds": [
+      "p2p-recipient-email",
+      "p2p-lookup",
+      "p2p-amount",
+      "p2p-review",
+      "p2p-edit",
+      "p2p-form"
+    ]
+  },
+  {
+    "id": "ZB-P2P-10",
+    "area": "p2p",
+    "title": "Changing the email after a lookup clears the recipient",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "A second customer named Rita Reyes, not signed in (fixture: newCustomer({ firstName: 'Rita', lastName: 'Reyes' })) — keep her email",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "Type Rita's email (rita.email) into p2p-recipient-email",
+      "Click p2p-lookup",
+      "Check p2p-recipient-name shows the found recipient (first expected result)",
+      "Replace the text in p2p-recipient-email with someone-else@zinc.test (do not click p2p-lookup)"
+    ],
+    "expected": [
+      {
+        "testId": "p2p-recipient-name",
+        "assert": "toHaveText",
+        "value": "Sending to Rita R."
+      },
+      {
+        "testId": "p2p-recipient-name",
+        "assert": "toHaveText",
+        "value": "Find a recipient by their email first."
+      },
+      {
+        "testId": "p2p-review",
+        "assert": "toBeDisabled"
+      }
+    ],
+    "testIds": [
+      "p2p-recipient-email",
+      "p2p-lookup",
+      "p2p-recipient-name",
+      "p2p-review"
+    ]
+  },
+  {
+    "id": "ZB-P2P-11",
+    "area": "p2p",
+    "title": "An amount of abc stops at the form with INVALID_AMOUNT",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "A second customer named Rita Reyes, not signed in (fixture: newCustomer({ firstName: 'Rita', lastName: 'Reyes' })) — keep her email",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "Type Rita's email (rita.email) into p2p-recipient-email",
+      "Click p2p-lookup",
+      "Type abc into p2p-amount",
+      "Click p2p-review"
+    ],
+    "expected": [
+      {
+        "testId": "p2p-result",
+        "assert": "toHaveText",
+        "value": "INVALID_AMOUNT"
+      },
+      {
+        "testId": "p2p-form",
+        "assert": "toBeVisible"
+      }
+    ],
+    "testIds": [
+      "p2p-recipient-email",
+      "p2p-lookup",
+      "p2p-amount",
+      "p2p-review",
+      "p2p-result",
+      "p2p-form"
+    ]
+  },
+  {
+    "id": "ZB-P2P-12",
+    "area": "p2p",
+    "title": "Sending $10.01 from $10.00 is rejected with INSUFFICIENT_FUNDS",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "A second customer named Rita Reyes, not signed in (fixture: newCustomer({ firstName: 'Rita', lastName: 'Reyes' })) — keep her email",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /move-money",
+      "Type Rita's email (rita.email) into p2p-recipient-email",
+      "Click p2p-lookup",
+      "Type 10.01 into p2p-amount",
+      "Click p2p-review",
+      "Click p2p-confirm"
+    ],
+    "expected": [
+      {
+        "testId": "p2p-result",
+        "assert": "toHaveText",
+        "value": "INSUFFICIENT_FUNDS"
+      }
+    ],
+    "testIds": [
+      "p2p-recipient-email",
+      "p2p-lookup",
+      "p2p-amount",
+      "p2p-review",
+      "p2p-confirm",
+      "p2p-result"
+    ]
+  }
+]

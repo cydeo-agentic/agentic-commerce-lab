@@ -1,0 +1,78 @@
+[
+  {
+    "id": "ZB-PROF-01",
+    "area": "profile",
+    "title": "The profile shows the customer name, and the email cannot be edited",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Open /profile"
+    ],
+    "expected": [
+      { "testId": "profile-firstname-input", "assert": "toHaveValue", "value": null, "valueFrom": "The customer's first name (customer.firstName)" },
+      { "testId": "profile-email-input", "assert": "toHaveValue", "value": null, "valueFrom": "The customer's email (customer.email)" },
+      { "testId": "profile-email-input", "assert": "toBeDisabled" }
+    ],
+    "testIds": ["profile-firstname-input", "profile-email-input"]
+  },
+  {
+    "id": "ZB-PROF-02",
+    "area": "profile",
+    "title": "A new phone number is saved (\"Profile saved\") and kept after a reload",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Check the customer's email contains zbtest- (safety check that this is a test customer)",
+      "Open /profile",
+      "Type (703) 555-0199 into profile-phone-input",
+      "Click profile-save",
+      "Wait for profile-form-status to read Profile saved",
+      "Reload the page"
+    ],
+    "expected": [
+      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "customer.email" },
+      { "testId": "profile-form-status", "assert": "toHaveText", "value": "Profile saved" },
+      { "testId": "profile-phone-input", "assert": "toHaveValue", "value": "(703) 555-0199" }
+    ],
+    "testIds": ["profile-phone-input", "profile-save", "profile-form-status"]
+  },
+  {
+    "id": "ZB-PROF-03",
+    "area": "profile",
+    "title": "An empty first name is refused with \"First name cannot be empty\"",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Check the customer's email contains zbtest- (safety check that this is a test customer)",
+      "Open /profile",
+      "Clear profile-firstname-input (fill it with an empty string)",
+      "Click profile-save"
+    ],
+    "expected": [
+      { "testId": null, "assert": "toContain", "value": "zbtest-", "subject": "customer.email" },
+      { "testId": "profile-form-status", "assert": "toHaveText", "value": "First name cannot be empty" }
+    ],
+    "testIds": ["profile-firstname-input", "profile-save", "profile-form-status"]
+  },
+  {
+    "id": "ZB-PROF-04",
+    "area": "profile",
+    "title": "Changing the password with the right current password says \"Password changed\"",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Open /profile",
+      "Type the customer's current password (customer.password) into profile-currentpassword-input",
+      "Type N3w-Passw0rd!zb into profile-newpassword-input",
+      "Click profile-changepassword-submit"
+    ],
+    "expected": [
+      { "testId": "profile-password-status", "assert": "toHaveText", "value": "Password changed" }
+    ],
+    "testIds": ["profile-currentpassword-input", "profile-newpassword-input", "profile-changepassword-submit", "profile-password-status"]
+  }
+]
