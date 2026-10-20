@@ -15,6 +15,7 @@ import { test as base, expect, request, type APIRequestContext, type Locator, ty
 import { randomUUID } from 'node:crypto';
 
 export { expect };
+export type { Locator, Page } from '@playwright/test';
 
 export const BASE_URL = process.env.ZB_BASE_URL ?? 'https://zincbank-lab.vercel.app';
 export const PASSWORD = 'Passw0rd!zb';
