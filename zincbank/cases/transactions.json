@@ -374,7 +374,8 @@
     ],
     "steps": [
       "Open /transactions",
-      "Read the href attribute of transactions-statement",
+      "Wait (web-first) until transactions-statement has an href that matches /api/statements/<customer.checkingId>?year=<4 digits>&month=<1-2 digits>: await expect(link).toHaveAttribute('href', <that regex>). The page fills this link in after it loads (it is '#' at first), so never read it before this wait",
+      "Then read the href with getAttribute",
       "Send a GET request to that href as the signed-in page (page.request.get) and read the status and the content-type header"
     ],
     "expected": [

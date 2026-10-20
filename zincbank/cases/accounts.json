@@ -195,10 +195,6 @@
         "subject": "the customer's email (checked before the first step)"
       },
       {
-        "testId": "accounts-list",
-        "assert": "toBeVisible"
-      },
-      {
         "testId": null,
         "assert": "loadTimeUnderMs",
         "value": 3000

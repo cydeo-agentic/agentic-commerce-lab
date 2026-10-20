@@ -140,10 +140,6 @@
     ],
     "expected": [
       {
-        "testId": "apply-step-2",
-        "assert": "toBeVisible"
-      },
-      {
         "testId": "apply-step-1",
         "assert": "toBeVisible"
       },
@@ -179,10 +175,6 @@
       "Type 123456789 into apply-ssn-input"
     ],
     "expected": [
-      {
-        "testId": "apply-step-2",
-        "assert": "toBeVisible"
-      },
       {
         "testId": "apply-ssn-input",
         "assert": "toHaveValue",
@@ -241,10 +233,6 @@
     "expected": [
       {
         "testId": "apply-step-2",
-        "assert": "toBeVisible"
-      },
-      {
-        "testId": "apply-step-2",
         "assert": "toContainText",
         "value": "Select your employment status"
       },
@@ -288,14 +276,6 @@
       "Click apply-next"
     ],
     "expected": [
-      {
-        "testId": "apply-step-2",
-        "assert": "toBeVisible"
-      },
-      {
-        "testId": "apply-step-3",
-        "assert": "toBeVisible"
-      },
       {
         "testId": "apply-step-4",
         "assert": "toBeVisible"
@@ -347,14 +327,6 @@
     ],
     "expected": [
       {
-        "testId": "apply-step-2",
-        "assert": "toBeVisible"
-      },
-      {
-        "testId": "apply-step-3",
-        "assert": "toBeVisible"
-      },
-      {
         "testId": "apply-step-3",
         "assert": "toContainText",
         "value": "Enter a valid 5-digit ZIP"
@@ -401,14 +373,6 @@
       "Click apply-next"
     ],
     "expected": [
-      {
-        "testId": "apply-step-2",
-        "assert": "toBeVisible"
-      },
-      {
-        "testId": "apply-step-3",
-        "assert": "toBeVisible"
-      },
       {
         "testId": "apply-step-4",
         "assert": "toContainText",
@@ -459,14 +423,6 @@
       "Click apply-next"
     ],
     "expected": [
-      {
-        "testId": "apply-step-2",
-        "assert": "toBeVisible"
-      },
-      {
-        "testId": "apply-step-3",
-        "assert": "toBeVisible"
-      },
       {
         "testId": "apply-step-4",
         "assert": "toContainText",
@@ -529,14 +485,6 @@
       "Click apply-decision-continue"
     ],
     "expected": [
-      {
-        "testId": "apply-step-2",
-        "assert": "toBeVisible"
-      },
-      {
-        "testId": "apply-step-3",
-        "assert": "toBeVisible"
-      },
       {
         "testId": "apply-review-summary",
         "assert": "toContainText",

@@ -15,11 +15,12 @@ These rules replace the Zinc Store rules in the repository root for everything i
 5. **Select by test id only:** `page.getByTestId('<id>')` with the id written as a literal. For repeated rows: `page.getByTestId('<container>').locator('[data-testid^="<prefix>-"]').filter({ hasText: '…' })`. No CSS, XPath, getByRole or getByText.
 6. **Web-first assertions:** `await expect(locator).toHaveText(...)`. Never `page.waitForTimeout`.
 7. **Beware the stale page.** If the expected state looks the same as the page BEFORE your action (for example "1 row" before and after a filter), an assertion can pass on the old page. Move the page to a different state first (for example an empty date range), then do the real action.
-8. **Each test makes its own customer.** Use the `customer` fixture (new, signed in, $0.00 checking + savings). Use `newCustomer(...)` for a second person and `fund(customer, cents)` only when the case says money is in the account. Never sign in as anyone else. Never call `/api/admin/*`.
-9. **Money:** inputs take dollar strings (`'2.50'`); `fund` and the API take integer cents (`250`). Pages show `$1,234.56`.
-10. **Prove it:** run exactly `npm run zb:spec -- <area>` (no pipes, no `cd`, no extra flags). Done means the gate passed and you saw the results.
-11. **Red is not always your fault.** When a test fails because the page showed a different value or state than the case expects, and your steps match the case, that is a **product defect**: leave the test as it is and add it to `defects/<area>.md` (case id, expected, actual, one line each). Fix only test problems: a wrong step, a missing wait, a wrong locator.
-12. **Do every step of the case, in order.** Do not skip a step (for example a Continue click) because a later check seems to cover it.
-13. **`newCustomer` registers its email.** For sign-up cases that type an email into the application form, use the helper `uniqueEmail('apply')` instead.
-14. **Never change a case's input data** (dates, amounts, emails, names, viewport) to make a test pass. A red test with the case's own data is a finding. The runner flags any test that turns green after you changed it as NEEDS REVIEW.
-15. **Stop after 3 runs** of `npm run zb:spec -- <area>`. Then write what is still red and why.
+8. **Wait before you read.** The pages load data after they appear. Never read a value with getAttribute, innerText or textContent until a web-first `expect(...)` has confirmed it is there (for example `toHaveAttribute('href', /…/)`, `toHaveCount(1)`).
+9. **Each test makes its own customer.** Use the `customer` fixture (new, signed in, $0.00 checking + savings). Use `newCustomer(...)` for a second person and `fund(customer, cents)` only when the case says money is in the account. Never sign in as anyone else. Never call `/api/admin/*`.
+10. **Money:** inputs take dollar strings (`'2.50'`); `fund` and the API take integer cents (`250`). Pages show `$1,234.56`.
+11. **Prove it:** run exactly `npm run zb:spec -- <area>` (no pipes, no `cd`, no extra flags). Done means the gate passed and you saw the results.
+12. **Red is not always your fault.** When a test fails because the page showed a different value or state than the case expects, and your steps match the case, that is a **product defect**: leave the test as it is and add it to `defects/<area>.md` (case id, expected, actual, one line each). Fix only test problems: a wrong step, a missing wait, a wrong locator.
+13. **Do every step of the case, in order.** Do not skip a step (for example a Continue click) because a later check seems to cover it.
+14. **`newCustomer` registers its email.** For sign-up cases that type an email into the application form, use the helper `uniqueEmail('apply')` instead.
+15. **Never change a case's input data** (dates, amounts, emails, names, viewport) to make a test pass. A red test with the case's own data is a finding. The runner flags any test that turns green after you changed it as NEEDS REVIEW.
+16. **Stop after 3 runs** of `npm run zb:spec -- <area>`. Then write what is still red and why.
