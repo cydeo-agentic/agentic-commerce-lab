@@ -76,6 +76,7 @@ for (const [re, why] of [
   [/xpath=|css=|page\.\$\$?\(/, 'CSS or XPath selector'],
   [/waitForTimeout\s*\(/, 'waitForTimeout: wait with an expect assertion instead'],
   [/networkidle/, 'networkidle'],
+  [/page\.goto\(/, 'page.goto: navigate with open(page, path) from ../fixtures (it waits until the page is interactive)'],
   [/\btest\.only\b|\bdescribe\.only\b/, 'test.only'],
   [/\btest\.skip\(\s*['"`]/, 'a blanket test.skip'],
 ]) if (re.test(src)) problems.push(`uses ${why}`);

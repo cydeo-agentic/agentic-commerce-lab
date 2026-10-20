@@ -7,7 +7,7 @@
       "A new signed-in customer (fixture: customer)"
     ],
     "steps": [
-      "Open /dashboard"
+      "Open /dashboard with open(page, '/dashboard')"
     ],
     "expected": [
       {
@@ -30,7 +30,7 @@
       "The customer's email contains zbtest- (it was made by the fixture)"
     ],
     "steps": [
-      "Open /dashboard"
+      "Open /dashboard with open(page, '/dashboard')"
     ],
     "expected": [
       {
@@ -59,7 +59,7 @@
     ],
     "steps": [
       "Precondition via fixture: fund(customer, 2_500) puts $25.00 into the customer's checking",
-      "Open /dashboard"
+      "Open /dashboard with open(page, '/dashboard')"
     ],
     "expected": [
       {
@@ -80,7 +80,7 @@
       "A new signed-in customer with checking and savings (fixture: customer)"
     ],
     "steps": [
-      "Open /dashboard"
+      "Open /dashboard with open(page, '/dashboard')"
     ],
     "expected": [
       {
@@ -113,7 +113,7 @@
       "The customer's email contains zbtest- (it was made by the fixture)"
     ],
     "steps": [
-      "Open /dashboard"
+      "Open /dashboard with open(page, '/dashboard')"
     ],
     "expected": [
       {
@@ -142,7 +142,7 @@
     ],
     "steps": [
       "Precondition via fixture: fund(customer, 2_500) puts $25.00 into the customer's checking",
-      "Open /dashboard",
+      "Open /dashboard with open(page, '/dashboard')",
       "Inside dashboard-recent-activity, find the rows whose test id starts with txn-row-"
     ],
     "expected": [
@@ -173,7 +173,7 @@
       "The customer's email contains zbtest- (it was made by the fixture)"
     ],
     "steps": [
-      "Open /dashboard",
+      "Open /dashboard with open(page, '/dashboard')",
       "Click dashboard-quick-transfer"
     ],
     "expected": [
@@ -208,7 +208,7 @@
     ],
     "steps": [
       "Precondition via API (apiPost): POST /api/credit/apply with { annualIncomeCents: 10000000, employmentStatus: 'employed', monthlyHousingCents: 100000, monthlyDebtCents: 0 }",
-      "Open /dashboard"
+      "Open /dashboard with open(page, '/dashboard')"
     ],
     "expected": [
       {

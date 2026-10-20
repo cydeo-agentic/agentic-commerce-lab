@@ -8,7 +8,7 @@
     ],
     "steps": [
       "Check the customer's email contains zbtest- (safety check that this is a test customer)",
-      "Open /cards"
+      "Open /cards with open(page, '/cards')"
     ],
     "expected": [
       {
@@ -35,7 +35,7 @@
     ],
     "steps": [
       "Check the customer's email contains zbtest- (safety check that this is a test customer)",
-      "Open /cards",
+      "Open /cards with open(page, '/cards')",
       "Type 100000 into cards-apply-income-input",
       "In cards-apply-employment-select choose the option with value employed",
       "Type 1000 into cards-apply-housing-input",
@@ -96,7 +96,7 @@
     ],
     "steps": [
       "Check the customer's email contains zbtest- (safety check that this is a test customer)",
-      "Open /cards",
+      "Open /cards with open(page, '/cards')",
       "Type 20000 into cards-apply-income-input",
       "In cards-apply-employment-select choose the option with value student",
       "Type 400 into cards-apply-housing-input",
@@ -145,7 +145,7 @@
     ],
     "steps": [
       "Check the customer's email contains zbtest- (safety check that this is a test customer)",
-      "Open /cards",
+      "Open /cards with open(page, '/cards')",
       "Type 50000 into cards-apply-income-input",
       "In cards-apply-employment-select choose the option with value unemployed",
       "Type 1000 into cards-apply-housing-input",
@@ -188,7 +188,7 @@
     ],
     "steps": [
       "Check the customer's email contains zbtest- (safety check that this is a test customer)",
-      "Open /cards",
+      "Open /cards with open(page, '/cards')",
       "Type 60000 into cards-apply-income-input",
       "In cards-apply-employment-select choose the option with value employed",
       "Type 3000 into cards-apply-housing-input",
@@ -233,7 +233,7 @@
     "steps": [
       "Precondition via API (apiPost): POST /api/credit/apply with { annualIncomeCents: 10000000, employmentStatus: 'employed', monthlyHousingCents: 100000, monthlyDebtCents: 0 }",
       "Precondition via API (apiPost): POST /api/credit/charge with { amountCents: 5000 }",
-      "Open /cards",
+      "Open /cards with open(page, '/cards')",
       "Wait for cards-card-balance to read $50.00",
       "In cards-pay-from-select choose the customer's checking account (option value: customer.checkingId)",
       "Type 5.00 into cards-pay-amount-input",

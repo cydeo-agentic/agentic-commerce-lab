@@ -7,7 +7,7 @@
       "A visitor who is NOT signed in (no fixture needed)"
     ],
     "steps": [
-      "Open /login"
+      "Open /login with open(page, '/login')"
     ],
     "expected": [
       {
@@ -28,7 +28,7 @@
       "A new customer who is NOT signed in, first name Lena (fixture: newCustomer({ firstName: 'Lena' }))"
     ],
     "steps": [
-      "Open /login",
+      "Open /login with open(page, '/login')",
       "Type the customer's email into login-email-input",
       "Type the customer's password into login-password-input",
       "Click login-submit"
@@ -60,7 +60,7 @@
       "A new customer who is NOT signed in (fixture: newCustomer())"
     ],
     "steps": [
-      "Open /login",
+      "Open /login with open(page, '/login')",
       "Type the customer's email into login-email-input",
       "Type Wrong-Passw0rd into login-password-input",
       "Click login-submit"
@@ -92,7 +92,7 @@
       "A visitor who is NOT signed in (no fixture needed)"
     ],
     "steps": [
-      "Open /login",
+      "Open /login with open(page, '/login')",
       "Leave login-email-input and login-password-input empty",
       "Click login-submit"
     ],
@@ -116,7 +116,7 @@
       "A visitor who is NOT signed in (no fixture needed)"
     ],
     "steps": [
-      "Open /dashboard"
+      "Open /dashboard with open(page, '/dashboard')"
     ],
     "expected": [
       {
@@ -141,7 +141,7 @@
       "A visitor who is NOT signed in (no fixture needed)"
     ],
     "steps": [
-      "Open /login",
+      "Open /login with open(page, '/login')",
       "Click login-apply-link"
     ],
     "expected": [
@@ -169,7 +169,7 @@
       "The customer's email contains zbtest- (it was made by the fixture)"
     ],
     "steps": [
-      "Open /dashboard",
+      "Open /dashboard with open(page, '/dashboard')",
       "Click nav-signout"
     ],
     "expected": [
@@ -203,10 +203,10 @@
       "The customer's email contains zbtest- (it was made by the fixture)"
     ],
     "steps": [
-      "Open /dashboard",
+      "Open /dashboard with open(page, '/dashboard')",
       "Click nav-signout",
       "Check the URL ends with /login",
-      "Open /dashboard again"
+      "Open /dashboard with open(page, '/dashboard') again"
     ],
     "expected": [
       {

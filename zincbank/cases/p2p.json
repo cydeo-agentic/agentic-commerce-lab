@@ -9,7 +9,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Read p2p-remaining"
     ],
     "expected": [
@@ -33,7 +33,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Type Rita's email (rita.email) into p2p-recipient-email",
       "Click p2p-lookup"
     ],
@@ -60,7 +60,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Type zbtest-nobody-0000@zinc.test into p2p-recipient-email",
       "Click p2p-lookup"
     ],
@@ -87,7 +87,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Type the signed-in customer's own email (customer.email) into p2p-recipient-email",
       "Click p2p-lookup"
     ],
@@ -114,7 +114,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Do not look up any recipient",
       "Type 2.50 into p2p-amount"
     ],
@@ -139,7 +139,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Type Rita's email (rita.email) into p2p-recipient-email",
       "Click p2p-lookup",
       "Type 2.50 into p2p-amount",
@@ -183,7 +183,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Type Rita's email (rita.email) into p2p-recipient-email",
       "Click p2p-lookup",
       "Type 2.50 into p2p-amount",
@@ -216,7 +216,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Type Rita's email (rita.email) into p2p-recipient-email",
       "Click p2p-lookup",
       "Type 2.50 into p2p-amount",
@@ -256,7 +256,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Type Rita's email (rita.email) into p2p-recipient-email",
       "Click p2p-lookup",
       "Type 2.50 into p2p-amount",
@@ -293,7 +293,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Type Rita's email (rita.email) into p2p-recipient-email",
       "Click p2p-lookup",
       "Check p2p-recipient-name shows the found recipient (first expected result)",
@@ -332,7 +332,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Type Rita's email (rita.email) into p2p-recipient-email",
       "Click p2p-lookup",
       "Type abc into p2p-amount",
@@ -368,7 +368,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Type Rita's email (rita.email) into p2p-recipient-email",
       "Click p2p-lookup",
       "Type 10.01 into p2p-amount",

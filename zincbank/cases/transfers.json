@@ -8,7 +8,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
       "Type 2.50 into transfer-amount",
@@ -38,7 +38,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
       "Type 4.00 into transfer-amount",
@@ -75,7 +75,7 @@
       "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In transfer-to choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "Type 1.00 into transfer-amount",
@@ -105,7 +105,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
       "Type 10.01 into transfer-amount",
@@ -135,7 +135,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
       "Type 10.00 into transfer-amount",
@@ -165,7 +165,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
       "Type 0.01 into transfer-amount",
@@ -195,7 +195,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
       "Type 0.02 into transfer-amount",
@@ -224,7 +224,7 @@
       "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
       "Type 1.234 into transfer-amount",
@@ -253,7 +253,7 @@
       "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
       "Type abc into transfer-amount",
@@ -282,7 +282,7 @@
       "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In transfer-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In transfer-to choose the customer's savings (select by value: the savings account id, customer.savingsId)",
       "Type 0 into transfer-amount",

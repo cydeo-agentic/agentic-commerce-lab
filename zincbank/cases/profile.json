@@ -7,7 +7,7 @@
       "A new signed-in customer (fixture: customer)"
     ],
     "steps": [
-      "Open /profile"
+      "Open /profile with open(page, '/profile')"
     ],
     "expected": [
       {
@@ -41,7 +41,7 @@
     ],
     "steps": [
       "Check the customer's email contains zbtest- (safety check that this is a test customer)",
-      "Open /profile",
+      "Open /profile with open(page, '/profile')",
       "Type (703) 555-0199 into profile-phone-input",
       "Click profile-save",
       "Wait for profile-form-status to read Profile saved",
@@ -80,7 +80,7 @@
     ],
     "steps": [
       "Check the customer's email contains zbtest- (safety check that this is a test customer)",
-      "Open /profile",
+      "Open /profile with open(page, '/profile')",
       "Clear profile-firstname-input (fill it with an empty string)",
       "Click profile-save"
     ],
@@ -111,7 +111,7 @@
       "A new signed-in customer (fixture: customer)"
     ],
     "steps": [
-      "Open /profile",
+      "Open /profile with open(page, '/profile')",
       "Type the customer's current password (customer.password) into profile-currentpassword-input",
       "Type N3w-Passw0rd!zb into profile-newpassword-input",
       "Click profile-changepassword-submit"

@@ -7,7 +7,7 @@
       "A new signed-in customer with checking and savings (fixture: customer)"
     ],
     "steps": [
-      "Open /accounts"
+      "Open /accounts with open(page, '/accounts')"
     ],
     "expected": [
       {
@@ -41,7 +41,7 @@
       "The customer's email contains zbtest- (it was made by the fixture)"
     ],
     "steps": [
-      "Open /accounts",
+      "Open /accounts with open(page, '/accounts')",
       "Click accounts-open-savings"
     ],
     "expected": [
@@ -72,7 +72,7 @@
       "A new signed-in customer (fixture: customer)"
     ],
     "steps": [
-      "Open /accounts",
+      "Open /accounts with open(page, '/accounts')",
       "Click accounts-card-{accountId} where accountId is the customer's checking account id (customer.checkingId)"
     ],
     "expected": [
@@ -102,7 +102,7 @@
       "A new signed-in customer (fixture: customer)"
     ],
     "steps": [
-      "Open /accounts/{checkingId} where checkingId is the customer's checking account id (customer.checkingId)"
+      "Open /accounts/{checkingId} with open(page, '/accounts/{checkingId}') where checkingId is the customer's checking account id (customer.checkingId)"
     ],
     "expected": [
       {
@@ -125,7 +125,7 @@
     ],
     "steps": [
       "Precondition via fixture: fund(customer, 750) puts $7.50 into the customer's checking",
-      "Open /accounts/{checkingId} where checkingId is the customer's checking account id (customer.checkingId)"
+      "Open /accounts/{checkingId} with open(page, '/accounts/{checkingId}') where checkingId is the customer's checking account id (customer.checkingId)"
     ],
     "expected": [
       {
@@ -148,7 +148,7 @@
       "A second customer who is NOT signed in (fixture: newCustomer())"
     ],
     "steps": [
-      "Open /accounts/{otherCheckingId} where otherCheckingId is the second customer's checking account id, and keep the navigation response"
+      "Open /accounts/{otherCheckingId} with open(page, '/accounts/{otherCheckingId}') where otherCheckingId is the second customer's checking account id, and keep the navigation response"
     ],
     "expected": [
       {
@@ -181,9 +181,9 @@
       "The customer's email contains zbtest- (it was made by the fixture)"
     ],
     "steps": [
-      "Open /dashboard",
+      "Open /dashboard with open(page, '/dashboard')",
       "Start a timer",
-      "Open /accounts",
+      "Open /accounts with open(page, '/accounts')",
       "Wait until accounts-list is visible",
       "Stop the timer"
     ],

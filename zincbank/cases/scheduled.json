@@ -7,7 +7,7 @@
       "A new signed-in customer with checking and savings at $0.00 and nothing scheduled (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money"
+      "Open /move-money with open(page, '/move-money')"
     ],
     "expected": [
       {
@@ -29,7 +29,7 @@
       "Tomorrow is the UTC date one day from today (helper isoDay(1), format YYYY-MM-DD)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In schedule-type choose the option with value transfer",
       "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
       "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
@@ -63,7 +63,7 @@
       "A new signed-in customer (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In schedule-type choose the option with value transfer",
       "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
       "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
@@ -117,7 +117,7 @@
       "A new signed-in customer (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In schedule-type choose the option with value transfer",
       "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
       "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
@@ -150,7 +150,7 @@
       "A new signed-in customer (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In schedule-type choose the option with value transfer",
       "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
       "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
@@ -183,7 +183,7 @@
       "A new signed-in customer (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In schedule-type choose the option with value transfer",
       "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
       "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
@@ -216,7 +216,7 @@
       "A new signed-in customer (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In schedule-type choose the option with value transfer",
       "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
       "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
@@ -260,7 +260,7 @@
       "A new signed-in customer (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In schedule-type choose the option with value transfer",
       "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
       "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
@@ -304,7 +304,7 @@
       "A new signed-in customer with no payees (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In schedule-type choose the option with value bill_pay"
     ],
     "expected": [
@@ -338,7 +338,7 @@
     ],
     "steps": [
       "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In schedule-type choose the option with value bill_pay",
       "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
       "In schedule-payee choose the Water Co payee (option value: the payee id from the API call)",

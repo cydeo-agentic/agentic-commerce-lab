@@ -9,6 +9,7 @@
  *   - fund          put money in a customer's checking (a P2P send from the funder login in zincbank/.env)
  *   - apiPost       call a ZincBank API as the signed-in page (for preconditions only, never for the check)
  *   - addPayee      add a payee as the signed-in page; returns the payee ({ id, name })
+ *   - open          navigate and wait until the page is interactive (use it instead of page.goto)
  *
  * Money: inputs take dollar strings ("25.00"); the API and these helpers take integer cents.
  */
@@ -82,6 +83,21 @@ async function envelope(res: Awaited<ReturnType<APIRequestContext['post']>>, wha
   const body = (await res.json().catch(() => ({}))) as { ok?: boolean; data?: any; error?: unknown }; // eslint-disable-line @typescript-eslint/no-explicit-any
   if (!res.ok() || !body.ok) throw new Error(`${what} failed: HTTP ${res.status()} ${JSON.stringify(body.error ?? body)}`);
   return body.data;
+}
+
+/**
+ * Open a page and wait until it is interactive. A server-rendered page is visible before React attaches its
+ * click handlers (hydration); a click in that gap does nothing and the test flakes. Always navigate with open().
+ * Returns the navigation response (for status checks).
+ */
+export async function open(page: Page, path: string) {
+  const res = await page.goto(path);
+  await page.waitForFunction(() => {
+    const el = document.querySelector('main [data-testid], [data-testid]');
+    if (!el) return document.readyState === 'complete'; // a page without test ids (e.g. 404)
+    return Object.keys(el).some((k) => k.startsWith('__reactProps'));
+  }, undefined, { timeout: 30_000 });
+  return res;
 }
 
 /** Create a customer through the public onboarding API (checking + savings, $0.00). */

@@ -7,7 +7,7 @@
       "A visitor who is NOT signed in (no fixture needed)"
     ],
     "steps": [
-      "Open /apply"
+      "Open /apply with open(page, '/apply')"
     ],
     "expected": [
       {
@@ -33,7 +33,7 @@
       "A visitor who is NOT signed in (no fixture needed)"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Click apply-next"
     ],
     "expected": [
@@ -61,7 +61,7 @@
       "A visitor who is NOT signed in (no fixture needed)"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Click apply-next (moves to About you)",
       "Leave every About-you field empty",
       "Click apply-next again"
@@ -92,7 +92,7 @@
       "A visitor who is NOT signed in (no fixture needed)"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Click apply-next (moves to About you)",
       "Type Nora into apply-firstname-input",
       "Type Quill into apply-lastname-input",
@@ -129,7 +129,7 @@
       "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Click apply-next (moves to About you)",
       "Type Nora into apply-firstname-input",
       "Type Quill into apply-lastname-input",
@@ -165,7 +165,7 @@
       "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Click apply-next (moves to About you)",
       "Type Nora into apply-firstname-input",
       "Type Quill into apply-lastname-input",
@@ -194,7 +194,7 @@
       "A visitor who is NOT signed in (no fixture needed)"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Click apply-next (moves to About you)",
       "Type 5551234567 into apply-phone-input"
     ],
@@ -219,7 +219,7 @@
       "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Click apply-next (moves to About you)",
       "Type Nora into apply-firstname-input",
       "Type Quill into apply-lastname-input",
@@ -258,7 +258,7 @@
       "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Click apply-next (moves to About you)",
       "Type Nora into apply-firstname-input",
       "Type Quill into apply-lastname-input",
@@ -308,7 +308,7 @@
       "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Click apply-next (moves to About you)",
       "Type Nora into apply-firstname-input",
       "Type Quill into apply-lastname-input",
@@ -352,7 +352,7 @@
       "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Click apply-next (moves to About you)",
       "Type Nora into apply-firstname-input",
       "Type Quill into apply-lastname-input",
@@ -402,7 +402,7 @@
       "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Click apply-next (moves to About you)",
       "Type Nora into apply-firstname-input",
       "Type Quill into apply-lastname-input",
@@ -458,7 +458,7 @@
       "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Check apply-account-savings-toggle",
       "Click apply-next (moves to About you)",
       "Type Nora into apply-firstname-input",
@@ -540,9 +540,9 @@
       "Viewport 375 x 812"
     ],
     "steps": [
-      "Open /apply",
+      "Open /apply with open(page, '/apply')",
       "Set the viewport to 375 wide x 812 high",
-      "Open /apply again"
+      "Open /apply with open(page, '/apply') again"
     ],
     "expected": [
       {

@@ -7,7 +7,7 @@
       "A new signed-in customer with no activity (fixture: customer)"
     ],
     "steps": [
-      "Open /transactions"
+      "Open /transactions with open(page, '/transactions')"
     ],
     "expected": [
       {
@@ -29,7 +29,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /transactions",
+      "Open /transactions with open(page, '/transactions')",
       "Find the rows: elements whose test id starts with txn-row- inside transactions-table"
     ],
     "expected": [
@@ -69,7 +69,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /transactions"
+      "Open /transactions with open(page, '/transactions')"
     ],
     "expected": [
       {
@@ -92,7 +92,7 @@
     ],
     "steps": [
       "Precondition via API (apiPost): POST /api/transfers with { fromAccountId: <checking id>, toAccountId: <savings id>, amountCents: 200 }",
-      "Open /transactions",
+      "Open /transactions with open(page, '/transactions')",
       "Find the rows: elements whose test id starts with txn-row- inside transactions-table, filtered to the row that has the text Transfer"
     ],
     "expected": [
@@ -124,7 +124,7 @@
     ],
     "steps": [
       "Precondition via API (apiPost): POST /api/transfers with { fromAccountId: <checking id>, toAccountId: <savings id>, amountCents: 200 }",
-      "Open /transactions",
+      "Open /transactions with open(page, '/transactions')",
       "In transactions-account choose the customer's savings account (option value: customer.savingsId)",
       "Find the rows: elements whose test id starts with txn-row- inside transactions-table"
     ],
@@ -161,7 +161,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /transactions",
+      "Open /transactions with open(page, '/transactions')",
       "Find the rows: elements whose test id starts with txn-row- inside transactions-table, and wait until there is exactly 1",
       "Read the first row's text and take the first date in MM/DD/YYYY form (pattern \\d{2}/\\d{2}/\\d{4})",
       "Turn that date into YYYY-MM-DD (split on /, then year-month-day); call it the transaction day",
@@ -220,7 +220,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /transactions",
+      "Open /transactions with open(page, '/transactions')",
       "Find the rows: elements whose test id starts with txn-row- inside transactions-table",
       "Type 2099-01-01 into transactions-from",
       "Type 2099-01-31 into transactions-to",
@@ -256,7 +256,7 @@
     ],
     "steps": [
       "Precondition via API (apiPost): POST /api/transfers with { fromAccountId: <checking id>, toAccountId: <savings id>, amountCents: 200 }",
-      "Open /transactions",
+      "Open /transactions with open(page, '/transactions')",
       "Find the rows: elements whose test id starts with txn-row- inside transactions-table, filtered to the row that has the text Transfer",
       "Inside that row, click the button whose test id starts with txn-reverse-"
     ],
@@ -284,7 +284,7 @@
     ],
     "steps": [
       "Precondition via API (apiPost): POST /api/transfers with { fromAccountId: <checking id>, toAccountId: <savings id>, amountCents: 200 }",
-      "Open /transactions",
+      "Open /transactions with open(page, '/transactions')",
       "Find the rows: elements whose test id starts with txn-row- inside transactions-table, filtered to the row that has the text Transfer",
       "Inside that row, click the button whose test id starts with txn-reverse-",
       "Wait for transactions-reverse-result to be visible",
@@ -327,7 +327,7 @@
     ],
     "steps": [
       "Precondition via API (apiPost), 26 times in a row: POST /api/transfers with { fromAccountId: <checking id>, toAccountId: <savings id>, amountCents: 2 }",
-      "Open /transactions",
+      "Open /transactions with open(page, '/transactions')",
       "Find the rows: elements whose test id starts with txn-row- inside transactions-table",
       "Click transactions-next"
     ],
@@ -373,7 +373,7 @@
       "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
     ],
     "steps": [
-      "Open /transactions",
+      "Open /transactions with open(page, '/transactions')",
       "Wait (web-first) until transactions-statement has an href that matches /api/statements/<customer.checkingId>?year=<4 digits>&month=<1-2 digits>: await expect(link).toHaveAttribute('href', <that regex>). The page fills this link in after it loads (it is '#' at first), so never read it before this wait",
       "Then read the href with getAttribute",
       "Send a GET request to that href as the signed-in page (page.request.get) and read the status and the content-type header"

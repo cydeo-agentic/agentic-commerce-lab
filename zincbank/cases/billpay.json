@@ -7,7 +7,7 @@
       "A new signed-in customer with checking and savings at $0.00 (fixture: customer), with no payees"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Read billpay-no-payees"
     ],
     "expected": [
@@ -35,7 +35,7 @@
       "A new signed-in customer with checking and savings at $0.00 (fixture: customer), with no payees"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Type Electric Co into payee-add-name",
       "Type 987654321 into payee-add-account",
       "Click payee-add-submit",
@@ -79,7 +79,7 @@
       "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
     ],
     "steps": [
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Leave payee-add-name empty",
       "Type 987654321 into payee-add-account",
       "Click payee-add-submit"
@@ -112,7 +112,7 @@
     ],
     "steps": [
       "Precondition: const payee = await addPayee(page, 'Gas Co', '111222333') (helper from '../fixtures'; it returns the payee itself).",
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Type Gas Co into payee-add-name",
       "Type 111222333 into payee-add-account",
       "Click payee-add-submit"
@@ -146,7 +146,7 @@
     ],
     "steps": [
       "Precondition: const payee = await addPayee(page, 'Phone Co', '444555666') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "Click payee-delete-{payeeId} (payeeId = the Phone Co payee id)"
     ],
     "expected": [
@@ -178,7 +178,7 @@
     ],
     "steps": [
       "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
       "Type 3.00 into billpay-amount",
@@ -209,7 +209,7 @@
     ],
     "steps": [
       "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
       "Type 10.01 into billpay-amount",
@@ -240,7 +240,7 @@
     ],
     "steps": [
       "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
       "Type 10.00 into billpay-amount",
@@ -271,7 +271,7 @@
     ],
     "steps": [
       "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
       "Type abc into billpay-amount",
@@ -302,7 +302,7 @@
     ],
     "steps": [
       "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
-      "Open /move-money",
+      "Open /move-money with open(page, '/move-money')",
       "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
       "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
       "Type 3.00 into billpay-amount",
