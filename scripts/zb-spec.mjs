@@ -14,6 +14,7 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 const ROOT = join(import.meta.dirname, '..');
 const ZB = join(ROOT, 'zincbank');
@@ -104,6 +105,7 @@ function withHelpers(body) {
   return out;
 }
 
+const blockHash = {};
 const titles = [...src.matchAll(/\btest\(\s*(['"`])(ZB-[A-Z0-9]+-\d+)\b/g)].map((m) => ({ id: m[2], at: m.index }));
 for (const c of cases) {
   const hits = titles.filter((t) => t.id === c.id);
@@ -117,6 +119,7 @@ for (const c of cases) {
   const whole = src.slice(start, next);
   const titleEnd = whole.search(/,\s*async\s*\(/);
   const block = withHelpers(titleEnd > 0 ? whole.slice(titleEnd) : whole);
+  blockHash[c.id] = createHash('sha256').update(block).digest('hex').slice(0, 12);
   for (const id of c.testIds ?? []) {
     const prefix = id.includes('{') ? id.split('{')[0].replace(/-$/, '') : null;
     const used = prefix ? block.includes(`${prefix}-`) : block.includes(`'${id}'`) || block.includes(`"${id}"`) || block.includes(`\`${id}\``);
@@ -166,9 +169,26 @@ for (const spec of report ? report.suites.flatMap(walk) : []) {
     error: err ? err.split('\n').filter((l) => /Expected|Received|Error|Timeout|waiting for/.test(l)).slice(0, 4).join(' | ') : undefined,
   });
 }
+// A test that failed on a WRONG VALUE and is green now, after its code changed, may have been bent to fit the
+// app (for example by changing the input data). Flag it for a human reviewer instead of trusting the green.
+const histPath = join(OUT, 'history', `${area}.json`);
+mkdirSync(join(OUT, 'history'), { recursive: true });
+const hist = existsSync(histPath) ? JSON.parse(readFileSync(histPath, 'utf8')) : {};
+status.review = [];
+for (const t of status.tests) {
+  const prev = hist[t.id] ?? [];
+  const valueRed = prev.find((h) => h.status !== 'passed' && /Received/.test(h.error ?? '') && !/element\(s\) not found|Received: hidden/.test(h.error ?? ''));
+  if (t.status === 'passed' && valueRed && valueRed.hash !== blockHash[t.id]) {
+    t.review = `was red on a value (${valueRed.error}), green after the test changed`;
+    status.review.push(t.id);
+  }
+  hist[t.id] = [...prev, { at: status.ranAt, status: t.status, hash: blockHash[t.id], error: t.error }].slice(-10);
+}
+writeFileSync(histPath, JSON.stringify(hist, null, 2));
 save();
 const passed = status.tests.filter((t) => t.status === 'passed').length;
 console.log(`\n${area}: ${passed}/${status.tests.length} passed (cases: ${cases.length})`);
 for (const t of status.tests.filter((x) => x.status !== 'passed')) console.log(`  FAILED ${t.id}: ${t.error ?? 'see the report'}`);
+for (const t of status.tests.filter((x) => x.review)) console.log(`  REVIEW ${t.id}: ${t.review}. A test must never be changed to fit the app.`);
 if (!report) console.log((r.stdout ?? '').slice(-3000) + (r.stderr ?? '').slice(-2000));
 process.exit(passed === cases.length && status.tests.length === cases.length ? 0 : 2);

@@ -21,4 +21,5 @@ These rules replace the Zinc Store rules in the repository root for everything i
 11. **Red is not always your fault.** When a test fails because the page showed a different value or state than the case expects, and your steps match the case, that is a **product defect**: leave the test as it is and add it to `defects/<area>.md` (case id, expected, actual, one line each). Fix only test problems: a wrong step, a missing wait, a wrong locator.
 12. **Do every step of the case, in order.** Do not skip a step (for example a Continue click) because a later check seems to cover it.
 13. **`newCustomer` registers its email.** For sign-up cases that type an email into the application form, use the helper `uniqueEmail('apply')` instead.
-14. **Stop after 3 runs** of `npm run zb:spec -- <area>`. Then write what is still red and why.
+14. **Never change a case's input data** (dates, amounts, emails, names, viewport) to make a test pass. A red test with the case's own data is a finding. The runner flags any test that turns green after you changed it as NEEDS REVIEW.
+15. **Stop after 3 runs** of `npm run zb:spec -- <area>`. Then write what is still red and why.

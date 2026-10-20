@@ -69,8 +69,9 @@ function snapshot() {
     const fresh = st && Date.parse(st.ranAt) >= s.started;
     const passed = fresh ? st.tests.filter((t) => t.status === 'passed').length : 0;
     const failed = fresh ? st.tests.filter((t) => t.status !== 'passed').length : 0;
+    const review = fresh ? (st.review ?? []).length : 0;
     return {
-      ...s, written: s.started ? writtenTests(a) : 0, passed, failed,
+      ...s, written: s.started ? writtenTests(a) : 0, passed, failed, review,
       gate: fresh ? st.gate : '', elapsed: s.started ? (s.ended || Date.now()) - s.started : 0,
     };
   });
@@ -82,11 +83,11 @@ function draw() {
   const lines = [
     `ZincBank — ${tot('cases')} cases, ${areas.length} areas, ${concurrency} agents at a time (${model})      ${mmss(Date.now() - t0)}`,
     '',
-    `  ${'area'.padEnd(14)}${'state'.padEnd(11)}${'cases'.padStart(6)}${'written'.padStart(9)}${'pass'.padStart(7)}${'red'.padStart(6)}  gate   time`,
+    `  ${'area'.padEnd(14)}${'state'.padEnd(11)}${'cases'.padStart(6)}${'written'.padStart(9)}${'pass'.padStart(7)}${'red'.padStart(6)}${'review'.padStart(8)}  gate   time`,
     `  ${'─'.repeat(70)}`,
-    ...rows.map((r) => `  ${r.area.padEnd(14)}${r.phase.padEnd(11)}${String(r.cases).padStart(6)}${String(r.written).padStart(9)}${String(r.passed).padStart(7)}${String(r.failed).padStart(6)}  ${(r.gate || '·').padEnd(6)} ${r.started ? mmss(r.elapsed) : ''}`),
+    ...rows.map((r) => `  ${r.area.padEnd(14)}${r.phase.padEnd(11)}${String(r.cases).padStart(6)}${String(r.written).padStart(9)}${String(r.passed).padStart(7)}${String(r.failed).padStart(6)}${String(r.review).padStart(8)}  ${(r.gate || '·').padEnd(6)} ${r.started ? mmss(r.elapsed) : ''}`),
     `  ${'─'.repeat(70)}`,
-    `  ${'TOTAL'.padEnd(25)}${String(tot('cases')).padStart(6)}${String(tot('written')).padStart(9)}${String(tot('passed')).padStart(7)}${String(tot('failed')).padStart(6)}`,
+    `  ${'TOTAL'.padEnd(25)}${String(tot('cases')).padStart(6)}${String(tot('written')).padStart(9)}${String(tot('passed')).padStart(7)}${String(tot('failed')).padStart(6)}${String(tot('review')).padStart(8)}`,
     '',
     '  Agent logs: artifacts/zb/agents/<area>.log    Defects the agents found: zincbank/defects/',
   ];
@@ -137,4 +138,6 @@ if (!process.stdout.isTTY) console.log(lines.join('\n'));
 
 const reds = areas.flatMap((a) => (readStatus(a)?.tests ?? []).filter((t) => t.status !== 'passed').map((t) => `  ${t.id}  ${t.error ?? ''}`.slice(0, 200)));
 console.log(`\nRed tests (${reds.length}):\n${reds.join('\n') || '  none'}`);
+const reviews = areas.flatMap((a) => (readStatus(a)?.tests ?? []).filter((t) => t.review).map((t) => `  ${t.id}  ${t.review}`.slice(0, 220)));
+console.log(`\nGreen but NEEDS REVIEW (${reviews.length}) — the agent changed a test that was red on a value:\n${reviews.join('\n') || '  none'}`);
 console.log('\nOpen the HTML report of one area: npx playwright show-report artifacts/zb/report --host 0.0.0.0');
