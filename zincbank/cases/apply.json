@@ -482,7 +482,8 @@
       "Check apply-terms-checkbox",
       "Click apply-submit",
       "Check apply-decision-approved (see expected)",
-      "Click apply-decision-continue"
+      "Click apply-decision-continue",
+      "After that click, check the URL is /dashboard and dashboard-welcome (see expected)"
     ],
     "expected": [
       {
