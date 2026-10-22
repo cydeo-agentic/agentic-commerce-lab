@@ -1,0 +1,376 @@
+[
+  {
+    "id": "ZB-SCHED-01",
+    "area": "scheduled",
+    "title": "A new customer sees \"Nothing scheduled yet.\"",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 and nothing scheduled (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money with open(page, '/move-money')"
+    ],
+    "expected": [
+      {
+        "testId": "schedule-empty",
+        "assert": "toHaveText",
+        "value": "Nothing scheduled yet."
+      }
+    ],
+    "testIds": [
+      "schedule-empty"
+    ]
+  },
+  {
+    "id": "ZB-SCHED-02",
+    "area": "scheduled",
+    "title": "Scheduling $10.00 for tomorrow says \"Scheduled for <date>.\"",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "Tomorrow is the UTC date one day from today (helper isoDay(1), format YYYY-MM-DD)"
+    ],
+    "steps": [
+      "Open /move-money with open(page, '/move-money')",
+      "In schedule-type choose the option with value transfer",
+      "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
+      "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
+      "Type 10.00 into schedule-amount",
+      "Type tomorrow's date (helper isoDay(1), format YYYY-MM-DD) into schedule-date",
+      "Click schedule-submit"
+    ],
+    "expected": [
+      {
+        "testId": "schedule-result",
+        "assert": "toHaveText",
+        "value": null,
+        "valueFrom": "Scheduled for <tomorrow as MM/DD/YYYY (helper usDate(isoDay(1)))>."
+      }
+    ],
+    "testIds": [
+      "schedule-amount",
+      "schedule-date",
+      "schedule-from",
+      "schedule-result",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
+  },
+  {
+    "id": "ZB-SCHED-03",
+    "area": "scheduled",
+    "title": "The scheduled payment is listed with $10.00 and status \"scheduled\"",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money with open(page, '/move-money')",
+      "In schedule-type choose the option with value transfer",
+      "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
+      "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
+      "Type 10.00 into schedule-amount",
+      "Type tomorrow's UTC date (helper isoDay(1), format YYYY-MM-DD) into schedule-date",
+      "Click schedule-submit",
+      "Wait for schedule-result to contain Scheduled for",
+      "Find the rows: elements whose test id starts with schedule-row- inside schedule-list",
+      "Inside those rows, find the element whose test id starts with schedule-status-"
+    ],
+    "expected": [
+      {
+        "testId": "schedule-result",
+        "assert": "toContainText",
+        "value": "Scheduled for"
+      },
+      {
+        "testId": "schedule-row-{id}",
+        "assert": "toHaveCount",
+        "value": 1
+      },
+      {
+        "testId": "schedule-row-{id}",
+        "assert": "toContainText",
+        "value": "$10.00"
+      },
+      {
+        "testId": "schedule-status-{id}",
+        "assert": "toHaveText",
+        "value": "scheduled"
+      }
+    ],
+    "testIds": [
+      "schedule-amount",
+      "schedule-date",
+      "schedule-from",
+      "schedule-list",
+      "schedule-result",
+      "schedule-row-{id}",
+      "schedule-status-{id}",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
+  },
+  {
+    "id": "ZB-SCHED-04",
+    "area": "scheduled",
+    "title": "A date in the past is rejected with INVALID_SCHEDULED_DATE",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money with open(page, '/move-money')",
+      "In schedule-type choose the option with value transfer",
+      "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
+      "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
+      "Type 10.00 into schedule-amount",
+      "Type yesterday's UTC date (helper isoDay(-1), format YYYY-MM-DD) into schedule-date",
+      "Click schedule-submit"
+    ],
+    "expected": [
+      {
+        "testId": "schedule-result",
+        "assert": "toHaveText",
+        "value": "INVALID_SCHEDULED_DATE"
+      }
+    ],
+    "testIds": [
+      "schedule-amount",
+      "schedule-date",
+      "schedule-from",
+      "schedule-result",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
+  },
+  {
+    "id": "ZB-SCHED-05",
+    "area": "scheduled",
+    "title": "A date more than 365 days ahead is rejected with INVALID_SCHEDULED_DATE",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money with open(page, '/move-money')",
+      "In schedule-type choose the option with value transfer",
+      "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
+      "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
+      "Type 10.00 into schedule-amount",
+      "Type the UTC date 366 days from today (helper isoDay(366), format YYYY-MM-DD) into schedule-date",
+      "Click schedule-submit"
+    ],
+    "expected": [
+      {
+        "testId": "schedule-result",
+        "assert": "toHaveText",
+        "value": "INVALID_SCHEDULED_DATE"
+      }
+    ],
+    "testIds": [
+      "schedule-amount",
+      "schedule-date",
+      "schedule-from",
+      "schedule-result",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
+  },
+  {
+    "id": "ZB-SCHED-06",
+    "area": "scheduled",
+    "title": "No date is rejected with VALIDATION_ERROR",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money with open(page, '/move-money')",
+      "In schedule-type choose the option with value transfer",
+      "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
+      "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
+      "Type 10.00 into schedule-amount",
+      "Leave schedule-date empty (do not type anything into it)",
+      "Click schedule-submit"
+    ],
+    "expected": [
+      {
+        "testId": "schedule-result",
+        "assert": "toHaveText",
+        "value": "VALIDATION_ERROR"
+      }
+    ],
+    "testIds": [
+      "schedule-amount",
+      "schedule-date",
+      "schedule-from",
+      "schedule-result",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
+  },
+  {
+    "id": "ZB-SCHED-07",
+    "area": "scheduled",
+    "title": "Cancel says \"Scheduled payment cancelled.\" and the status becomes \"cancelled\"",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money with open(page, '/move-money')",
+      "In schedule-type choose the option with value transfer",
+      "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
+      "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
+      "Type 10.00 into schedule-amount",
+      "Type tomorrow's UTC date (helper isoDay(1), format YYYY-MM-DD) into schedule-date",
+      "Click schedule-submit",
+      "Find the rows: elements whose test id starts with schedule-row- inside schedule-list",
+      "Inside those rows, click the button whose test id starts with schedule-cancel-"
+    ],
+    "expected": [
+      {
+        "testId": "schedule-result",
+        "assert": "toHaveText",
+        "value": "Scheduled payment cancelled."
+      },
+      {
+        "testId": "schedule-status-{id}",
+        "assert": "toHaveText",
+        "value": "cancelled"
+      }
+    ],
+    "testIds": [
+      "schedule-amount",
+      "schedule-cancel-{id}",
+      "schedule-date",
+      "schedule-from",
+      "schedule-list",
+      "schedule-result",
+      "schedule-row-{id}",
+      "schedule-status-{id}",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
+  },
+  {
+    "id": "ZB-SCHED-08",
+    "area": "scheduled",
+    "title": "A cancelled payment no longer offers Cancel",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money with open(page, '/move-money')",
+      "In schedule-type choose the option with value transfer",
+      "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
+      "In schedule-to choose the customer's savings account (option value: customer.savingsId)",
+      "Type 10.00 into schedule-amount",
+      "Type tomorrow's UTC date (helper isoDay(1), format YYYY-MM-DD) into schedule-date",
+      "Click schedule-submit",
+      "Find the rows: elements whose test id starts with schedule-row- inside schedule-list",
+      "Inside those rows, click the button whose test id starts with schedule-cancel-",
+      "Wait for the row's schedule-status- element to read cancelled, then look for any schedule-cancel- button inside the rows"
+    ],
+    "expected": [
+      {
+        "testId": "schedule-status-{id}",
+        "assert": "toHaveText",
+        "value": "cancelled"
+      },
+      {
+        "testId": "schedule-cancel-{id}",
+        "assert": "toHaveCount",
+        "value": 0
+      }
+    ],
+    "testIds": [
+      "schedule-amount",
+      "schedule-cancel-{id}",
+      "schedule-date",
+      "schedule-from",
+      "schedule-list",
+      "schedule-row-{id}",
+      "schedule-status-{id}",
+      "schedule-submit",
+      "schedule-to",
+      "schedule-type"
+    ]
+  },
+  {
+    "id": "ZB-SCHED-09",
+    "area": "scheduled",
+    "title": "Bill pay type swaps To for Payee, disabled with \"Add a payee first\" when there are none",
+    "given": [
+      "A new signed-in customer with no payees (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money with open(page, '/move-money')",
+      "In schedule-type choose the option with value bill_pay"
+    ],
+    "expected": [
+      {
+        "testId": "schedule-to",
+        "assert": "toHaveCount",
+        "value": 0
+      },
+      {
+        "testId": "schedule-payee",
+        "assert": "toBeDisabled"
+      },
+      {
+        "testId": "schedule-payee",
+        "assert": "toContainText",
+        "value": "Add a payee first"
+      }
+    ],
+    "testIds": [
+      "schedule-payee",
+      "schedule-to",
+      "schedule-type"
+    ]
+  },
+  {
+    "id": "ZB-SCHED-10",
+    "area": "scheduled",
+    "title": "A scheduled bill payment to \"Water Co\" is listed under that payee",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
+      "Open /move-money with open(page, '/move-money')",
+      "In schedule-type choose the option with value bill_pay",
+      "In schedule-from choose the customer's checking account (option value: customer.checkingId)",
+      "In schedule-payee choose the Water Co payee (option value: the payee id from the API call)",
+      "Type 15.00 into schedule-amount",
+      "Type the UTC date two days from today (helper isoDay(2), format YYYY-MM-DD) into schedule-date",
+      "Click schedule-submit",
+      "Find the rows: elements whose test id starts with schedule-row- inside schedule-list, filtered to the row that has the text Water Co"
+    ],
+    "expected": [
+      {
+        "testId": "schedule-result",
+        "assert": "toHaveText",
+        "value": null,
+        "valueFrom": "Scheduled for <the date two days from today as MM/DD/YYYY (helper usDate(isoDay(2)))>."
+      },
+      {
+        "testId": "schedule-row-{id}",
+        "filterText": "Water Co",
+        "assert": "toContainText",
+        "value": "$15.00"
+      }
+    ],
+    "testIds": [
+      "schedule-amount",
+      "schedule-date",
+      "schedule-from",
+      "schedule-list",
+      "schedule-payee",
+      "schedule-result",
+      "schedule-row-{id}",
+      "schedule-submit",
+      "schedule-type"
+    ]
+  }
+]

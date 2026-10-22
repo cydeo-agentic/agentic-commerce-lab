@@ -1,0 +1,398 @@
+[
+  {
+    "id": "ZB-TXN-01",
+    "area": "transactions",
+    "title": "A customer with no activity sees \"No transactions for this account and range.\"",
+    "given": [
+      "A new signed-in customer with no activity (fixture: customer)"
+    ],
+    "steps": [
+      "Open /transactions with open(page, '/transactions')"
+    ],
+    "expected": [
+      {
+        "testId": "transactions-empty",
+        "assert": "toHaveText",
+        "value": "No transactions for this account and range."
+      }
+    ],
+    "testIds": [
+      "transactions-empty"
+    ]
+  },
+  {
+    "id": "ZB-TXN-02",
+    "area": "transactions",
+    "title": "Money received is listed as P2P +$10.00 and the total is \"1 total\"",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /transactions with open(page, '/transactions')",
+      "Find the rows: elements whose test id starts with txn-row- inside transactions-table"
+    ],
+    "expected": [
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 1
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toContainText",
+        "value": "P2P"
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toContainText",
+        "value": "+$10.00"
+      },
+      {
+        "testId": "transactions-total",
+        "assert": "toHaveText",
+        "value": "1 total"
+      }
+    ],
+    "testIds": [
+      "transactions-table",
+      "transactions-total",
+      "txn-row-{id}"
+    ]
+  },
+  {
+    "id": "ZB-TXN-03",
+    "area": "transactions",
+    "title": "The current balance shows $10.00",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /transactions with open(page, '/transactions')"
+    ],
+    "expected": [
+      {
+        "testId": "transactions-balance",
+        "assert": "toHaveText",
+        "value": "$10.00"
+      }
+    ],
+    "testIds": [
+      "transactions-balance"
+    ]
+  },
+  {
+    "id": "ZB-TXN-04",
+    "area": "transactions",
+    "title": "A $2.00 transfer out shows -$2.00 with a running balance of $8.00",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Precondition via API (apiPost): POST /api/transfers with { fromAccountId: <checking id>, toAccountId: <savings id>, amountCents: 200 }",
+      "Open /transactions with open(page, '/transactions')",
+      "Find the rows: elements whose test id starts with txn-row- inside transactions-table, filtered to the row that has the text Transfer"
+    ],
+    "expected": [
+      {
+        "testId": "txn-row-{id}",
+        "filterText": "Transfer",
+        "assert": "toContainText",
+        "value": "-$2.00"
+      },
+      {
+        "testId": "txn-row-{id}",
+        "filterText": "Transfer",
+        "assert": "toContainText",
+        "value": "$8.00"
+      }
+    ],
+    "testIds": [
+      "transactions-table",
+      "txn-row-{id}"
+    ]
+  },
+  {
+    "id": "ZB-TXN-05",
+    "area": "transactions",
+    "title": "Choosing the savings account shows +$2.00 and a balance of $2.00",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Precondition via API (apiPost): POST /api/transfers with { fromAccountId: <checking id>, toAccountId: <savings id>, amountCents: 200 }",
+      "Open /transactions with open(page, '/transactions')",
+      "In transactions-account choose the customer's savings account (option value: customer.savingsId)",
+      "Find the rows: elements whose test id starts with txn-row- inside transactions-table"
+    ],
+    "expected": [
+      {
+        "testId": "transactions-balance",
+        "assert": "toHaveText",
+        "value": "$2.00"
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 1
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toContainText",
+        "value": "+$2.00"
+      }
+    ],
+    "testIds": [
+      "transactions-account",
+      "transactions-balance",
+      "transactions-table",
+      "txn-row-{id}"
+    ]
+  },
+  {
+    "id": "ZB-TXN-06",
+    "area": "transactions",
+    "title": "A From and To date of the transaction day still lists it",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /transactions with open(page, '/transactions')",
+      "Find the rows: elements whose test id starts with txn-row- inside transactions-table, and wait until there is exactly 1",
+      "Read the first row's text and take the first date in MM/DD/YYYY form (pattern \\d{2}/\\d{2}/\\d{4})",
+      "Turn that date into YYYY-MM-DD (split on /, then year-month-day); call it the transaction day",
+      "Check the transaction day matches YYYY-MM-DD",
+      "Type 2099-01-01 into transactions-from",
+      "Type 2099-01-31 into transactions-to",
+      "Click transactions-apply",
+      "Wait for transactions-empty to be visible, because the unfiltered page already shows 1 row, so only a working filter can bring 1 row back from an empty list",
+      "Type the transaction day (YYYY-MM-DD) into transactions-from",
+      "Type the transaction day (YYYY-MM-DD) into transactions-to",
+      "Click transactions-apply"
+    ],
+    "expected": [
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 1
+      },
+      {
+        "testId": null,
+        "assert": "toMatch",
+        "value": "^\\d{4}-\\d{2}-\\d{2}$",
+        "subject": "the transaction day converted to YYYY-MM-DD"
+      },
+      {
+        "testId": "transactions-empty",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 1
+      },
+      {
+        "testId": "transactions-total",
+        "assert": "toHaveText",
+        "value": "1 total"
+      }
+    ],
+    "testIds": [
+      "transactions-apply",
+      "transactions-empty",
+      "transactions-from",
+      "transactions-table",
+      "transactions-to",
+      "transactions-total",
+      "txn-row-{id}"
+    ]
+  },
+  {
+    "id": "ZB-TXN-07",
+    "area": "transactions",
+    "title": "A date range in the future shows the empty message",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /transactions with open(page, '/transactions')",
+      "Find the rows: elements whose test id starts with txn-row- inside transactions-table",
+      "Type 2099-01-01 into transactions-from",
+      "Type 2099-01-31 into transactions-to",
+      "Click transactions-apply"
+    ],
+    "expected": [
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 1
+      },
+      {
+        "testId": "transactions-empty",
+        "assert": "toBeVisible"
+      }
+    ],
+    "testIds": [
+      "transactions-apply",
+      "transactions-empty",
+      "transactions-from",
+      "transactions-table",
+      "transactions-to",
+      "txn-row-{id}"
+    ]
+  },
+  {
+    "id": "ZB-TXN-08",
+    "area": "transactions",
+    "title": "Reversing a $2.00 transfer says \"Reversed 2.00 — original marked reversed.\"",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Precondition via API (apiPost): POST /api/transfers with { fromAccountId: <checking id>, toAccountId: <savings id>, amountCents: 200 }",
+      "Open /transactions with open(page, '/transactions')",
+      "Find the rows: elements whose test id starts with txn-row- inside transactions-table, filtered to the row that has the text Transfer",
+      "Inside that row, click the button whose test id starts with txn-reverse-"
+    ],
+    "expected": [
+      {
+        "testId": "transactions-reverse-result",
+        "assert": "toHaveText",
+        "value": "Reversed 2.00 — original marked reversed."
+      }
+    ],
+    "testIds": [
+      "transactions-reverse-result",
+      "transactions-table",
+      "txn-reverse-{id}",
+      "txn-row-{id}"
+    ]
+  },
+  {
+    "id": "ZB-TXN-09",
+    "area": "transactions",
+    "title": "After a reversal the row is marked Reversed and the balance is back to $10.00",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Precondition via API (apiPost): POST /api/transfers with { fromAccountId: <checking id>, toAccountId: <savings id>, amountCents: 200 }",
+      "Open /transactions with open(page, '/transactions')",
+      "Find the rows: elements whose test id starts with txn-row- inside transactions-table, filtered to the row that has the text Transfer",
+      "Inside that row, click the button whose test id starts with txn-reverse-",
+      "Wait for transactions-reverse-result to be visible",
+      "In the row that has the text Transfer, find the element whose test id starts with txn-reversed-",
+      "Reload the page"
+    ],
+    "expected": [
+      {
+        "testId": "transactions-reverse-result",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "txn-reversed-{id}",
+        "filterText": "Transfer",
+        "assert": "toHaveText",
+        "value": "Reversed"
+      },
+      {
+        "testId": "transactions-balance",
+        "assert": "toHaveText",
+        "value": "$10.00"
+      }
+    ],
+    "testIds": [
+      "transactions-balance",
+      "transactions-reverse-result",
+      "transactions-table",
+      "txn-reverse-{id}",
+      "txn-reversed-{id}",
+      "txn-row-{id}"
+    ]
+  },
+  {
+    "id": "ZB-TXN-10",
+    "area": "transactions",
+    "title": "With 27 rows the list pages by 25: Previous disabled, Next shows the last 2",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Precondition via API (apiPost), 26 times in a row: POST /api/transfers with { fromAccountId: <checking id>, toAccountId: <savings id>, amountCents: 2 }",
+      "Open /transactions with open(page, '/transactions')",
+      "Find the rows: elements whose test id starts with txn-row- inside transactions-table",
+      "Click transactions-next"
+    ],
+    "expected": [
+      {
+        "testId": "transactions-total",
+        "assert": "toHaveText",
+        "value": "27 total"
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 25
+      },
+      {
+        "testId": "transactions-prev",
+        "assert": "toBeDisabled"
+      },
+      {
+        "testId": "txn-row-{id}",
+        "assert": "toHaveCount",
+        "value": 2
+      },
+      {
+        "testId": "transactions-next",
+        "assert": "toBeDisabled"
+      }
+    ],
+    "testIds": [
+      "transactions-next",
+      "transactions-prev",
+      "transactions-table",
+      "transactions-total",
+      "txn-row-{id}"
+    ]
+  },
+  {
+    "id": "ZB-TXN-11",
+    "area": "transactions",
+    "title": "The statement link downloads a PDF for this account",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Open /transactions with open(page, '/transactions')",
+      "Wait (web-first) until transactions-statement has an href that matches /api/statements/<customer.checkingId>?year=<4 digits>&month=<1-2 digits>: await expect(link).toHaveAttribute('href', <that regex>). The page fills this link in after it loads (it is '#' at first), so never read it before this wait",
+      "Then read the href with getAttribute",
+      "Send a GET request to that href as the signed-in page (page.request.get) and read the status and the content-type header"
+    ],
+    "expected": [
+      {
+        "testId": "transactions-statement",
+        "assert": "toHaveAttribute",
+        "value": null,
+        "valueFrom": "Attribute href ends with /api/statements/<customer.checkingId>?year=<4 digits>&month=<1 or 2 digits> (regex /api/statements/<checkingId>\\?year=\\d{4}&month=\\d{1,2}$)"
+      },
+      {
+        "testId": null,
+        "assert": "httpGet",
+        "value": "200 application/pdf"
+      }
+    ],
+    "testIds": [
+      "transactions-statement"
+    ]
+  }
+]

@@ -1,0 +1,344 @@
+[
+  {
+    "id": "ZB-BILL-01",
+    "area": "billpay",
+    "title": "With no payees, bill pay says Add a payee below to pay a bill.",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer), with no payees"
+    ],
+    "steps": [
+      "Open /move-money with open(page, '/move-money')",
+      "Read billpay-no-payees"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "subject": "The customer's email (customer.email), checked before any step",
+        "assert": "toContain",
+        "value": "zbtest-"
+      },
+      {
+        "testId": "billpay-no-payees",
+        "assert": "toHaveText",
+        "value": "Add a payee below to pay a bill."
+      }
+    ],
+    "testIds": [
+      "billpay-no-payees"
+    ]
+  },
+  {
+    "id": "ZB-BILL-02",
+    "area": "billpay",
+    "title": "Adding payee Electric Co 987654321 lists it as ••4321",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer), with no payees"
+    ],
+    "steps": [
+      "Open /move-money with open(page, '/move-money')",
+      "Type Electric Co into payee-add-name",
+      "Type 987654321 into payee-add-account",
+      "Click payee-add-submit",
+      "Inside payee-manager, find the payee rows (test ids starting with payee-row-) that contain the text Electric Co"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "subject": "The customer's email (customer.email), checked before any step",
+        "assert": "toContain",
+        "value": "zbtest-"
+      },
+      {
+        "testId": "payee-row-{payeeId}",
+        "assert": "toHaveCount",
+        "value": 1,
+        "within": "payee-manager",
+        "filterText": "Electric Co"
+      },
+      {
+        "testId": "payee-row-{payeeId}",
+        "assert": "toContainText",
+        "value": "••4321",
+        "within": "payee-manager",
+        "filterText": "Electric Co"
+      }
+    ],
+    "testIds": [
+      "payee-add-account",
+      "payee-add-name",
+      "payee-add-submit",
+      "payee-manager",
+      "payee-row-{id}"
+    ]
+  },
+  {
+    "id": "ZB-BILL-03",
+    "area": "billpay",
+    "title": "A payee without a name is rejected with VALIDATION_ERROR",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
+    ],
+    "steps": [
+      "Open /move-money with open(page, '/move-money')",
+      "Leave payee-add-name empty",
+      "Type 987654321 into payee-add-account",
+      "Click payee-add-submit"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "subject": "The customer's email (customer.email), checked before any step",
+        "assert": "toContain",
+        "value": "zbtest-"
+      },
+      {
+        "testId": "payee-add-error",
+        "assert": "toHaveText",
+        "value": "VALIDATION_ERROR"
+      }
+    ],
+    "testIds": [
+      "payee-add-account",
+      "payee-add-error",
+      "payee-add-submit"
+    ]
+  },
+  {
+    "id": "ZB-BILL-04",
+    "area": "billpay",
+    "title": "Adding the same payee twice is rejected with DUPLICATE_PAYEE",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
+    ],
+    "steps": [
+      "Precondition: const payee = await addPayee(page, 'Gas Co', '111222333') (helper from '../fixtures'; it returns the payee itself).",
+      "Open /move-money with open(page, '/move-money')",
+      "Type Gas Co into payee-add-name",
+      "Type 111222333 into payee-add-account",
+      "Click payee-add-submit"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "subject": "The customer's email (customer.email), checked before any step",
+        "assert": "toContain",
+        "value": "zbtest-"
+      },
+      {
+        "testId": "payee-add-error",
+        "assert": "toHaveText",
+        "value": "DUPLICATE_PAYEE"
+      }
+    ],
+    "testIds": [
+      "payee-add-account",
+      "payee-add-error",
+      "payee-add-name",
+      "payee-add-submit"
+    ]
+  },
+  {
+    "id": "ZB-BILL-05",
+    "area": "billpay",
+    "title": "Deleting a payee removes it from the list",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)"
+    ],
+    "steps": [
+      "Precondition: const payee = await addPayee(page, 'Phone Co', '444555666') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
+      "Open /move-money with open(page, '/move-money')",
+      "Click payee-delete-{payeeId} (payeeId = the Phone Co payee id)"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "subject": "The customer's email (customer.email), checked before any step",
+        "assert": "toContain",
+        "value": "zbtest-"
+      },
+      {
+        "testId": "payee-row-{payeeId}",
+        "assert": "toHaveCount",
+        "value": 0,
+        "note": "payeeId = the Phone Co payee id"
+      }
+    ],
+    "testIds": [
+      "payee-delete-{id}",
+      "payee-row-{id}"
+    ]
+  },
+  {
+    "id": "ZB-BILL-06",
+    "area": "billpay",
+    "title": "Paying $3.00 succeeds with new balance $7.00",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
+      "Open /move-money with open(page, '/move-money')",
+      "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
+      "Type 3.00 into billpay-amount",
+      "Click billpay-submit"
+    ],
+    "expected": [
+      {
+        "testId": "billpay-result",
+        "assert": "toHaveText",
+        "value": "Paid — new balance $7.00."
+      }
+    ],
+    "testIds": [
+      "billpay-amount",
+      "billpay-from",
+      "billpay-payee",
+      "billpay-result",
+      "billpay-submit"
+    ]
+  },
+  {
+    "id": "ZB-BILL-07",
+    "area": "billpay",
+    "title": "Paying $10.01 from $10.00 is rejected with INSUFFICIENT_FUNDS",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
+      "Open /move-money with open(page, '/move-money')",
+      "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
+      "Type 10.01 into billpay-amount",
+      "Click billpay-submit"
+    ],
+    "expected": [
+      {
+        "testId": "billpay-result",
+        "assert": "toHaveText",
+        "value": "INSUFFICIENT_FUNDS"
+      }
+    ],
+    "testIds": [
+      "billpay-amount",
+      "billpay-from",
+      "billpay-payee",
+      "billpay-result",
+      "billpay-submit"
+    ]
+  },
+  {
+    "id": "ZB-BILL-08",
+    "area": "billpay",
+    "title": "Paying the exact balance $10.00 succeeds with new balance $0.00",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
+      "Open /move-money with open(page, '/move-money')",
+      "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
+      "Type 10.00 into billpay-amount",
+      "Click billpay-submit"
+    ],
+    "expected": [
+      {
+        "testId": "billpay-result",
+        "assert": "toHaveText",
+        "value": "Paid — new balance $0.00."
+      }
+    ],
+    "testIds": [
+      "billpay-amount",
+      "billpay-from",
+      "billpay-payee",
+      "billpay-result",
+      "billpay-submit"
+    ]
+  },
+  {
+    "id": "ZB-BILL-09",
+    "area": "billpay",
+    "title": "Letters (abc) are rejected with INVALID_AMOUNT",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
+      "Open /move-money with open(page, '/move-money')",
+      "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
+      "Type abc into billpay-amount",
+      "Click billpay-submit"
+    ],
+    "expected": [
+      {
+        "testId": "billpay-result",
+        "assert": "toHaveText",
+        "value": "INVALID_AMOUNT"
+      }
+    ],
+    "testIds": [
+      "billpay-amount",
+      "billpay-from",
+      "billpay-payee",
+      "billpay-result",
+      "billpay-submit"
+    ]
+  },
+  {
+    "id": "ZB-BILL-10",
+    "area": "billpay",
+    "title": "A $3.00 bill payment appears in transactions as Bill Pay -$3.00",
+    "given": [
+      "A new signed-in customer with checking and savings at $0.00 (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Precondition: const payee = await addPayee(page, 'Water Co', '555000111') (helper from '../fixtures'; it returns the payee itself). Use payee.id as the payee id.",
+      "Open /move-money with open(page, '/move-money')",
+      "In billpay-from choose the customer's checking (select by value: the checking account id, customer.checkingId)",
+      "In billpay-payee choose the Water Co payee (select by value: the Water Co payee id)",
+      "Type 3.00 into billpay-amount",
+      "Click billpay-submit",
+      "After the billpay-result shows, open /transactions",
+      "Inside transactions-table, find the transaction rows (test ids starting with txn-row-) that contain the text Bill Pay"
+    ],
+    "expected": [
+      {
+        "testId": "billpay-result",
+        "assert": "toHaveText",
+        "value": "Paid — new balance $7.00."
+      },
+      {
+        "testId": "txn-row-{ledgerEntryId}",
+        "assert": "toHaveCount",
+        "value": 1,
+        "within": "transactions-table",
+        "filterText": "Bill Pay"
+      },
+      {
+        "testId": "txn-row-{ledgerEntryId}",
+        "assert": "toContainText",
+        "value": "-$3.00",
+        "within": "transactions-table",
+        "filterText": "Bill Pay"
+      }
+    ],
+    "testIds": [
+      "billpay-amount",
+      "billpay-from",
+      "billpay-payee",
+      "billpay-result",
+      "billpay-submit",
+      "transactions-table",
+      "txn-row-{id}"
+    ]
+  }
+]

@@ -1,0 +1,235 @@
+[
+  {
+    "id": "ZB-DASH-01",
+    "area": "dashboard",
+    "title": "The welcome line uses the customer first name",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Open /dashboard with open(page, '/dashboard')"
+    ],
+    "expected": [
+      {
+        "testId": "dashboard-welcome",
+        "assert": "toHaveText",
+        "value": null,
+        "valueFrom": "Welcome, followed by the customer's first name (Welcome, {firstName})"
+      }
+    ],
+    "testIds": [
+      "dashboard-welcome"
+    ]
+  },
+  {
+    "id": "ZB-DASH-02",
+    "area": "dashboard",
+    "title": "A new customer has a total deposit balance of $0.00",
+    "given": [
+      "A new signed-in customer with no money (fixture: customer)",
+      "The customer's email contains zbtest- (it was made by the fixture)"
+    ],
+    "steps": [
+      "Open /dashboard with open(page, '/dashboard')"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": "dashboard-total-deposit",
+        "assert": "toHaveText",
+        "value": "$0.00"
+      }
+    ],
+    "testIds": [
+      "dashboard-total-deposit"
+    ]
+  },
+  {
+    "id": "ZB-DASH-03",
+    "area": "dashboard",
+    "title": "After $25.00 arrives, the total deposit balance is $25.00",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$25.00 in checking (fixture: fund(customer, 2_500))"
+    ],
+    "steps": [
+      "Precondition via fixture: fund(customer, 2_500) puts $25.00 into the customer's checking",
+      "Open /dashboard with open(page, '/dashboard')"
+    ],
+    "expected": [
+      {
+        "testId": "dashboard-total-deposit",
+        "assert": "toHaveText",
+        "value": "$25.00"
+      }
+    ],
+    "testIds": [
+      "dashboard-total-deposit"
+    ]
+  },
+  {
+    "id": "ZB-DASH-04",
+    "area": "dashboard",
+    "title": "The dashboard shows one card per deposit account (2)",
+    "given": [
+      "A new signed-in customer with checking and savings (fixture: customer)"
+    ],
+    "steps": [
+      "Open /dashboard with open(page, '/dashboard')"
+    ],
+    "expected": [
+      {
+        "testId": "dashboard-account-card-{accountId}",
+        "assert": "toBeVisible",
+        "valueFrom": "accountId is the customer's checking account id (customer.checkingId)"
+      },
+      {
+        "testId": "dashboard-account-card-{accountId}",
+        "assert": "toBeVisible",
+        "valueFrom": "accountId is the customer's savings account id (customer.savingsId)"
+      },
+      {
+        "testId": "dashboard-account-card-{accountId}",
+        "assert": "toHaveCount",
+        "value": 2,
+        "scope": "all elements whose test id starts with dashboard-account-card- on the page"
+      }
+    ],
+    "testIds": [
+      "dashboard-account-card-{id}"
+    ]
+  },
+  {
+    "id": "ZB-DASH-05",
+    "area": "dashboard",
+    "title": "A new customer sees \"No activity yet.\"",
+    "given": [
+      "A new signed-in customer with no transactions (fixture: customer)",
+      "The customer's email contains zbtest- (it was made by the fixture)"
+    ],
+    "steps": [
+      "Open /dashboard with open(page, '/dashboard')"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": "dashboard-recent-empty",
+        "assert": "toHaveText",
+        "value": "No activity yet."
+      }
+    ],
+    "testIds": [
+      "dashboard-recent-empty"
+    ]
+  },
+  {
+    "id": "ZB-DASH-06",
+    "area": "dashboard",
+    "title": "Money received shows in recent activity as $25.00",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$25.00 in checking (fixture: fund(customer, 2_500))"
+    ],
+    "steps": [
+      "Precondition via fixture: fund(customer, 2_500) puts $25.00 into the customer's checking",
+      "Open /dashboard with open(page, '/dashboard')",
+      "Inside dashboard-recent-activity, find the rows whose test id starts with txn-row-"
+    ],
+    "expected": [
+      {
+        "testId": "txn-row-{transactionId}",
+        "assert": "toHaveCount",
+        "value": 1,
+        "scope": "rows whose test id starts with txn-row- inside dashboard-recent-activity"
+      },
+      {
+        "testId": "txn-row-{transactionId}",
+        "assert": "toContainText",
+        "value": "$25.00",
+        "scope": "the first such row inside dashboard-recent-activity"
+      }
+    ],
+    "testIds": [
+      "dashboard-recent-activity",
+      "txn-row-{id}"
+    ]
+  },
+  {
+    "id": "ZB-DASH-07",
+    "area": "dashboard",
+    "title": "\"Move money\" opens the transfer form",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "The customer's email contains zbtest- (it was made by the fixture)"
+    ],
+    "steps": [
+      "Open /dashboard with open(page, '/dashboard')",
+      "Click dashboard-quick-transfer"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": "/move-money"
+      },
+      {
+        "testId": "transfer-form",
+        "assert": "toBeVisible"
+      }
+    ],
+    "testIds": [
+      "dashboard-quick-transfer",
+      "transfer-form"
+    ]
+  },
+  {
+    "id": "ZB-DASH-08",
+    "area": "dashboard",
+    "title": "After a Tier 1 card approval the card tile shows $10,000.00 and 17.99%",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "The customer's email contains zbtest- (it was made by the fixture)"
+    ],
+    "steps": [
+      "Precondition via API (apiPost): POST /api/credit/apply with { annualIncomeCents: 10000000, employmentStatus: 'employed', monthlyHousingCents: 100000, monthlyDebtCents: 0 }",
+      "Open /dashboard with open(page, '/dashboard')"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": "dashboard-card-summary",
+        "assert": "toContainText",
+        "value": "$10,000.00"
+      },
+      {
+        "testId": "dashboard-card-summary",
+        "assert": "toContainText",
+        "value": "17.99%"
+      }
+    ],
+    "testIds": [
+      "dashboard-card-summary"
+    ]
+  }
+]

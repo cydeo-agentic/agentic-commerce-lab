@@ -1,0 +1,558 @@
+[
+  {
+    "id": "ZB-APPLY-01",
+    "area": "apply",
+    "title": "The wizard starts on \"Step 1 of 6 · Choose your accounts\"",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')"
+    ],
+    "expected": [
+      {
+        "testId": "apply-step-0",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-progress",
+        "assert": "toHaveText",
+        "value": "Step 1 of 6 · Choose your accounts"
+      }
+    ],
+    "testIds": [
+      "apply-progress",
+      "apply-step-0"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-02",
+    "area": "apply",
+    "title": "Continue moves to \"Step 2 of 6 · About you\"",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Click apply-next"
+    ],
+    "expected": [
+      {
+        "testId": "apply-step-1",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-progress",
+        "assert": "toHaveText",
+        "value": "Step 2 of 6 · About you"
+      }
+    ],
+    "testIds": [
+      "apply-next",
+      "apply-progress",
+      "apply-step-1"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-03",
+    "area": "apply",
+    "title": "An empty About-you step does not advance and says \"First name is required\"",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Click apply-next (moves to About you)",
+      "Leave every About-you field empty",
+      "Click apply-next again"
+    ],
+    "expected": [
+      {
+        "testId": "apply-step-1",
+        "assert": "toContainText",
+        "value": "First name is required"
+      },
+      {
+        "testId": "apply-progress",
+        "assert": "toHaveText",
+        "value": "Step 2 of 6 · About you"
+      }
+    ],
+    "testIds": [
+      "apply-next",
+      "apply-progress",
+      "apply-step-1"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-04",
+    "area": "apply",
+    "title": "An invalid email does not advance and says \"Enter a valid email address\"",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Click apply-next (moves to About you)",
+      "Type Nora into apply-firstname-input",
+      "Type Quill into apply-lastname-input",
+      "Type nora@ into apply-email-input",
+      "Click apply-next"
+    ],
+    "expected": [
+      {
+        "testId": "apply-step-1",
+        "assert": "toContainText",
+        "value": "Enter a valid email address"
+      },
+      {
+        "testId": "apply-step-2",
+        "assert": "toHaveCount",
+        "value": 0
+      }
+    ],
+    "testIds": [
+      "apply-email-input",
+      "apply-firstname-input",
+      "apply-lastname-input",
+      "apply-next",
+      "apply-step-1",
+      "apply-step-2"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-05",
+    "area": "apply",
+    "title": "Back from step 3 keeps what was typed on step 2",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)",
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Click apply-next (moves to About you)",
+      "Type Nora into apply-firstname-input",
+      "Type Quill into apply-lastname-input",
+      "Type the unique applicant email into apply-email-input",
+      "Click apply-next",
+      "Wait until apply-step-2 is visible",
+      "Click apply-back"
+    ],
+    "expected": [
+      {
+        "testId": "apply-step-1",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-firstname-input",
+        "assert": "toHaveValue",
+        "value": "Nora"
+      }
+    ],
+    "testIds": [
+      "apply-back",
+      "apply-firstname-input",
+      "apply-next",
+      "apply-step-1"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-06",
+    "area": "apply",
+    "title": "The SSN field formats 123456789 as 123-45-6789",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)",
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Click apply-next (moves to About you)",
+      "Type Nora into apply-firstname-input",
+      "Type Quill into apply-lastname-input",
+      "Type the unique applicant email into apply-email-input",
+      "Click apply-next",
+      "Wait until apply-step-2 is visible",
+      "Type 123456789 into apply-ssn-input"
+    ],
+    "expected": [
+      {
+        "testId": "apply-ssn-input",
+        "assert": "toHaveValue",
+        "value": "123-45-6789"
+      }
+    ],
+    "testIds": [
+      "apply-next",
+      "apply-ssn-input"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-07",
+    "area": "apply",
+    "title": "The phone field formats 5551234567 as (555) 123-4567",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Click apply-next (moves to About you)",
+      "Type 5551234567 into apply-phone-input"
+    ],
+    "expected": [
+      {
+        "testId": "apply-phone-input",
+        "assert": "toHaveValue",
+        "value": "(555) 123-4567"
+      }
+    ],
+    "testIds": [
+      "apply-next",
+      "apply-phone-input"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-08",
+    "area": "apply",
+    "title": "Identity without an employment status does not advance",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)",
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Click apply-next (moves to About you)",
+      "Type Nora into apply-firstname-input",
+      "Type Quill into apply-lastname-input",
+      "Type the unique applicant email into apply-email-input",
+      "Click apply-next",
+      "Wait until apply-step-2 is visible",
+      "Type 123456789 into apply-ssn-input",
+      "Leave apply-employment-select unselected",
+      "Click apply-next"
+    ],
+    "expected": [
+      {
+        "testId": "apply-step-2",
+        "assert": "toContainText",
+        "value": "Select your employment status"
+      },
+      {
+        "testId": "apply-progress",
+        "assert": "toHaveText",
+        "value": "Step 3 of 6 · Identity (simulated)"
+      }
+    ],
+    "testIds": [
+      "apply-next",
+      "apply-progress",
+      "apply-ssn-input",
+      "apply-step-2"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-09",
+    "area": "apply",
+    "title": "A ZIP that starts with 0 (01001) is accepted",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)",
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Click apply-next (moves to About you)",
+      "Type Nora into apply-firstname-input",
+      "Type Quill into apply-lastname-input",
+      "Type the unique applicant email into apply-email-input",
+      "Click apply-next",
+      "Wait until apply-step-2 is visible",
+      "Type 123456789 into apply-ssn-input",
+      "Select the option with value employed in apply-employment-select",
+      "Click apply-next",
+      "Wait until apply-step-3 is visible",
+      "Type 12 Elm Street into apply-addressline-input",
+      "Type Springfield into apply-city-input",
+      "Select the option with value MA in apply-state-select",
+      "Type 01001 into apply-zip-input",
+      "Click apply-next"
+    ],
+    "expected": [
+      {
+        "testId": "apply-step-4",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "apply-progress",
+        "assert": "toHaveText",
+        "value": "Step 5 of 6 · Security"
+      }
+    ],
+    "testIds": [
+      "apply-addressline-input",
+      "apply-city-input",
+      "apply-employment-select",
+      "apply-next",
+      "apply-progress",
+      "apply-ssn-input",
+      "apply-state-select",
+      "apply-step-3",
+      "apply-step-4",
+      "apply-zip-input"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-10",
+    "area": "apply",
+    "title": "A 4-digit ZIP (2019) is rejected with \"Enter a valid 5-digit ZIP\"",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)",
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Click apply-next (moves to About you)",
+      "Type Nora into apply-firstname-input",
+      "Type Quill into apply-lastname-input",
+      "Type the unique applicant email into apply-email-input",
+      "Click apply-next",
+      "Wait until apply-step-2 is visible",
+      "Type 123456789 into apply-ssn-input",
+      "Select the option with value employed in apply-employment-select",
+      "Click apply-next",
+      "Wait until apply-step-3 is visible",
+      "Type 12 Elm Street into apply-addressline-input",
+      "Type Springfield into apply-city-input",
+      "Select the option with value MA in apply-state-select",
+      "Type 2019 into apply-zip-input",
+      "Click apply-next"
+    ],
+    "expected": [
+      {
+        "testId": "apply-step-3",
+        "assert": "toContainText",
+        "value": "Enter a valid 5-digit ZIP"
+      }
+    ],
+    "testIds": [
+      "apply-addressline-input",
+      "apply-city-input",
+      "apply-employment-select",
+      "apply-next",
+      "apply-ssn-input",
+      "apply-state-select",
+      "apply-step-3",
+      "apply-zip-input"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-11",
+    "area": "apply",
+    "title": "A 7-character password is rejected with \"Use at least 8 characters\"",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)",
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Click apply-next (moves to About you)",
+      "Type Nora into apply-firstname-input",
+      "Type Quill into apply-lastname-input",
+      "Type the unique applicant email into apply-email-input",
+      "Click apply-next",
+      "Wait until apply-step-2 is visible",
+      "Type 123456789 into apply-ssn-input",
+      "Select the option with value employed in apply-employment-select",
+      "Click apply-next",
+      "Wait until apply-step-3 is visible",
+      "Type 12 Elm Street into apply-addressline-input",
+      "Type Springfield into apply-city-input",
+      "Select the option with value MA in apply-state-select",
+      "Type 20191 into apply-zip-input",
+      "Click apply-next",
+      "Type Abc123! into apply-password-input",
+      "Type Abc123! into apply-confirm-input",
+      "Click apply-next"
+    ],
+    "expected": [
+      {
+        "testId": "apply-step-4",
+        "assert": "toContainText",
+        "value": "Use at least 8 characters"
+      }
+    ],
+    "testIds": [
+      "apply-addressline-input",
+      "apply-city-input",
+      "apply-confirm-input",
+      "apply-employment-select",
+      "apply-next",
+      "apply-password-input",
+      "apply-ssn-input",
+      "apply-state-select",
+      "apply-step-3",
+      "apply-step-4",
+      "apply-zip-input"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-12",
+    "area": "apply",
+    "title": "A confirm password that differs only in capital letters is rejected",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)",
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Click apply-next (moves to About you)",
+      "Type Nora into apply-firstname-input",
+      "Type Quill into apply-lastname-input",
+      "Type the unique applicant email into apply-email-input",
+      "Click apply-next",
+      "Wait until apply-step-2 is visible",
+      "Type 123456789 into apply-ssn-input",
+      "Select the option with value employed in apply-employment-select",
+      "Click apply-next",
+      "Wait until apply-step-3 is visible",
+      "Type 12 Elm Street into apply-addressline-input",
+      "Type Springfield into apply-city-input",
+      "Select the option with value MA in apply-state-select",
+      "Type 20191 into apply-zip-input",
+      "Click apply-next",
+      "Type Passw0rd!Lab into apply-password-input",
+      "Type passw0rd!lab into apply-confirm-input",
+      "Click apply-next"
+    ],
+    "expected": [
+      {
+        "testId": "apply-step-4",
+        "assert": "toContainText",
+        "value": "Passwords must match"
+      },
+      {
+        "testId": "apply-step-5",
+        "assert": "toHaveCount",
+        "value": 0
+      }
+    ],
+    "testIds": [
+      "apply-addressline-input",
+      "apply-city-input",
+      "apply-confirm-input",
+      "apply-employment-select",
+      "apply-next",
+      "apply-password-input",
+      "apply-ssn-input",
+      "apply-state-select",
+      "apply-step-3",
+      "apply-step-4",
+      "apply-step-5",
+      "apply-zip-input"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-13",
+    "area": "apply",
+    "title": "A full application with savings is approved and opens the dashboard",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)",
+      "A brand-new email nobody has registered: call the helper uniqueEmail('apply') imported from '../fixtures'. Do NOT use newCustomer here: it registers its email, and the application would then be refused"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Check apply-account-savings-toggle",
+      "Click apply-next (moves to About you)",
+      "Type Nora into apply-firstname-input",
+      "Type Quill into apply-lastname-input",
+      "Type the unique applicant email into apply-email-input",
+      "Click apply-next",
+      "Wait until apply-step-2 is visible",
+      "Type 123456789 into apply-ssn-input",
+      "Select the option with value employed in apply-employment-select",
+      "Click apply-next",
+      "Wait until apply-step-3 is visible",
+      "Type 12 Elm Street into apply-addressline-input",
+      "Type Springfield into apply-city-input",
+      "Select the option with value MA in apply-state-select",
+      "Type 20191 into apply-zip-input",
+      "Click apply-next",
+      "Type Passw0rd!zb into apply-password-input",
+      "Type Passw0rd!zb into apply-confirm-input",
+      "Click apply-next",
+      "Check apply-review-summary (see expected)",
+      "Check apply-terms-checkbox",
+      "Click apply-submit",
+      "Check apply-decision-approved (see expected)",
+      "Click apply-decision-continue",
+      "After that click, check the URL is /dashboard and dashboard-welcome (see expected)"
+    ],
+    "expected": [
+      {
+        "testId": "apply-review-summary",
+        "assert": "toContainText",
+        "value": "Checking + Savings"
+      },
+      {
+        "testId": "apply-review-summary",
+        "assert": "toContainText",
+        "value": "•••-••-6789"
+      },
+      {
+        "testId": "apply-decision-approved",
+        "assert": "toContainText",
+        "value": "Welcome to ZincBank, Nora"
+      },
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": "/dashboard"
+      },
+      {
+        "testId": "dashboard-welcome",
+        "assert": "toHaveText",
+        "value": "Welcome, Nora"
+      }
+    ],
+    "testIds": [
+      "apply-account-savings-toggle",
+      "apply-addressline-input",
+      "apply-city-input",
+      "apply-confirm-input",
+      "apply-decision-approved",
+      "apply-decision-continue",
+      "apply-employment-select",
+      "apply-next",
+      "apply-password-input",
+      "apply-review-summary",
+      "apply-ssn-input",
+      "apply-state-select",
+      "apply-step-3",
+      "apply-submit",
+      "apply-terms-checkbox",
+      "apply-zip-input",
+      "dashboard-welcome"
+    ]
+  },
+  {
+    "id": "ZB-APPLY-14",
+    "area": "apply",
+    "title": "On a phone (375 px wide) the Continue button is visible",
+    "given": [
+      "A visitor who is NOT signed in (no fixture needed)",
+      "Viewport 375 x 812"
+    ],
+    "steps": [
+      "Open /apply with open(page, '/apply')",
+      "Set the viewport to 375 wide x 812 high",
+      "Open /apply with open(page, '/apply') again"
+    ],
+    "expected": [
+      {
+        "testId": "apply-next",
+        "assert": "toBeVisible"
+      }
+    ],
+    "testIds": [
+      "apply-next"
+    ]
+  }
+]

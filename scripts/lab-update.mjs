@@ -5,7 +5,7 @@
  *   git fetch -q https://github.com/cydeo-agentic/agentic-commerce-lab.git main && git show FETCH_HEAD:scripts/lab-update.mjs > /tmp/lab-update.mjs && node /tmp/lab-update.mjs
  *
  * Your Codespace was made from the template, so it has no `origin` to pull from. This script fetches the public lab
- * repository by URL and brings in only the lab's own files: labs/, scripts/ and .qwen/agents/.
+ * repository by URL and brings in only the lab's own files: labs/, scripts/, .qwen/agents/ and zincbank/.
  * Nothing you wrote is overwritten: if you changed one of those files, the new version is saved next to yours as
  * <file>.update. Your store, your tests, AGENTS.md and your .env are never touched.
  * In package.json it only adds the lab's npm scripts; in .qwen/settings.json it only adds the lab's rules.
@@ -18,7 +18,7 @@ import { dirname } from 'node:path';
 
 const LAB_REPO = process.env.LAB_REPO ?? 'https://github.com/cydeo-agentic/agentic-commerce-lab.git';
 const LAB_REF = process.env.LAB_REF ?? 'main';
-const MANAGED = ['labs/', 'scripts/', '.qwen/agents/'];
+const MANAGED = ['labs/', 'scripts/', '.qwen/agents/', 'zincbank/'];
 const MANIFEST = '.lab-update.json';
 
 const git = (...args) => spawnSync('git', args, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });

@@ -1,0 +1,273 @@
+[
+  {
+    "id": "ZB-CARD-01",
+    "area": "cards",
+    "title": "A customer without a card sees the application form",
+    "given": [
+      "A new signed-in customer with no credit card (fixture: customer)"
+    ],
+    "steps": [
+      "Check the customer's email contains zbtest- (safety check that this is a test customer)",
+      "Open /cards with open(page, '/cards')"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "customer.email"
+      },
+      {
+        "testId": "cards-apply-form",
+        "assert": "toBeVisible"
+      }
+    ],
+    "testIds": [
+      "cards-apply-form"
+    ]
+  },
+  {
+    "id": "ZB-CARD-02",
+    "area": "cards",
+    "title": "$100,000 income, employed, low debt is approved at Tier 1: $10,000.00 limit, 17.99%",
+    "given": [
+      "A new signed-in customer with no credit card (fixture: customer)"
+    ],
+    "steps": [
+      "Check the customer's email contains zbtest- (safety check that this is a test customer)",
+      "Open /cards with open(page, '/cards')",
+      "Type 100000 into cards-apply-income-input",
+      "In cards-apply-employment-select choose the option with value employed",
+      "Type 1000 into cards-apply-housing-input",
+      "Type 0 into cards-apply-debt-input",
+      "Click cards-apply-submit"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "customer.email"
+      },
+      {
+        "testId": "apply-decision-approved",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "cards-card-limit",
+        "assert": "toHaveText",
+        "value": "$10,000.00"
+      },
+      {
+        "testId": "cards-card-available",
+        "assert": "toHaveText",
+        "value": "$10,000.00"
+      },
+      {
+        "testId": "cards-card-balance",
+        "assert": "toHaveText",
+        "value": "$0.00"
+      },
+      {
+        "testId": "cards-card-apr",
+        "assert": "toHaveText",
+        "value": "17.99%"
+      }
+    ],
+    "testIds": [
+      "apply-decision-approved",
+      "cards-apply-debt-input",
+      "cards-apply-employment-select",
+      "cards-apply-housing-input",
+      "cards-apply-income-input",
+      "cards-apply-submit",
+      "cards-card-apr",
+      "cards-card-available",
+      "cards-card-balance",
+      "cards-card-limit"
+    ]
+  },
+  {
+    "id": "ZB-CARD-03",
+    "area": "cards",
+    "title": "$20,000 income as a student is approved at Tier 4: $500.00 limit, 29.99%",
+    "given": [
+      "A new signed-in customer with no credit card (fixture: customer)"
+    ],
+    "steps": [
+      "Check the customer's email contains zbtest- (safety check that this is a test customer)",
+      "Open /cards with open(page, '/cards')",
+      "Type 20000 into cards-apply-income-input",
+      "In cards-apply-employment-select choose the option with value student",
+      "Type 400 into cards-apply-housing-input",
+      "Type 0 into cards-apply-debt-input",
+      "Click cards-apply-submit"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "customer.email"
+      },
+      {
+        "testId": "apply-decision-approved",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "cards-card-limit",
+        "assert": "toHaveText",
+        "value": "$500.00"
+      },
+      {
+        "testId": "cards-card-apr",
+        "assert": "toHaveText",
+        "value": "29.99%"
+      }
+    ],
+    "testIds": [
+      "apply-decision-approved",
+      "cards-apply-debt-input",
+      "cards-apply-employment-select",
+      "cards-apply-housing-input",
+      "cards-apply-income-input",
+      "cards-apply-submit",
+      "cards-card-apr",
+      "cards-card-limit"
+    ]
+  },
+  {
+    "id": "ZB-CARD-04",
+    "area": "cards",
+    "title": "An unemployed applicant is declined for \"employment status\"",
+    "given": [
+      "A new signed-in customer with no credit card (fixture: customer)"
+    ],
+    "steps": [
+      "Check the customer's email contains zbtest- (safety check that this is a test customer)",
+      "Open /cards with open(page, '/cards')",
+      "Type 50000 into cards-apply-income-input",
+      "In cards-apply-employment-select choose the option with value unemployed",
+      "Type 1000 into cards-apply-housing-input",
+      "Type 0 into cards-apply-debt-input",
+      "Click cards-apply-submit"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "customer.email"
+      },
+      {
+        "testId": "apply-decision-rejected",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "cards-apply-result",
+        "assert": "toHaveText",
+        "value": "Application declined — employment status."
+      }
+    ],
+    "testIds": [
+      "apply-decision-rejected",
+      "cards-apply-debt-input",
+      "cards-apply-employment-select",
+      "cards-apply-housing-input",
+      "cards-apply-income-input",
+      "cards-apply-result",
+      "cards-apply-submit"
+    ]
+  },
+  {
+    "id": "ZB-CARD-05",
+    "area": "cards",
+    "title": "Housing of 60% of income is declined for the debt-to-income ratio",
+    "given": [
+      "A new signed-in customer with no credit card (fixture: customer)"
+    ],
+    "steps": [
+      "Check the customer's email contains zbtest- (safety check that this is a test customer)",
+      "Open /cards with open(page, '/cards')",
+      "Type 60000 into cards-apply-income-input",
+      "In cards-apply-employment-select choose the option with value employed",
+      "Type 3000 into cards-apply-housing-input",
+      "Type 0 into cards-apply-debt-input",
+      "Click cards-apply-submit"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "customer.email"
+      },
+      {
+        "testId": "apply-decision-rejected",
+        "assert": "toBeVisible"
+      },
+      {
+        "testId": "cards-apply-result",
+        "assert": "toHaveText",
+        "value": "Application declined — debt-to-income ratio above the maximum."
+      }
+    ],
+    "testIds": [
+      "apply-decision-rejected",
+      "cards-apply-debt-input",
+      "cards-apply-employment-select",
+      "cards-apply-housing-input",
+      "cards-apply-income-input",
+      "cards-apply-result",
+      "cards-apply-submit"
+    ]
+  },
+  {
+    "id": "ZB-CARD-06",
+    "area": "cards",
+    "title": "Paying $5.00 on a $50.00 card balance leaves $45.00 owed and $9,955.00 available",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$10.00 in the customer's checking (fixture: fund(customer, 1_000))"
+    ],
+    "steps": [
+      "Precondition via API (apiPost): POST /api/credit/apply with { annualIncomeCents: 10000000, employmentStatus: 'employed', monthlyHousingCents: 100000, monthlyDebtCents: 0 }",
+      "Precondition via API (apiPost): POST /api/credit/charge with { amountCents: 5000 }",
+      "Open /cards with open(page, '/cards')",
+      "Wait for cards-card-balance to read $50.00",
+      "In cards-pay-from-select choose the customer's checking account (option value: customer.checkingId)",
+      "Type 5.00 into cards-pay-amount-input",
+      "Click cards-pay-submit"
+    ],
+    "expected": [
+      {
+        "testId": "cards-card-balance",
+        "assert": "toHaveText",
+        "value": "$50.00"
+      },
+      {
+        "testId": "cards-pay-result",
+        "assert": "toHaveText",
+        "value": "Payment posted to your card."
+      },
+      {
+        "testId": "cards-card-balance",
+        "assert": "toHaveText",
+        "value": "$45.00"
+      },
+      {
+        "testId": "cards-card-available",
+        "assert": "toHaveText",
+        "value": "$9,955.00"
+      }
+    ],
+    "testIds": [
+      "cards-card-available",
+      "cards-card-balance",
+      "cards-pay-amount-input",
+      "cards-pay-from-select",
+      "cards-pay-result",
+      "cards-pay-submit"
+    ]
+  }
+]

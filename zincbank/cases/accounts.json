@@ -1,0 +1,207 @@
+[
+  {
+    "id": "ZB-ACCT-01",
+    "area": "accounts",
+    "title": "The accounts page lists checking and savings",
+    "given": [
+      "A new signed-in customer with checking and savings (fixture: customer)"
+    ],
+    "steps": [
+      "Open /accounts with open(page, '/accounts')"
+    ],
+    "expected": [
+      {
+        "testId": "accounts-card-{accountId}",
+        "assert": "toBeVisible",
+        "valueFrom": "accountId is the customer's checking account id (customer.checkingId)"
+      },
+      {
+        "testId": "accounts-card-{accountId}",
+        "assert": "toBeVisible",
+        "valueFrom": "accountId is the customer's savings account id (customer.savingsId)"
+      },
+      {
+        "testId": "accounts-card-{accountId}",
+        "assert": "toHaveCount",
+        "value": 2,
+        "scope": "elements whose test id starts with accounts-card- inside accounts-list"
+      }
+    ],
+    "testIds": [
+      "accounts-card-{id}",
+      "accounts-list"
+    ]
+  },
+  {
+    "id": "ZB-ACCT-02",
+    "area": "accounts",
+    "title": "\"Open savings account\" adds a third account",
+    "given": [
+      "A new signed-in customer with checking and savings (fixture: customer)",
+      "The customer's email contains zbtest- (it was made by the fixture)"
+    ],
+    "steps": [
+      "Open /accounts with open(page, '/accounts')",
+      "Click accounts-open-savings"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": "accounts-card-{accountId}",
+        "assert": "toHaveCount",
+        "value": 3,
+        "scope": "elements whose test id starts with accounts-card- inside accounts-list"
+      }
+    ],
+    "testIds": [
+      "accounts-card-{id}",
+      "accounts-list",
+      "accounts-open-savings"
+    ]
+  },
+  {
+    "id": "ZB-ACCT-03",
+    "area": "accounts",
+    "title": "An account card opens its detail page with the full account number",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Open /accounts with open(page, '/accounts')",
+      "Click accounts-card-{accountId} where accountId is the customer's checking account id (customer.checkingId)"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toHaveURL",
+        "value": null,
+        "valueFrom": "URL ends with /accounts/ followed by the customer's checking account id (customer.checkingId)"
+      },
+      {
+        "testId": "account-detail-number",
+        "assert": "toHaveText",
+        "value": null,
+        "valueFrom": "the customer's full checking account number (customer.checkingNumber)"
+      }
+    ],
+    "testIds": [
+      "account-detail-number",
+      "accounts-card-{id}"
+    ]
+  },
+  {
+    "id": "ZB-ACCT-04",
+    "area": "accounts",
+    "title": "The account detail shows routing number 123456780",
+    "given": [
+      "A new signed-in customer (fixture: customer)"
+    ],
+    "steps": [
+      "Open /accounts/{checkingId} with open(page, '/accounts/{checkingId}') where checkingId is the customer's checking account id (customer.checkingId)"
+    ],
+    "expected": [
+      {
+        "testId": "account-detail-routing",
+        "assert": "toHaveText",
+        "value": "123456780"
+      }
+    ],
+    "testIds": [
+      "account-detail-routing"
+    ]
+  },
+  {
+    "id": "ZB-ACCT-05",
+    "area": "accounts",
+    "title": "The account detail shows the balance $7.50 after $7.50 arrives",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "$7.50 in checking (fixture: fund(customer, 750))"
+    ],
+    "steps": [
+      "Precondition via fixture: fund(customer, 750) puts $7.50 into the customer's checking",
+      "Open /accounts/{checkingId} with open(page, '/accounts/{checkingId}') where checkingId is the customer's checking account id (customer.checkingId)"
+    ],
+    "expected": [
+      {
+        "testId": "account-detail-balance",
+        "assert": "toHaveText",
+        "value": "$7.50"
+      }
+    ],
+    "testIds": [
+      "account-detail-balance"
+    ]
+  },
+  {
+    "id": "ZB-ACCT-06",
+    "area": "accounts",
+    "title": "Another customer account id returns 404",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "The customer's email contains zbtest- (it was made by the fixture)",
+      "A second customer who is NOT signed in (fixture: newCustomer())"
+    ],
+    "steps": [
+      "Open /accounts/{otherCheckingId} with open(page, '/accounts/{otherCheckingId}') where otherCheckingId is the second customer's checking account id, and keep the navigation response"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": null,
+        "assert": "status",
+        "value": 404
+      },
+      {
+        "testId": "account-detail-number",
+        "assert": "toHaveCount",
+        "value": 0
+      }
+    ],
+    "testIds": [
+      "account-detail-number"
+    ]
+  },
+  {
+    "id": "ZB-ACCT-07",
+    "area": "accounts",
+    "title": "The accounts page loads in under 3 seconds",
+    "given": [
+      "A new signed-in customer (fixture: customer)",
+      "The customer's email contains zbtest- (it was made by the fixture)"
+    ],
+    "steps": [
+      "Open /dashboard with open(page, '/dashboard')",
+      "Start a timer",
+      "Open /accounts with open(page, '/accounts')",
+      "Wait until accounts-list is visible",
+      "Stop the timer"
+    ],
+    "expected": [
+      {
+        "testId": null,
+        "assert": "toContain",
+        "value": "zbtest-",
+        "subject": "the customer's email (checked before the first step)"
+      },
+      {
+        "testId": null,
+        "assert": "loadTimeUnderMs",
+        "value": 3000
+      }
+    ],
+    "testIds": [
+      "accounts-list"
+    ]
+  }
+]
