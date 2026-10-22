@@ -4,7 +4,7 @@ These rules replace the Zinc Store rules in the repository root for everything i
 
 - **System under test:** the ZincBank lab build at https://zincbank-lab.vercel.app (yellow banner "BUILD 101"). It is shared by the whole class. It is NOT the Zinc Store and it does NOT run in this Codespace.
 - **What you automate:** the approved manual cases in `cases/<area>.json`. One Playwright test per case.
-- **Selectors:** `.cydeo/contract.md` is the only list of test ids. If a case needs an element that is not in it, say so and stop.
+- **Selectors:** `contract.md` is the only list of test ids. If a case needs an element that is not in it, say so and stop.
 - **Fixtures:** `fixtures.ts`. Import `test`, `expect` and helpers from `'../fixtures'` only.
 
 ## Iron rules
