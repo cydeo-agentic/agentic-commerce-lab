@@ -3,7 +3,7 @@
  * Gate + run ONE ZincBank area. Run: npm run zb:spec -- transfers
  * Agents may run this command without asking, so it checks the spec before it runs anything:
  *   1. Safety   the spec imports only from '../fixtures' and never reaches for the machine.
- *   2. Contract every getByTestId / data-testid prefix is listed in zincbank/.cydeo/contract.md.
+ *   2. Contract every getByTestId / data-testid prefix is listed in zincbank/contract.md.
  *   3. Locators no CSS, XPath, getByRole/Text/Label; no waitForTimeout, test.only or blanket skips.
  *   4. Cases    every case in zincbank/cases/<area>.json has exactly one test whose title starts with its id,
  *               and every expected value of the case appears, unchanged, inside that test.
@@ -52,7 +52,7 @@ for (const [re, why] of [
 ]) if (re.test(src)) problems.push(`uses ${why}: a spec needs only page, the fixtures and expect`);
 
 // ── 2. Contract ──────────────────────────────────────────────────────────────
-const contract = readFileSync(join(ZB, '.cydeo', 'contract.md'), 'utf8');
+const contract = readFileSync(join(ZB, 'contract.md'), 'utf8');
 const staticIds = new Set([...contract.matchAll(/`([a-z0-9]+(?:-[a-z0-9]+)*)`/g)].map((m) => m[1]));
 const prefixes = new Set([...contract.matchAll(/`([a-z0-9-]+)-\{[a-zA-Z]+\}`/g)].map((m) => m[1]));
 for (const m of src.matchAll(/getByTestId\(\s*(['"`])([^'"`]*?)\1?\s*\)/g)) {

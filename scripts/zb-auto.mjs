@@ -38,7 +38,7 @@ mkdirSync(join(OUT, 'agents'), { recursive: true });
 
 const prompt = (area) => [
   `You are the automation engineer for the ZincBank area "${area}". Work only inside this folder (zincbank/).`,
-  `1. Read AGENTS.md (the rules), then cases/${area}.json (the approved cases), .cydeo/contract.md (the only test ids) and fixtures.ts (the fixtures and helpers).`,
+  `1. Read AGENTS.md (the rules), then cases/${area}.json (the approved cases), contract.md (the only test ids) and fixtures.ts (the fixtures and helpers).`,
   `2. Write tests/${area}.spec.ts: one test per case, title starting with the case id, every expected value copied exactly.`,
   `3. Run exactly: npm run zb:spec -- ${area}`,
   `4. If the gate fails, fix what it lists and run again. If a test fails, decide: a test problem (fix the spec) or a product defect (the page shows a different value than the case expects while your steps match the case: keep the test and write it to defects/${area}.md). At most 3 runs in total.`,
